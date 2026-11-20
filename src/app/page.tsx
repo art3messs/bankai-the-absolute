@@ -10,7 +10,9 @@ import FilmContactSheet from "@/components/FilmContactSheet";
 import ArchivalLetter from "@/components/ArchivalLetter";
 import MidnightVault from "@/components/MidnightVault";
 import GuestbookWall from "@/components/GuestbookWall";
-import { Sparkles, Film, Mail, Lock, MessageSquare, Disc3, Heart } from "lucide-react";
+import SpotifyMixtape from "@/components/SpotifyMixtape";
+import SixteenReasons from "@/components/SixteenReasons";
+import { Sparkles, Film, Mail, Lock, MessageSquare, Disc3, Heart, Award } from "lucide-react";
 
 export default function HomePage() {
   const [hasStarted, setHasStarted] = useState(false);
@@ -70,8 +72,10 @@ export default function HomePage() {
         </div>
 
         {/* Centerpiece: Cigarettes After Sex Turntable Player */}
-        <div className="w-full flex justify-center mb-16">
+        <div className="w-full flex flex-col items-center justify-center gap-6 mb-16">
           <TurntablePlayer autoPlayTrigger={hasStarted} />
+          {/* Collaborative Spotify Playlist Integration */}
+          <SpotifyMixtape />
         </div>
 
         {/* The Birthday Ritual: Luxury Candle + Feb 16 Moon Dial */}
@@ -87,6 +91,14 @@ export default function HomePage() {
           >
             <Film className="w-3.5 h-3.5 text-amber-500" />
             <span>Photo Frames</span>
+          </a>
+
+          <a
+            href="#reasons"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full glass-pearl hover:bg-white border border-pink-300 text-rose-800 text-xs font-mono font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95 shadow-sm"
+          >
+            <Award className="w-3.5 h-3.5 text-amber-500" />
+            <span>16 Reasons</span>
           </a>
 
           <a
@@ -118,13 +130,16 @@ export default function HomePage() {
       {/* 1. Curated Photo Contact Sheet */}
       <FilmContactSheet />
 
-      {/* 2. Archival Love Letter */}
+      {/* 2. 16 Reasons Why I Adore You (Feb 16 Special) */}
+      <SixteenReasons />
+
+      {/* 3. Archival Love Letter */}
       <ArchivalLetter />
 
-      {/* 3. Inside-Joke Secret Vault */}
+      {/* 4. Inside-Joke Secret Vault */}
       <MidnightVault />
 
-      {/* 4. Live Guestbook Wall */}
+      {/* 5. Live Little Notes Wall */}
       <GuestbookWall />
 
       {/* Luminous Footer */}
