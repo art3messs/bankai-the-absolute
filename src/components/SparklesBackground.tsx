@@ -17,21 +17,18 @@ export default function SparklesBackground() {
   const [stars, setStars] = useState<Star[]>([]);
 
   useEffect(() => {
-    // Generate stars for the pink galaxy background
-    const newStars: Star[] = Array.from({ length: 60 }, (_, i) => ({
+    const newStars: Star[] = Array.from({ length: 65 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      size: Math.random() * 2.5 + 1,
+      size: Math.random() * 2 + 1,
       duration: Math.random() * 3 + 2,
       delay: Math.random() * 2,
       opacity: Math.random() * 0.7 + 0.3,
     }));
     setStars(newStars);
 
-    // Global click listener for romantic confetti burst
     const handleGlobalClick = (e: MouseEvent) => {
-      // Don't burst if clicking directly on buttons or inputs to avoid distraction
       const target = e.target as HTMLElement;
       if (target.closest("button") || target.closest("input") || target.closest("textarea")) {
         return;
@@ -40,14 +37,15 @@ export default function SparklesBackground() {
       const x = e.clientX / window.innerWidth;
       const y = e.clientY / window.innerHeight;
 
+      // Color Theory: 60% Noir, 30% Dusty Rose, 10% Champagne Gold!
       confetti({
-        particleCount: 18,
+        particleCount: 16,
         spread: 60,
         origin: { x, y },
-        colors: ["#ff758f", "#ffb3c1", "#ff4d6d", "#ffe3a8", "#ffffff"],
-        ticks: 180,
+        colors: ["#fde047", "#fef08a", "#e0a4b8", "#f4c2ce", "#ffffff"],
+        ticks: 160,
         gravity: 0.8,
-        scalar: 0.9,
+        scalar: 0.85,
       });
     };
 
@@ -56,17 +54,17 @@ export default function SparklesBackground() {
   }, []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      {/* Ambient Pink Nebulas */}
-      <div className="absolute -top-40 -left-40 w-96 h-96 bg-pink-600/20 rounded-full blur-[120px] animate-pink-pulse" />
-      <div className="absolute top-1/2 -right-40 w-[30rem] h-[30rem] bg-rose-500/15 rounded-full blur-[140px] animate-pink-pulse" style={{ animationDelay: "2s" }} />
-      <div className="absolute -bottom-40 left-1/3 w-96 h-96 bg-fuchsia-600/15 rounded-full blur-[130px] animate-pink-pulse" style={{ animationDelay: "1s" }} />
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden film-grain">
+      {/* Ambient Noir & Rose Nebulas */}
+      <div className="absolute -top-40 -left-40 w-[32rem] h-[32rem] bg-rose-900/10 rounded-full blur-[160px] animate-breathe" />
+      <div className="absolute top-1/2 -right-40 w-[28rem] h-[28rem] bg-amber-400/5 rounded-full blur-[140px] animate-breathe" style={{ animationDelay: "2s" }} />
+      <div className="absolute -bottom-40 left-1/3 w-[30rem] h-[30rem] bg-purple-950/20 rounded-full blur-[150px] animate-breathe" style={{ animationDelay: "4s" }} />
 
-      {/* Twinkling Starfield */}
+      {/* Gold & Starlight Specks */}
       {stars.map((star) => (
         <div
           key={star.id}
-          className="absolute rounded-full bg-pink-100 shadow-[0_0_8px_rgba(255,192,203,0.8)]"
+          className="absolute rounded-full bg-amber-100 shadow-[0_0_6px_rgba(253,224,71,0.6)]"
           style={{
             left: `${star.x}%`,
             top: `${star.y}%`,
