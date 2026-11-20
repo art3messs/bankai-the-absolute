@@ -61,11 +61,11 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
   };
 
   return (
-    <div className="editorial-card p-5 sm:p-6 rounded-3xl max-w-lg w-full flex flex-col items-center select-none shadow-2xl relative overflow-hidden border border-rose-300/20">
-      {/* Ambient Turntable Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-rose-500/10 rounded-full blur-[70px] pointer-events-none" />
+    <div className="glass-pearl p-6 sm:p-8 rounded-3xl max-w-lg w-full flex flex-col items-center select-none shadow-2xl relative overflow-hidden border border-pink-200/80">
+      {/* Background Soft Pink Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-pink-300/20 rounded-full blur-[70px] pointer-events-none" />
 
-      {/* Hidden audio element */}
+      {/* Audio Element */}
       <audio
         ref={audioRef}
         src={BIRTHDAY_CONFIG.music.src}
@@ -74,96 +74,95 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
         loop
       />
 
-      {/* Turntable Deck */}
-      <div className="relative w-full aspect-square max-w-[280px] bg-gradient-to-b from-[#18121f] to-[#0c0910] rounded-3xl p-4 shadow-2xl border border-white/10 flex items-center justify-center">
-        {/* Tonearm (Pivots when playing) */}
+      {/* TURNTABLE DECK (Pearl White with Gold Borders) */}
+      <div className="relative w-full aspect-square max-w-[290px] bg-white rounded-3xl p-4 shadow-xl border-2 border-pink-100 flex items-center justify-center">
+        {/* Tonearm (Polished Champagne Gold) */}
         <motion.div
           animate={{ rotate: isPlaying ? 24 : 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
           className="absolute top-4 right-5 w-4 h-36 origin-top-right z-30 pointer-events-none"
         >
-          {/* Pivot Base */}
-          <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-200 to-amber-400 shadow-md border border-amber-300/60 ml-auto -mr-2" />
-          {/* Arm Bar */}
-          <div className="w-1.5 h-28 bg-gradient-to-b from-amber-100 via-amber-200 to-amber-300 mx-auto shadow-md" />
-          {/* Cartridge / Head */}
-          <div className="w-3.5 h-6 bg-rose-900 border border-amber-300/80 rounded-sm mx-auto shadow-md" />
+          {/* Base */}
+          <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-300 via-amber-200 to-yellow-400 shadow-md border border-amber-400 ml-auto -mr-2" />
+          {/* Gold Bar */}
+          <div className="w-1.5 h-28 bg-gradient-to-b from-amber-200 via-amber-300 to-amber-400 mx-auto shadow-sm" />
+          {/* Cartridge */}
+          <div className="w-3.5 h-6 bg-rose-500 border border-amber-300 rounded-sm mx-auto shadow-sm" />
         </motion.div>
 
         {/* VINYL RECORD */}
         <div
           onClick={togglePlay}
-          className={`relative w-full h-full rounded-full bg-[#0d0b0f] shadow-2xl border-4 border-black/80 flex items-center justify-center cursor-pointer group transition-transform ${
+          className={`relative w-full h-full rounded-full bg-[#18131d] shadow-2xl border-4 border-neutral-900 flex items-center justify-center cursor-pointer group transition-transform ${
             isPlaying ? "animate-vinyl" : ""
           }`}
           style={{
-            backgroundImage: `radial-gradient(circle, #0e0c12 28%, #14101a 29%, #0e0c12 34%, #14101a 38%, #0e0c12 43%, #14101a 48%, #0e0c12 55%, #181320 60%, #0e0c12 65%, #181320 75%, #0a080d 100%)`,
+            backgroundImage: `radial-gradient(circle, #1a1420 28%, #281f33 29%, #1a1420 34%, #281f33 38%, #1a1420 43%, #281f33 48%, #1a1420 55%, #2a2036 60%, #1a1420 65%, #2a2036 75%, #16111b 100%)`,
           }}
           title={isPlaying ? "Pause vinyl" : "Spin vinyl"}
         >
-          {/* Vinyl Grooves Sheen */}
-          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none" />
+          {/* Sheen */}
+          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none" />
 
-          {/* Dusty Rose Center Label */}
-          <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-[#d48b9f] via-[#e5a2b3] to-[#f4c2ce] p-0.5 shadow-inner flex flex-col items-center justify-center text-center border border-amber-200/40">
-            <div className="w-full h-full rounded-full bg-[#1c1219]/90 flex flex-col items-center justify-center p-1.5">
-              <span className="text-[9px] uppercase tracking-widest text-amber-200 font-bold">
+          {/* Strawberry Rose Center Label */}
+          <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-[#ff758f] via-[#ff8fa3] to-[#ffb3c1] p-0.5 shadow-inner flex flex-col items-center justify-center text-center border-2 border-amber-200">
+            <div className="w-full h-full rounded-full bg-white/95 flex flex-col items-center justify-center p-1.5 shadow-inner">
+              <span className="text-[9px] uppercase tracking-widest text-amber-600 font-extrabold">
                 CAS • 33 RPM
               </span>
-              <span className="font-serif font-black text-rose-200 text-sm tracking-wider">
+              <span className="font-serif font-black text-rose-600 text-sm tracking-wider">
                 K.
               </span>
-              <span className="text-[8px] text-rose-300/80 tracking-tight font-sans">
-                For Harleen 🤍
+              <span className="text-[8px] text-rose-500 tracking-tight font-sans font-bold">
+                For Harleen 🌸
               </span>
-              {/* Spindle hole */}
-              <div className="w-2.5 h-2.5 rounded-full bg-black border border-amber-300/60 mt-0.5" />
+              <div className="w-2.5 h-2.5 rounded-full bg-neutral-900 border border-amber-400 mt-0.5" />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Track Info & Lyric Line */}
+      {/* Track Info */}
       <div className="w-full text-center mt-5">
         <div className="flex items-center justify-center gap-2">
-          <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
-          <h4 className="font-serif text-lg font-bold text-white tracking-wide">
+          <Sparkles className="w-4 h-4 text-amber-500 animate-spin" style={{ animationDuration: "6s" }} />
+          <h4 className="font-serif text-xl font-bold text-[#2e1322] tracking-wide">
             K. • Cigarettes After Sex
           </h4>
-          <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
+          <Sparkles className="w-4 h-4 text-amber-500 animate-spin" style={{ animationDuration: "6s" }} />
         </div>
-        <p className="font-hand text-lg text-rose-200/80 mt-0.5 italic">
+        <p className="font-hand text-xl text-rose-600 mt-0.5">
           &ldquo;Remember when I started crying to you...&rdquo;
         </p>
       </div>
 
-      {/* Scrubber & Duration */}
+      {/* Progress Bar with Brightener */}
       <div className="w-full mt-4 px-2">
-        <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden cursor-pointer">
+        <div className="w-full bg-pink-100 h-2 rounded-full overflow-hidden cursor-pointer shadow-inner">
           <div
-            className="bg-gradient-to-r from-rose-400 via-rose-300 to-amber-200 h-full transition-all duration-200"
+            className="bg-gradient-to-r from-rose-500 via-pink-400 to-amber-400 h-full transition-all duration-200 shadow-sm"
             style={{ width: `${progress}%` }}
           />
         </div>
-        <div className="flex justify-between items-center text-[11px] text-rose-200/60 mt-1 font-mono">
+        <div className="flex justify-between items-center text-xs text-rose-800/70 mt-1 font-mono">
           <span>{currentTimeFormatted}</span>
           <span>{durationFormatted}</span>
         </div>
       </div>
 
-      {/* Control Buttons */}
+      {/* Controls */}
       <div className="flex items-center justify-center gap-4 mt-3">
         <button
           onClick={toggleMute}
-          className="p-2 rounded-full hover:bg-white/10 text-rose-200/80 hover:text-white transition-colors"
+          className="p-2 rounded-full hover:bg-pink-100 text-rose-700 transition-colors"
           title={isMuted ? "Unmute" : "Mute"}
         >
-          {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+          {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
         </button>
 
         <button
           onClick={togglePlay}
-          className="px-6 py-2.5 rounded-full bg-gradient-to-r from-amber-300 via-amber-200 to-yellow-400 hover:from-amber-200 hover:to-yellow-300 text-black font-extrabold text-sm shadow-[0_0_25px_rgba(253,224,71,0.4)] active:scale-95 transition-all flex items-center gap-2"
+          className="px-7 py-3 rounded-full bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-black font-extrabold text-sm shadow-[0_4px_20px_rgba(251,191,36,0.5)] active:scale-95 transition-all flex items-center gap-2"
         >
           {isPlaying ? (
             <>
@@ -182,10 +181,10 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
           href={BIRTHDAY_CONFIG.spotifyPlaylistUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="p-2 rounded-full hover:bg-white/10 text-rose-200/80 hover:text-white transition-colors"
+          className="p-2 rounded-full hover:bg-pink-100 text-rose-700 transition-colors"
           title="Open Track on Spotify"
         >
-          <Disc3 className="w-4 h-4" />
+          <Disc3 className="w-5 h-5" />
         </a>
       </div>
     </div>
