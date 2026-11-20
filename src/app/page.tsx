@@ -7,6 +7,7 @@ import StartGate from "@/components/StartGate";
 import BirthdayCake from "@/components/BirthdayCake";
 import CalendarCard from "@/components/CalendarCard";
 import MusicPlayer from "@/components/MusicPlayer";
+import PhotoGallery from "@/components/PhotoGallery";
 import { Heart, Sparkles, Image as ImageIcon, Mail, Lock, MessageSquare } from "lucide-react";
 
 export default function HomePage() {
@@ -25,7 +26,7 @@ export default function HomePage() {
       />
 
       {/* Floating Top Header & Music Player */}
-      <header className="sticky top-0 z-40 px-4 py-3 bg-[#14050d]/60 backdrop-blur-md border-b border-pink-500/15">
+      <header className="sticky top-0 z-40 px-4 py-3 bg-[#14050d]/70 backdrop-blur-md border-b border-pink-500/15">
         <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <span className="text-xl">🌸</span>
@@ -106,6 +107,9 @@ export default function HomePage() {
           </a>
         </div>
       </section>
+
+      {/* Curated Photo Memories Section */}
+      <PhotoGallery />
     </main>
   );
 }
