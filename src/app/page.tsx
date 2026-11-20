@@ -56,7 +56,7 @@ export default function HomePage() {
         <div className="text-center mb-12 max-w-3xl">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-pink-200 shadow-sm text-rose-700 text-xs font-mono font-bold tracking-widest uppercase mb-4">
             <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-            <span>FEBRUARY 16 • A SPECIAL CELEBRATION</span>
+            <span>FEBRUARY 16 • FOR THE ONLY ONE I ADORE</span>
             <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
           </div>
 
@@ -65,7 +65,7 @@ export default function HomePage() {
           </h1>
 
           <p className="font-hand text-2xl sm:text-3xl text-rose-700 mt-4">
-            &ldquo;In a world full of noise, you bring an effortless peace.&rdquo;
+            &ldquo;You are the only person I adore. Seeing you happy is my favorite thing in life.&rdquo;
           </p>
         </div>
 
@@ -94,7 +94,7 @@ export default function HomePage() {
             className="flex items-center gap-2 px-5 py-2.5 rounded-full glass-pearl hover:bg-white border border-pink-300 text-rose-800 text-xs font-mono font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95 shadow-sm"
           >
             <Mail className="w-3.5 h-3.5 text-amber-500" />
-            <span>Love Letter</span>
+            <span>My Letter For You</span>
           </a>
 
           <a
@@ -102,7 +102,7 @@ export default function HomePage() {
             className="flex items-center gap-2 px-5 py-2.5 rounded-full glass-pearl hover:bg-white border border-pink-300 text-rose-800 text-xs font-mono font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95 shadow-sm"
           >
             <Lock className="w-3.5 h-3.5 text-amber-500" />
-            <span>Secret Vault</span>
+            <span>Our Secret Vault</span>
           </a>
 
           <a
@@ -110,7 +110,7 @@ export default function HomePage() {
             className="flex items-center gap-2 px-5 py-2.5 rounded-full glass-pearl hover:bg-white border border-pink-300 text-rose-800 text-xs font-mono font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95 shadow-sm"
           >
             <MessageSquare className="w-3.5 h-3.5 text-amber-500" />
-            <span>Wishes Wall</span>
+            <span>Little Notes For You</span>
           </a>
         </div>
       </section>
@@ -132,13 +132,13 @@ export default function HomePage() {
         <div className="max-w-md mx-auto px-4 flex flex-col items-center">
           <span className="text-2xl mb-2">🌸</span>
           <p className="font-serif text-lg font-bold text-rose-900 tracking-widest uppercase">
-            HARLEEN • FEBRUARY 16
+            HARLEEN 4 LIFE • FEBRUARY 16
           </p>
           <p className="font-hand text-2xl text-rose-600 mt-1">
-            Soundtrack: Cigarettes After Sex — &ldquo;K.&rdquo;
+            &ldquo;You are the only person I adore.&rdquo;
           </p>
-          <span className="text-xs text-gray-400 font-sans mt-3">
-            Curated with all the love in the world for Harleen ✨
+          <span className="text-xs text-rose-400 font-sans mt-3">
+            Made with all my heart, just for Harleen ✨
           </span>
         </div>
       </footer>

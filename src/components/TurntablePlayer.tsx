@@ -106,17 +106,17 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
 
           {/* Strawberry Rose Center Label */}
           <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-[#ff758f] via-[#ff8fa3] to-[#ffb3c1] p-0.5 shadow-inner flex flex-col items-center justify-center text-center border-2 border-amber-200">
-            <div className="w-full h-full rounded-full bg-white/95 flex flex-col items-center justify-center p-1.5 shadow-inner">
-              <span className="text-[9px] uppercase tracking-widest text-amber-600 font-extrabold">
+            <div className="w-full h-full rounded-full bg-white/95 flex flex-col items-center justify-center p-1 shadow-inner">
+              <span className="text-[7.5px] uppercase tracking-widest text-amber-600 font-extrabold">
                 CAS • 33 RPM
               </span>
-              <span className="font-serif font-black text-rose-600 text-sm tracking-wider">
-                K.
+              <span className="font-serif font-black text-rose-600 text-xs tracking-wider uppercase mt-0.5 leading-tight">
+                harleen 4 life
               </span>
-              <span className="text-[8px] text-rose-500 tracking-tight font-sans font-bold">
-                For Harleen 🌸
+              <span className="text-[8.5px] text-pink-600 tracking-tight font-hand font-bold mt-0.5">
+                the only one I adore 🌸
               </span>
-              <div className="w-2.5 h-2.5 rounded-full bg-neutral-900 border border-amber-400 mt-0.5" />
+              <div className="w-2.5 h-2.5 rounded-full bg-neutral-900 border border-amber-400 mt-1" />
             </div>
           </div>
         </div>

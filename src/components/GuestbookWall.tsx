@@ -76,13 +76,13 @@ export default function GuestbookWall() {
         <div>
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pink-100 border border-pink-200 text-rose-700 text-xs font-semibold tracking-wider uppercase mb-2 shadow-xs">
             <MessageSquare className="w-3.5 h-3.5 text-amber-500" />
-            <span>Digital Guestbook • {wishes.length} Messages</span>
+            <span>Reminders & Adorations • {wishes.length} Notes</span>
           </div>
           <h3 className="font-serif text-3xl sm:text-4xl font-extrabold text-[#2e1322]">
-            Birthday Wishes for Harleen 💌
+            Little Notes For Harleen 💌
           </h3>
           <p className="font-hand text-2xl text-rose-600/90">
-            Messages from friends celebrating the one and only Harleen!
+            Every little reminder, reason why I adore you, and notes from my heart.
           </p>
         </div>
 
@@ -92,7 +92,7 @@ export default function GuestbookWall() {
           className="flex items-center gap-2 px-7 py-3.5 rounded-full bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-black font-extrabold text-sm shadow-[0_4px_20px_rgba(251,191,36,0.4)] hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
         >
           <Plus className="w-4 h-4 stroke-[3]" />
-          <span>Leave a Message</span>
+          <span>Add a Little Note</span>
         </button>
       </div>
 

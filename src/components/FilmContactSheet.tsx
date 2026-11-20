@@ -37,7 +37,7 @@ export default function FilmContactSheet() {
           Captured Moments with Harleen 📸✨
         </h2>
         <p className="font-hand text-2xl text-rose-600/90 mt-2 max-w-lg mx-auto">
-          Every picture tells a story of your beauty, your laughter, and our favorite memories.
+          Every picture tells a story of your beauty, your laughter, and my favorite memories with you.
         </p>
       </div>
 

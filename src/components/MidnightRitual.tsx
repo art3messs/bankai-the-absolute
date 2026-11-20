@@ -220,8 +220,8 @@ export default function MidnightRitual({ recipientName }: MidnightRitualProps) {
               <span className="font-serif text-xl font-bold bg-gradient-to-r from-rose-600 to-amber-500 bg-clip-text text-transparent drop-shadow">
                 ✨ Make your birthday wish, Harleen! ✨
               </span>
-              <span className="text-xs text-rose-500 mt-0.5 font-medium">
-                Tap the glass anytime to relight 🕯️
+              <span className="text-xs text-rose-600 mt-0.5 font-hand text-base">
+                I would love to see you happy all of the time. Tap glass to relight 🕯️
               </span>
             </motion.div>
           ) : (
@@ -282,7 +282,7 @@ export default function MidnightRitual({ recipientName }: MidnightRitualProps) {
             The Day The Stars Aligned For You.
           </p>
           <p className="font-hand text-xl text-rose-600">
-            &ldquo;In all of space and time, there is only one Harleen.&rdquo;
+            &ldquo;In all of space and time, you are the only person I adore.&rdquo;
           </p>
         </div>
 

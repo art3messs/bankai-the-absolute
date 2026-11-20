@@ -60,7 +60,7 @@ export default function StartGate({ onStart, isOpen, recipientName }: StartGateP
             </h1>
 
             <p className="font-hand text-2xl text-rose-600/90 mb-8">
-              A luminous universe created for your 16th of February...
+              I created this little universe just for you, because you are the only one I adore...
             </p>
 
             {/* Enter Button with Gold Pop */}

@@ -15,38 +15,40 @@ export const BIRTHDAY_CONFIG = {
     monthIndex: 1, // 0-indexed (Feb = 1)
   },
   theme: {
-    baseColor: "obsidian",      // 60% Noir Charcoal & Deep Indigo (#0a080d)
-    secondaryColor: "dusty-rose", // 30% Cashmere Blush & Dusty Mauve (#e0a4b8)
-    accentColor: "champagne-gold",// 10% Luminous Champagne Gold (#fde047 / #ffe3a8)
-    vibe: "cigarettes-after-sex-cinematic",
+    baseColor: "cream-pearl",       // 60% Silk Cream & Pearl Milk (#fbf7f8)
+    secondaryColor: "rose-strawberry", // 30% Strawberry Rose Pink (#ff758f / #ff4d6d)
+    accentColor: "champagne-gold",  // 10% Sparkling Champagne Gold (#f59e0b / #fde047)
+    vibe: "dreamy-editorial",
   },
-  spotifyPlaylistUrl: "https://open.spotify.com/track/1FWWonnv3kdOzvo7AZBZu8",
+  spotifyPlaylistUrl: "https://open.spotify.com/playlist/06Aj93NfdzlxVX8Sw1dlXK?si=ae1e54085bc14b13&pt=434eda748460ab71160e13914df66af0",
   music: {
     title: "K.",
     artist: "Cigarettes After Sex",
     src: "/music/track.mp3",
   },
   letter: {
-    title: "For Harleen, at Midnight 🌙",
-    subtitle: "February 16 • An intimate letter for someone truly rare",
+    title: "For Harleen, The Only Person I Adore 🌙",
+    subtitle: "February 16 • Written straight from my heart",
     body: `Hey Harleen, Happy Birthday. 🤍
 
-I didn't want to make something ordinary for you. I wanted to build a world that feels just like you—rare, effortlessly beautiful, and unforgettable.
+I didn't want to make anything ordinary for you today, because to me, you are the most extraordinary person in this world. You are genuinely the only person I adore like this.
 
-There is a quiet grace in the way you laugh, the way you speak, and the way you make the simplest moments feel like scenes from a movie you never want to end. In a world full of noise, you bring an effortless peace.
+More than anything in life, I just want to see you happy. Every smile of yours, every little laugh, the way you speak, and the effortless peace you bring into my world—it means more to me than words could ever explain.
 
-May this 16th of February be gentle to you, filled with warm golden lights, soft laughter, and all the love you give so freely to others.
+In a world full of temporary things, having you in my life is something I will always cherish with everything I have. You are my favorite person, my safest corner, and the sweetest part of every day.
 
-Thank you for existing, Harleen.
+May this 16th of February give back even a fraction of the immense joy you give to me. May your days be soft, full of warm golden light, and overflowing with endless peace.
 
-Happy Birthday, always. ✨`,
-    signoff: "Yours in quiet admiration,",
+Harleen 4 life, always and forever.
+
+Happy Birthday, my favorite person in the entire universe. ✨`,
+    signoff: "Yours, and only yours,",
   },
   secretVault: {
-    question: "Where did we first talk or what is our favorite inside joke?",
-    hint: "Think about our iconic memory together...",
+    question: "What is that one secret inside joke or memory that belongs only to you and me?",
+    hint: "Think about the sweetest thing between us...",
     answerHash: "pink",
-    secretMessage: "You unlocked the midnight vault. Some memories will always belong to only the two of us 🤍✨",
+    secretMessage: "You unlocked my secret vault. You are the only person I adore this much, and seeing you happy will always be my favorite thing in the universe 🤍✨",
   },
   samplePhotos: [
     {

@@ -1,30 +1,30 @@
 [
   {
-    "id": "1795195615035",
-    "name": "Artemis",
-    "message": "Wishing Harleen the absolute best pink-filled birthday ever! 💖",
-    "stamp": "🎀",
-    "createdAt": "2026-11-20T17:26:55.035Z"
-  },
-  {
     "id": "1",
-    "name": "A Close Friend",
-    "message": "Happy Birthday Harleen!! 🌸 Hope your 16th of Feb is filled with lots of pink cakes, laughs, and unforgettable memories! Keep shining always ✨",
-    "stamp": "🌸",
+    "name": "From My Heart",
+    "message": "You are genuinely the only person I adore in this world. Seeing you smile effortlessly is my favorite sight in life. Harleen 4 life 🌸",
+    "stamp": "💖",
     "createdAt": "2026-02-16T00:01:00Z"
   },
   {
     "id": "2",
-    "name": "Secret Admirer",
-    "message": "To the prettiest girl with the sweetest vibe 💖 Happy Birthday Harleen! Never stop smiling!",
-    "stamp": "💖",
+    "name": "Little Reminder",
+    "message": "I would love to see you happy all of the time. Every little laugh of yours makes everything around you so much better. Never forget how special you are ✨",
+    "stamp": "✨",
     "createdAt": "2026-02-16T00:05:00Z"
   },
   {
     "id": "3",
-    "name": "Bestie",
-    "message": "Queen of pink!! 🎀 You deserve the absolute best year ahead. So lucky to have you in our lives!",
-    "stamp": "🎀",
+    "name": "Midnight Thought",
+    "message": "In a world full of noise, you bring a quiet peace I can't find anywhere else. Thank you for existing, Harleen. Always here for you 🌙",
+    "stamp": "💌",
     "createdAt": "2026-02-16T00:10:00Z"
+  },
+  {
+    "id": "4",
+    "name": "My Favorite Person",
+    "message": "If I could give you one thing in life, it would be the ability to see yourself through my eyes — so you'd know just how truly rare and adored you are 🎀",
+    "stamp": "🎀",
+    "createdAt": "2026-02-16T00:15:00Z"
   }
 ]
