@@ -1,0 +1,23 @@
+[
+  {
+    "id": "1",
+    "name": "A Close Friend",
+    "message": "Happy Birthday Harleen!! 🌸 Hope your 16th of Feb is filled with lots of pink cakes, laughs, and unforgettable memories! Keep shining always ✨",
+    "stamp": "🌸",
+    "createdAt": "2026-02-16T00:01:00Z"
+  },
+  {
+    "id": "2",
+    "name": "Secret Admirer",
+    "message": "To the prettiest girl with the sweetest vibe 💖 Happy Birthday Harleen! Never stop smiling!",
+    "stamp": "💖",
+    "createdAt": "2026-02-16T00:05:00Z"
+  },
+  {
+    "id": "3",
+    "name": "Bestie",
+    "message": "Queen of pink!! 🎀 You deserve the absolute best year ahead. So lucky to have you in our lives!",
+    "stamp": "🎀",
+    "createdAt": "2026-02-16T00:10:00Z"
+  }
+]

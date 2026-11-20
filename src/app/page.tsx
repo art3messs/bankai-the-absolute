@@ -8,6 +8,9 @@ import BirthdayCake from "@/components/BirthdayCake";
 import CalendarCard from "@/components/CalendarCard";
 import MusicPlayer from "@/components/MusicPlayer";
 import PhotoGallery from "@/components/PhotoGallery";
+import LoveLetter from "@/components/LoveLetter";
+import SecretVault from "@/components/SecretVault";
+import Guestbook from "@/components/Guestbook";
 import { Heart, Sparkles, Image as ImageIcon, Mail, Lock, MessageSquare } from "lucide-react";
 
 export default function HomePage() {
@@ -26,7 +29,7 @@ export default function HomePage() {
       />
 
       {/* Floating Top Header & Music Player */}
-      <header className="sticky top-0 z-40 px-4 py-3 bg-[#14050d]/70 backdrop-blur-md border-b border-pink-500/15">
+      <header className="sticky top-0 z-40 px-4 py-3 bg-[#14050d]/80 backdrop-blur-md border-b border-pink-500/15">
         <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <span className="text-xl">🌸</span>
@@ -108,8 +111,27 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Curated Photo Memories Section */}
+      {/* 1. Curated Photo Memories Section */}
       <PhotoGallery />
+
+      {/* 2. Interactive Wax-Sealed Love Letter */}
+      <LoveLetter />
+
+      {/* 3. Secret Inside-Joke Vault */}
+      <SecretVault />
+
+      {/* 4. Live Wishes Guestbook (API Powered) */}
+      <Guestbook />
+
+      {/* Romantic Footer */}
+      <footer className="relative z-10 py-12 text-center border-t border-pink-500/20 bg-pink-950/20">
+        <p className="font-hand text-2xl text-pink-200">
+          Made with all the love in the universe for {BIRTHDAY_CONFIG.recipientName} 🌸✨
+        </p>
+        <p className="text-xs text-pink-300/60 mt-2">
+          February 16 • Forever Celebrating You 💖
+        </p>
+      </footer>
     </main>
   );
 }
