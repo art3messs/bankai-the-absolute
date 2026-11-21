@@ -88,7 +88,7 @@ const REASONS: Reason[] = [
   {
     number: 13,
     title: "Your Big, Caring Heart",
-    note: "How deeply and selflessly you care. You give so much quiet love and warmth to the world.",
+    note: "How deeply and selflessly you care. You give so much quiet kindness and gentle warmth to everyone around you.",
     icon: "🤍",
   },
   {
@@ -173,9 +173,10 @@ export default function SixteenReasons() {
           return (
             <motion.div
               key={item.number}
-              whileHover={{ y: -4, scale: 1.02 }}
+              whileHover={{ y: -8, scale: 1.03, rotateX: 4, rotateY: -3 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
               onClick={() => toggleCard(item.number)}
-              className="relative h-60 rounded-3xl cursor-pointer perspective-[1000px] select-none group"
+              className="relative h-60 rounded-3xl cursor-pointer perspective-[1200px] select-none group"
             >
               <motion.div
                 animate={{ rotateY: isFlipped ? 180 : 0 }}

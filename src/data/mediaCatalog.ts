@@ -71,7 +71,7 @@ export const MEDIA_CATALOG: MediaItem[] = [
     type: "image",
     category: "harleen 4 life",
     title: "Warmest Embrace",
-    caption: "Where peace lives • Safe & loved 🤍",
+    caption: "Where peace lives • Safe, cherished & adored 🤍",
     aspectRatio: "portrait",
   },
   {

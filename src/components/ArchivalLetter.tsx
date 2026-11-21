@@ -13,7 +13,7 @@ export default function ArchivalLetter() {
       {/* Editorial Header */}
       <div className="text-center mb-8 max-w-2xl mx-auto">
         <h2 className="font-forum text-3xl sm:text-5xl text-[#241e16] uppercase tracking-[0.06em]">
-          An Intimate Love Epistle
+          An Intimate Birthday Epistle
         </h2>
         <p className="font-signature text-2xl sm:text-3xl text-[#7d7265] mt-2 leading-relaxed">
           &ldquo;Written straight from my heart. Tap the golden wax seal to unseal.&rdquo;

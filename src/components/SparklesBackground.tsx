@@ -13,39 +13,73 @@ interface Star {
   opacity: number;
 }
 
+interface Petal {
+  id: number;
+  left: number;
+  size: number;
+  duration: number;
+  delay: number;
+  rotate: number;
+  swayDistance: number;
+  symbol: string;
+}
+
 export default function SparklesBackground() {
   const [stars, setStars] = useState<Star[]>([]);
+  const [petals, setPetals] = useState<Petal[]>([]);
 
   useEffect(() => {
-    const newStars: Star[] = Array.from({ length: 45 }, (_, i) => ({
+    // 36 ambient twinkle stars
+    const newStars: Star[] = Array.from({ length: 36 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      size: Math.random() * 2.5 + 1.2,
-      duration: Math.random() * 3 + 2,
-      delay: Math.random() * 2,
-      opacity: Math.random() * 0.6 + 0.3,
+      size: Math.random() * 2.2 + 1.2,
+      duration: Math.random() * 3 + 2.5,
+      delay: Math.random() * 2.5,
+      opacity: Math.random() * 0.6 + 0.35,
     }));
     setStars(newStars);
 
+    // 22 drifting romantic rose petals & blossoms
+    const symbols = ["🌸", "🌹", "✨", "🤍", "🌸"];
+    const newPetals: Petal[] = Array.from({ length: 22 }, (_, i) => ({
+      id: i,
+      left: Math.random() * 96,
+      size: 13 + (i % 4) * 4,
+      duration: 11 + ((i * 1.7) % 8),
+      delay: ((i * 1.1) % 9),
+      rotate: Math.random() * 360,
+      swayDistance: 25 + (i % 3) * 15,
+      symbol: symbols[i % symbols.length],
+    }));
+    setPetals(newPetals);
+
+    // Global click: Romantic Rose Petal & Champagne Gold Burst
     const handleGlobalClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (target.closest("button") || target.closest("input") || target.closest("textarea")) {
+      if (
+        target.closest("button") ||
+        target.closest("input") ||
+        target.closest("textarea") ||
+        target.closest("a")
+      ) {
         return;
       }
 
       const x = e.clientX / window.innerWidth;
       const y = e.clientY / window.innerHeight;
 
-      // 60-30-10 Confetti: Pearl White, Strawberry Pink, Champagne Gold!
+      // Color theory: Velvet Berry, Deep Rose, Champagne Gold & Cream
       confetti({
-        particleCount: 18,
-        spread: 60,
+        particleCount: 22,
+        spread: 75,
         origin: { x, y },
-        colors: ["#ff758f", "#ff4d6d", "#fbbf24", "#fde047", "#ffffff"],
-        ticks: 180,
-        gravity: 0.8,
-        scalar: 0.9,
+        colors: ["#db2777", "#ec4899", "#f472b6", "#fbbf24", "#fef08a", "#ffffff"],
+        ticks: 220,
+        gravity: 0.7,
+        scalar: 0.95,
+        shapes: ["circle"],
       });
     };
 
@@ -55,16 +89,22 @@ export default function SparklesBackground() {
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      {/* Soft Luminous Cloud Nebulas */}
-      <div className="absolute -top-32 -left-32 w-[34rem] h-[34rem] bg-rose-200/40 rounded-full blur-[140px] animate-dreamy" />
-      <div className="absolute top-1/3 -right-32 w-[30rem] h-[30rem] bg-amber-100/50 rounded-full blur-[130px] animate-dreamy" style={{ animationDelay: "2s" }} />
-      <div className="absolute -bottom-32 left-1/4 w-[36rem] h-[36rem] bg-pink-100/60 rounded-full blur-[150px] animate-dreamy" style={{ animationDelay: "4s" }} />
+      {/* Editorial Luxury Ambient Nebulas */}
+      <div className="absolute -top-36 -left-36 w-[38rem] h-[38rem] bg-[#fce7f3]/50 rounded-full blur-[140px] animate-dreamy" />
+      <div
+        className="absolute top-1/3 -right-32 w-[34rem] h-[34rem] bg-[#fdf2f8]/70 rounded-full blur-[130px] animate-dreamy"
+        style={{ animationDelay: "2.5s" }}
+      />
+      <div
+        className="absolute -bottom-36 left-1/4 w-[40rem] h-[40rem] bg-[#fff1f2]/60 rounded-full blur-[150px] animate-dreamy"
+        style={{ animationDelay: "4.5s" }}
+      />
 
       {/* Golden Fairy Dust Stars */}
       {stars.map((star) => (
         <div
           key={star.id}
-          className="absolute rounded-full bg-amber-400/80 shadow-[0_0_8px_rgba(251,191,36,0.8)]"
+          className="absolute rounded-full bg-gradient-to-r from-[#fbbf24] to-[#fef08a] shadow-[0_0_8px_rgba(251,191,36,0.85)]"
           style={{
             left: `${star.x}%`,
             top: `${star.y}%`,
@@ -76,6 +116,47 @@ export default function SparklesBackground() {
           }}
         />
       ))}
+
+      {/* Romantic Falling Rose Petals & Stardust */}
+      {petals.map((petal) => (
+        <div
+          key={petal.id}
+          className="absolute select-none pointer-events-none text-rose-300/35"
+          style={{
+            left: `${petal.left}%`,
+            fontSize: `${petal.size}px`,
+            top: "-40px",
+            animation: `fallAndSway ${petal.duration}s cubic-bezier(0.4, 0, 0.2, 1) infinite`,
+            animationDelay: `${petal.delay}s`,
+          }}
+        >
+          {petal.symbol}
+        </div>
+      ))}
+
+      {/* Keyframe Styles for Drift & Sway */}
+      <style jsx global>{`
+        @keyframes fallAndSway {
+          0% {
+            transform: translateY(-20px) translateX(0) rotate(0deg);
+            opacity: 0;
+          }
+          10% {
+            opacity: 0.65;
+          }
+          50% {
+            transform: translateY(50vh) translateX(30px) rotate(180deg);
+            opacity: 0.7;
+          }
+          90% {
+            opacity: 0.55;
+          }
+          100% {
+            transform: translateY(105vh) translateX(-25px) rotate(360deg);
+            opacity: 0;
+          }
+        }
+      `}</style>
     </div>
   );
 }

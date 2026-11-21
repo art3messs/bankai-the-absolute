@@ -78,7 +78,7 @@ export default function GuestbookWall() {
             Reminders For Your Heart
           </h3>
           <p className="font-signature text-2xl text-[#7d7265] mt-1">
-            &ldquo;Every little reason why you are my whole universe, sealed with endless love.&rdquo;
+            &ldquo;Every little reason why you are my whole universe, sealed with endless fondness &amp; pucchi.&rdquo;
           </p>
         </div>
 

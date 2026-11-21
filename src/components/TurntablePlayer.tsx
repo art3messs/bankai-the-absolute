@@ -72,24 +72,27 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
   const handleNextTrack = () => {
     const nextIdx = (currentTrackIndex + 1) % tracks.length;
     setCurrentTrackIndex(nextIdx);
+    setIsPlaying(true);
   };
 
   const handlePrevTrack = () => {
     const prevIdx = (currentTrackIndex - 1 + tracks.length) % tracks.length;
     setCurrentTrackIndex(prevIdx);
+    setIsPlaying(true);
   };
 
   // Switch track in audio element
   useEffect(() => {
     if (!audioRef.current) return;
     audioRef.current.src = currentTrack.src;
+    audioRef.current.load();
     if (isPlaying) {
       audioRef.current
         .play()
         .then(() => setIsPlaying(true))
         .catch(() => {});
     }
-  }, [currentTrackIndex]);
+  }, [currentTrackIndex, isPlaying]);
 
   useEffect(() => {
     if (autoPlayTrigger && audioRef.current) {

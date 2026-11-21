@@ -6,7 +6,7 @@ import { BIRTHDAY_CONFIG } from "@/data/config";
 import SparklesBackground from "@/components/SparklesBackground";
 import StartGate from "@/components/StartGate";
 import TurntablePlayer from "@/components/TurntablePlayer";
-import MidnightRitual from "@/components/MidnightRitual";
+import BirthdayCakeCeremony from "@/components/BirthdayCakeCeremony";
 import Hero3D from "@/components/Hero3D";
 import PhotoScrollReveal from "@/components/PhotoScrollReveal";
 import ThemedGalleries from "@/components/ThemedGalleries";
@@ -33,6 +33,7 @@ import {
   ArrowDown,
   Camera,
   Star,
+  Cake,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -46,7 +47,7 @@ export default function HomePage() {
       {/* Floating Ambient Interactive Stickers */}
       <ScrollyStickers />
 
-      {/* Luminous Dreamy Atmosphere & Confetti Sparkles */}
+      {/* Luminous Dreamy Atmosphere, Drifting Rose Petals & Golden Stardust */}
       <SparklesBackground />
 
       {/* Cinematic Start Gate ("K." by Cigarettes After Sex & Scroll on Photo Reveal) */}
@@ -56,7 +57,7 @@ export default function HomePage() {
         recipientName={BIRTHDAY_CONFIG.recipientName}
       />
 
-      {/* Top Editorial Masthead (like lovealways.earth) */}
+      {/* Top Editorial Masthead */}
       <header className="sticky top-0 z-40 px-6 py-4 bg-[#fdfaf5]/85 backdrop-blur-xl border-b border-[#d97d93]/20 shadow-xs">
         <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -81,6 +82,9 @@ export default function HomePage() {
       {/* CHAPTER I: 3D INTERACTIVE HERO STAGE WITH DUAL PORTRAITS */}
       <Hero3D />
 
+      {/* CHAPTER II: GRAND 3D BIRTHDAY CAKE & INSTANT WISH CEREMONY */}
+      <BirthdayCakeCeremony recipientName={BIRTHDAY_CONFIG.recipientName} />
+
       {/* POPPING SCROLL CAPSULE #1: LITTLE POGO */}
       <ScrollyCard
         popup={{
@@ -96,16 +100,16 @@ export default function HomePage() {
         }}
       />
 
-      {/* CHAPTER II: INTERACTIVE DUAL-LAYER SCROLL PHOTO REVEAL */}
+      {/* CHAPTER III: INTERACTIVE DUAL-LAYER SCROLL PHOTO REVEAL */}
       <div id="scroll-reveal">
         <PhotoScrollReveal />
       </div>
 
-      {/* CHAPTER III: THE SOUND (TURNTABLE & MIXTAPE) */}
+      {/* CHAPTER IV: THE SOUND (TURNTABLE & MIXTAPE) */}
       <section id="sound" className="relative z-10 max-w-5xl mx-auto px-4 py-16 flex flex-col items-center">
         <div className="text-center mb-10">
           <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
-            CHAPTER III • THE VINYL CHAMBER
+            CHAPTER IV • THE VINYL CHAMBER
           </span>
           <h2 className="font-forum text-3xl sm:text-5xl text-[#241e16] uppercase tracking-[0.06em]">
             Cigarettes After Sex &amp; Our Mixtape
@@ -138,11 +142,11 @@ export default function HomePage() {
 
       <div className="max-w-2xl mx-auto editorial-rule" />
 
-      {/* CHAPTER IV: THE 16 REASONS (FEB 16 SPECIAL) */}
+      {/* CHAPTER V: THE 16 REASONS (FEB 16 SPECIAL) */}
       <section id="reasons" className="relative z-10 max-w-6xl mx-auto px-4 py-16">
         <div className="text-center mb-4">
           <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
-            CHAPTER IV • THE CHRONICLES
+            CHAPTER V • THE CHRONICLES
           </span>
         </div>
         <SixteenReasons />
@@ -165,45 +169,12 @@ export default function HomePage() {
 
       <div className="max-w-2xl mx-auto editorial-rule" />
 
-      {/* CHAPTER V: THE MIDNIGHT RITUAL (CANDLE & MOON) */}
-      <section id="ritual" className="relative z-10 max-w-5xl mx-auto px-4 py-16">
-        <div className="text-center mb-10">
-          <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
-            CHAPTER V • THE MIDNIGHT RITUAL
-          </span>
-          <h2 className="font-forum text-3xl sm:text-5xl text-[#241e16] uppercase tracking-[0.06em]">
-            The Candle &amp; Lunar Alignment
-          </h2>
-          <p className="font-signature text-2xl text-[#7d7265] mt-2">
-            &ldquo;Extinguish the flame with your breath to reveal your February 16 wish&rdquo;
-          </p>
-        </div>
-        <MidnightRitual recipientName={BIRTHDAY_CONFIG.recipientName} />
-      </section>
-
-      {/* POPPING SCROLL CAPSULE #4: SICK IN ETHNIC */}
-      <ScrollyCard
-        popup={{
-          id: "ethnic-popup",
-          badge: "💃 SICK IN ETHNIC",
-          title: "Royal Emerald Tiara & Silk",
-          subtitle: "Straight out of a royal fairytale • Timeless elegance 👑",
-          image: "/media/ethnic-dragonfly-tiara.jpg",
-          side: "right",
-          rotate: 3.2,
-          category: "sick in ethnic",
-          tagColor: "bg-purple-50 text-purple-700 border-purple-300",
-        }}
-      />
-
-      <div className="max-w-2xl mx-auto editorial-rule" />
-
       {/* CHAPTER VI: THE ARCHIVES (5 CURATED THEMED WORLDS WITH ALL 35 MEDIA ASSETS) */}
       <section id="memories" className="relative z-10 max-w-6xl mx-auto px-4 py-16">
         <ThemedGalleries />
       </section>
 
-      {/* POPPING SCROLL CAPSULE #5: HARLEEN 4 LIFE */}
+      {/* POPPING SCROLL CAPSULE #4: HARLEEN 4 LIFE */}
       <ScrollyCard
         popup={{
           id: "harleen-popup",
@@ -220,7 +191,7 @@ export default function HomePage() {
 
       <div className="max-w-2xl mx-auto editorial-rule" />
 
-      {/* CHAPTER VII: THE LOVE LETTER */}
+      {/* CHAPTER VII: THE ARCHIVAL LETTER */}
       <section id="letter" className="relative z-10 max-w-4xl mx-auto px-4 py-16">
         <div className="text-center mb-4">
           <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
@@ -270,7 +241,7 @@ export default function HomePage() {
           </p>
           <div className="w-16 editorial-rule my-4" />
           <p className="font-signature text-2xl text-[#7d7265]">
-            &ldquo;You are my entire universe. Today, tomorrow, and across every lifetime.&rdquo;
+            &ldquo;You are my entire universe. Today, tomorrow, and always.&rdquo;
           </p>
           <div className="flex items-center gap-2 text-[10px] font-raleway tracking-[0.3em] uppercase text-[#7d7265] mt-6">
             <span>SOUNDTRACK: CAS &ldquo;K.&rdquo;</span>

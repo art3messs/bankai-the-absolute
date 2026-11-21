@@ -102,8 +102,8 @@ export async function POST(req: Request) {
     } else {
       await sendInstantNotification(
         "💌 New Reaction From Harleen!",
-        `Reaction: ${newEntry.reaction || "Loved it"} | Note: "${newEntry.message}"`,
-        ["heart", "love_letter", "sparkling_heart"]
+        `Reaction: ${newEntry.reaction || "Adored it"} | Note: "${newEntry.message}"`,
+        ["heart", "envelope", "sparkling_heart"]
       );
     }
 

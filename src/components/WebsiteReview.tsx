@@ -6,7 +6,7 @@ import confetti from "canvas-confetti";
 import { Heart, Send, Sparkles, MessageSquareHeart, CheckCircle2 } from "lucide-react";
 
 const REACTIONS = [
-  { id: "loved", label: "🥹 Loved every second", stamp: "🥹" },
+  { id: "adored", label: "🥹 Adored every second", stamp: "🥹" },
   { id: "tears", label: "😭 In happy tears", stamp: "😭" },
   { id: "best", label: "✨ Best gift ever", stamp: "✨" },
   { id: "pucchi", label: "💖 Pucchi for life", stamp: "💖" },

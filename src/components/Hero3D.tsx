@@ -17,6 +17,7 @@ import {
   Crown,
   Flame,
   Camera,
+  Cake,
 } from "lucide-react";
 import { BIRTHDAY_CONFIG } from "@/data/config";
 
@@ -277,7 +278,7 @@ export default function Hero3D() {
               transition={{ duration: 0.7, delay: 0.4 }}
               className="font-signature text-2xl sm:text-3xl text-[#6b5e51] max-w-xl mt-3 leading-relaxed"
             >
-              &ldquo;Across every galaxy, in every timeline and through all of life, you will always be my sweetest love story.&rdquo;
+              &ldquo;Across every galaxy, in every timeline and through all of life, you will always be my favorite human and safest haven.&rdquo;
             </motion.p>
           </div>
 
@@ -315,19 +316,19 @@ export default function Hero3D() {
 
         <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
           <a
-            href="#scroll-reveal"
+            href="#cake"
             className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-rose-500 via-pink-600 to-amber-500 text-white text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-md shadow-rose-500/25 cursor-pointer"
           >
-            <Camera className="w-3.5 h-3.5" />
-            <span>01. Interactive Scroll Reveal</span>
+            <Cake className="w-3.5 h-3.5 text-amber-200" />
+            <span>01. Birthday Cake &amp; Wish</span>
           </a>
 
           <a
-            href="#memories"
+            href="#scroll-reveal"
             className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-[#fff9f8] border border-[#d97d93]/35 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer"
           >
-            <Film className="w-3.5 h-3.5 text-rose-500" />
-            <span>02. Themed Photo &amp; Video Archives</span>
+            <Camera className="w-3.5 h-3.5 text-rose-500" />
+            <span>02. Scroll Photo Reveal</span>
           </a>
 
           <a
@@ -347,11 +348,11 @@ export default function Hero3D() {
           </a>
 
           <a
-            href="#ritual"
+            href="#memories"
             className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-[#fff9f8] border border-[#d97d93]/35 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer"
           >
-            <Flame className="w-3.5 h-3.5 text-[#f59e0b]" />
-            <span>05. Midnight Candle</span>
+            <Film className="w-3.5 h-3.5 text-rose-500" />
+            <span>05. Themed Archives</span>
           </a>
 
           <a
@@ -368,6 +369,14 @@ export default function Hero3D() {
           >
             <Lock className="w-3.5 h-3.5 text-[#8b5cf6]" />
             <span>07. Secret Vault (&ldquo;pucchi&rdquo;)</span>
+          </a>
+
+          <a
+            href="#review"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-[#fff9f8] border border-[#d97d93]/35 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer"
+          >
+            <Heart className="w-3.5 h-3.5 text-[#ec4899]" />
+            <span>08. Your Reaction</span>
           </a>
         </div>
       </motion.div>

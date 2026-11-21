@@ -280,14 +280,14 @@ export default function PhotoLightbox({
               </p>
             </div>
 
-            {/* Love Heart Action */}
+            {/* Heart & Pucchi Action */}
             <div className="relative flex items-center gap-3">
               <button
                 onClick={spawnHearts}
                 className="relative px-4 py-2 rounded-full bg-gradient-to-r from-[#d97d93] to-[#c95874] text-white text-xs font-raleway font-bold uppercase tracking-wider flex items-center gap-2 shadow-md hover:scale-105 active:scale-95 transition-all"
               >
                 <Heart className="w-4 h-4 fill-white animate-pulse" />
-                <span>Send Love</span>
+                <span>Send Pucchi 🤍</span>
 
                 {/* Floating Click Hearts */}
                 {hearts.map((h) => (
