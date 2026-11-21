@@ -17,8 +17,13 @@ export default function SecretVault() {
     const cleanInput = inputAnswer.trim().toLowerCase();
     const expected = BIRTHDAY_CONFIG.secretVault.answerHash.trim().toLowerCase();
 
-    // Check if input matches or matches common sweet words
-    if (cleanInput === expected || cleanInput === "pink" || cleanInput === "harleen" || cleanInput === "16") {
+    // Check if input matches pucchi
+    if (
+      cleanInput === expected ||
+      cleanInput === "pucchi" ||
+      cleanInput === "puchhi" ||
+      cleanInput === "puchi"
+    ) {
       setIsUnlocked(true);
       setErrorMsg("");
 
@@ -29,7 +34,7 @@ export default function SecretVault() {
         colors: ["#ff758f", "#ffb3c1", "#ff4d6d", "#ffe3a8", "#ffffff"],
       });
     } else {
-      setErrorMsg("Incorrect secret word! Check the hint or try again 🥺");
+      setErrorMsg("Incorrect secret word! Hint: the sweetest little word... 🥺");
     }
   };
 
@@ -51,122 +56,113 @@ export default function SecretVault() {
             </div>
           </div>
 
-          <span className="text-xs uppercase tracking-widest text-pink-300/90 font-semibold mb-1">
-            Top Secret Memory Vault 🔐
-          </span>
-          <h3 className="font-serif text-2xl sm:text-4xl font-black bg-gradient-to-r from-pink-100 via-rose-200 to-pink-300 bg-clip-text text-transparent">
-            {isUnlocked ? "Vault Unlocked! 🎉" : "Only for Harleen's Eyes"}
-          </h3>
-          <p className="font-hand text-lg sm:text-xl text-pink-200/80 mt-1">
-            {isUnlocked
-              ? "You solved the secret riddle! Here is your private surprise..."
-              : "Answer the inside-joke question below to unlock your secret surprise!"}
+          <h2 className="font-serif text-3xl sm:text-4xl text-neutral-800 dark:text-pink-100 font-bold tracking-wide">
+            The Secret Archive
+          </h2>
+          <p className="font-handwriting text-2xl text-pink-600 dark:text-pink-300 mt-2">
+            Locked with our secret password: &ldquo;pucchi&rdquo; 🔐
           </p>
         </div>
 
         {/* VAULT CONTENT */}
         <AnimatePresence mode="wait">
           {!isUnlocked ? (
-            /* LOCKED STATE FORM */
             <motion.form
-              key="locked"
-              initial={{ opacity: 0, y: 10 }}
+              key="locked-form"
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
+              exit={{ opacity: 0, scale: 0.95 }}
               onSubmit={handleUnlock}
-              className="flex flex-col items-center max-w-md mx-auto w-full gap-4"
+              className="flex flex-col items-center max-w-md mx-auto"
             >
-              <div className="w-full p-4 rounded-2xl bg-pink-950/40 border border-pink-400/25 text-center">
-                <p className="text-sm sm:text-base font-semibold text-pink-100">
-                  ❓ &ldquo;{BIRTHDAY_CONFIG.secretVault.question}&rdquo;
+              {/* Question */}
+              <div className="w-full p-5 rounded-2xl bg-white/70 dark:bg-pink-950/40 border border-pink-200/50 dark:border-pink-500/20 shadow-sm mb-6 text-center">
+                <span className="text-[11px] font-sans tracking-widest text-pink-600 dark:text-pink-400 font-semibold uppercase block mb-1">
+                  SECURITY QUESTION
+                </span>
+                <p className="font-serif text-lg text-neutral-800 dark:text-pink-200">
+                  {BIRTHDAY_CONFIG.secretVault.question}
                 </p>
               </div>
 
-              {/* Input & Button */}
-              <div className="w-full flex flex-col sm:flex-row gap-2">
-                <div className="relative flex-1">
-                  <Key className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-pink-400" />
-                  <input
-                    type="text"
-                    value={inputAnswer}
-                    onChange={(e) => setInputAnswer(e.target.value)}
-                    placeholder="Type the answer here..."
-                    className="w-full pl-10 pr-4 py-3 rounded-full bg-pink-950/50 border border-pink-400/30 text-white placeholder-pink-300/50 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="px-6 py-3 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-400 hover:to-rose-400 text-white font-bold text-sm shadow-md active:scale-95 transition-all flex items-center justify-center gap-2 whitespace-nowrap"
-                >
-                  <Sparkles className="w-4 h-4" />
-                  <span>Unlock</span>
-                </button>
+              {/* Password Input */}
+              <div className="w-full relative mb-4">
+                <input
+                  type="text"
+                  value={inputAnswer}
+                  onChange={(e) => {
+                    setInputAnswer(e.target.value);
+                    if (errorMsg) setErrorMsg("");
+                  }}
+                  placeholder='Enter secret answer (e.g. "pucchi")...'
+                  className="w-full px-5 py-3.5 rounded-full bg-white/80 dark:bg-pink-950/50 border border-pink-300/60 dark:border-pink-500/30 focus:border-pink-500 focus:ring-2 focus:ring-pink-400/30 outline-none text-center font-sans text-sm text-neutral-800 dark:text-pink-100 placeholder-neutral-400 dark:placeholder-pink-400/40 transition-all shadow-inner"
+                />
               </div>
 
-              {/* Error Message */}
               {errorMsg && (
-                <p className="text-xs text-rose-300 font-medium">{errorMsg}</p>
+                <p className="text-xs text-rose-500 font-sans font-medium mb-3">
+                  {errorMsg}
+                </p>
               )}
 
-              {/* Hint Accordion */}
-              <div className="mt-2 text-center">
+              {/* Unlock Button */}
+              <button
+                type="submit"
+                className="w-full py-3.5 rounded-full bg-gradient-to-r from-pink-500 via-rose-500 to-pink-500 hover:opacity-95 text-white font-sans font-semibold text-sm tracking-wider shadow-lg shadow-pink-500/25 hover:scale-102 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Key className="w-4 h-4" />
+                <span>Unlock Secret Archive</span>
+              </button>
+
+              {/* Hint */}
+              <div className="mt-4 text-center">
                 <button
                   type="button"
                   onClick={() => setShowHint(!showHint)}
-                  className="inline-flex items-center gap-1.5 text-xs text-pink-300/80 hover:text-pink-200 underline"
+                  className="inline-flex items-center gap-1.5 text-xs text-pink-600 dark:text-pink-400 hover:underline font-sans font-medium"
                 >
                   <HelpCircle className="w-3.5 h-3.5" />
-                  <span>{showHint ? "Hide hint" : "Need a hint?"}</span>
+                  <span>{showHint ? "Hide Hint" : "Need a hint?"}</span>
                 </button>
+
                 {showHint && (
-                  <motion.p
+                  <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
-                    className="text-xs text-pink-200/90 font-hand text-base mt-2 bg-pink-500/10 p-2.5 rounded-xl border border-pink-400/20"
+                    className="mt-2 p-3 rounded-xl bg-pink-50/80 dark:bg-pink-950/30 border border-pink-200/50 dark:border-pink-500/20 text-xs text-pink-700 dark:text-pink-300 font-sans"
                   >
-                    💡 Hint: {BIRTHDAY_CONFIG.secretVault.hint}
-                  </motion.p>
+                    💡 {BIRTHDAY_CONFIG.secretVault.hint}
+                  </motion.div>
                 )}
               </div>
             </motion.form>
           ) : (
-            /* UNLOCKED SURPRISE CARD */
             <motion.div
-              key="unlocked"
+              key="unlocked-content"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
-              className="flex flex-col items-center text-center gap-6"
+              className="flex flex-col items-center text-center max-w-lg mx-auto"
             >
-              <div className="p-6 rounded-3xl bg-pink-950/60 border border-pink-300/40 w-full max-w-lg shadow-inner">
-                <div className="w-12 h-12 rounded-full bg-pink-500/20 border border-pink-400/40 flex items-center justify-center mx-auto mb-3">
-                  <Heart className="w-6 h-6 text-pink-300 fill-pink-400 animate-pulse" />
+              <div className="w-full p-6 sm:p-8 rounded-2xl bg-white/80 dark:bg-pink-950/50 border border-pink-300/60 dark:border-pink-500/30 shadow-xl">
+                <div className="flex items-center justify-center gap-2 mb-3">
+                  <Sparkles className="w-5 h-5 text-amber-400" />
+                  <span className="text-xs font-sans tracking-widest text-pink-600 dark:text-pink-400 font-bold uppercase">
+                    VAULT DECRYPTED
+                  </span>
+                  <Sparkles className="w-5 h-5 text-amber-400" />
                 </div>
-                <h4 className="font-serif text-xl font-bold text-pink-100 mb-2">
-                  Special Secret Message 💖
-                </h4>
-                <p className="font-hand text-xl sm:text-2xl text-pink-100/90 leading-relaxed">
+
+                <p className="font-serif text-xl sm:text-2xl text-neutral-800 dark:text-pink-100 leading-relaxed">
                   {BIRTHDAY_CONFIG.secretVault.secretMessage}
                 </p>
 
-                {/* Video Reel or Memory Link Placeholder */}
-                <div className="mt-6 p-4 rounded-2xl bg-black/40 border border-pink-500/30 flex items-center justify-center gap-3">
-                  <Video className="w-5 h-5 text-pink-300" />
-                  <span className="text-xs sm:text-sm font-semibold text-pink-200">
-                    Secret Video Reel / Playlist unlocked for Harleen!
-                  </span>
-                </div>
-              </div>
+                <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-pink-400 to-transparent my-6 mx-auto" />
 
-              <button
-                onClick={() => {
-                  setIsUnlocked(false);
-                  setInputAnswer("");
-                }}
-                className="text-xs text-pink-300/70 hover:text-pink-200 underline"
-              >
-                🔒 Relock the vault
-              </button>
+                <span className="font-handwriting text-3xl text-pink-500 dark:text-pink-400 block">
+                  harleen 4 life 🤍
+                </span>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

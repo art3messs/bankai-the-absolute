@@ -8,7 +8,7 @@ export interface PhotoMemory {
 
 export const BIRTHDAY_CONFIG = {
   recipientName: "Harleen",
-  nickname: "Harlee",
+  nickname: "Pucchi",
   birthDate: {
     day: 16,
     month: "February",
@@ -27,70 +27,72 @@ export const BIRTHDAY_CONFIG = {
     src: "/music/track.mp3",
   },
   letter: {
-    title: "For Harleen, My Entire Universe 🌙",
-    subtitle: "February 16 • Written straight from my heart",
-    body: `Hey Harleen, Happy Birthday. 🤍
+    title: "To Harleen, My Entire Universe & My Sweetest Pucchi 🌙",
+    subtitle: "February 16 • A Love Letter Written From The Depths of My Heart",
+    body: `Hey Harleen, Happy Birthday my favorite person. 🤍
 
-I didn't want to make anything ordinary for you today, because to me, you are the most extraordinary person in this world. You are genuinely the center of my entire universe.
+I didn't want to make anything ordinary for you today, because in a world of billions of people, you are the most extraordinarily rare and beautiful soul to ever exist. You are genuinely, undeniably, the center of my entire universe.
 
-More than anything in life, I just want to see you happy. Every smile of yours, every little laugh, the way you speak, and the effortless peace you bring into my world—it means more to me than words could ever explain.
+More than anything in this life, seeing you truly happy is my greatest joy. Every little smile of yours, that soft quiet laugh when you're being silly, the way your eyes crinkle when you're giggling, and the effortless peace you bring into my chaotic world—nothing else compares.
 
-In a world full of temporary things, having you in my life is something I will always cherish with everything I have. You are my favorite person, my safest corner, and the sweetest part of every day.
+Whenever things get heavy, just hearing your voice or getting a message from you makes everything feel gentle again. You are my safest haven, my sweetest comfort, my little Pucchi, and the person I want to celebrate every single day.
 
-May this 16th of February give back even a fraction of the immense joy you give to me. May your days be soft, full of warm golden light, and overflowing with endless peace.
+From your royal elegance in traditional silk to your adorable goofy faces, from your aesthetic nail checks to the baby pogo moments—every single version of you is something I treasure with all my heart.
 
-Harleen 4 life, always and forever.
+May this 16th of February bring you the exact same warmth, tenderness, and endless love that you effortlessly give to me. May your upcoming year be full of sunshine, golden skies, laughter that hurts your stomach, and every dream you've ever whispered into the night.
 
-Happy Birthday, my favorite person in the entire universe. ✨`,
-    signoff: "Yours, and only yours,",
+Harleen 4 Life. Today, tomorrow, across every lifetime.
+
+Happy Birthday, my beautiful girl. ✨🤍`,
+    signoff: "Forever yours, and only yours,",
   },
   secretVault: {
-    question: "What is that one secret inside joke or memory that belongs only to you and me?",
-    hint: "Think about the sweetest thing between us...",
-    answerHash: "pink",
-    secretMessage: "You unlocked my secret vault. You are my entire universe, and seeing you happy will always be my favorite thing in the world 🤍✨",
+    question: "What is that one secret code word that belongs only to you and me?",
+    hint: "The cutest, softest little word... starts with 'p' 💋",
+    answerHash: "pucchi",
+    secretMessage: "You unlocked my secret vault! 🔐 'Pucchi' forever and always. You are genuinely the most precious, gorgeous, and adored person in this entire world, Harleen. My universe begins and ends with you. Happy Birthday, my love 🤍✨",
   },
   samplePhotos: [
     {
       id: "1",
-      url: "/photos/sample1.jpg",
-      caption: "Golden hour glow & that effortless smile ✨",
+      url: "/media/harleen-red-feather-dress.jpg",
+      caption: "A vision in red • Pure elegance & grace 🌹",
       category: "aesthetic",
       date: "February 2026",
     },
     {
       id: "2",
-      url: "/photos/sample2.jpg",
-      caption: "Looking like pure royalty in soft rose 🎀",
+      url: "/media/ethnic-dragonfly-tiara.jpg",
+      caption: "Royal emerald tiara • Timeless queen 👑",
       category: "aesthetic",
       date: "February 2026",
     },
     {
       id: "3",
-      url: "/photos/sample3.jpg",
-      caption: "The sweet laugh that makes the whole world stop 🕊️",
+      url: "/media/harleen-warm-hug.jpg",
+      caption: "Where my heart feels safest & warmest 🤍",
       category: "core",
       date: "Core Memory",
     },
     {
       id: "4",
-      url: "/photos/sample4.jpg",
-      caption: "Unfiltered laughter on late night talks 🌙",
-      category: "core",
+      url: "/media/popaaa-cheek-pinch.jpg",
+      caption: "Pucchi moments & the sweetest squishy giggles 🧸",
+      category: "silly",
       date: "Late Night",
     },
     {
       id: "5",
-      url: "/photos/sample5.jpg",
-      caption: "The sweetest, cutest moments that belong only to us 🧸",
-      category: "silly",
+      url: "/media/harleen-polka-rhinestones.jpg",
+      caption: "Polka dots & rhinestone sparkles in your eyes ✨",
+      category: "aesthetic",
       date: "Adored",
     },
     {
       id: "6",
-      url: "/photos/sample6.jpg",
-      caption: "Harleen 4 Life • My entire universe forever 🤍",
-      category: "aesthetic",
+      url: "/media/pogo-baby-fur-smile.jpg",
+      caption: "Baby Pogo • The sweetest human since day one 🍼",
+      category: "silly",
       date: "Forever",
     },
   ] as PhotoMemory[],

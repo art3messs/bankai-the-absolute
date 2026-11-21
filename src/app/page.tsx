@@ -8,6 +8,7 @@ import StartGate from "@/components/StartGate";
 import TurntablePlayer from "@/components/TurntablePlayer";
 import MidnightRitual from "@/components/MidnightRitual";
 import Hero3D from "@/components/Hero3D";
+import PhotoScrollReveal from "@/components/PhotoScrollReveal";
 import ThemedGalleries from "@/components/ThemedGalleries";
 import ArchivalLetter from "@/components/ArchivalLetter";
 import MidnightVault from "@/components/MidnightVault";
@@ -47,7 +48,7 @@ export default function HomePage() {
       {/* Luminous Dreamy Atmosphere & Confetti Sparkles */}
       <SparklesBackground />
 
-      {/* Cinematic Start Gate ("K." by Cigarettes After Sex) */}
+      {/* Cinematic Start Gate ("K." by Cigarettes After Sex & Scroll on Photo Reveal) */}
       <StartGate
         isOpen={!hasStarted}
         onStart={() => setHasStarted(true)}
@@ -59,7 +60,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <span className="text-[11px] font-raleway tracking-[0.25em] text-[#7d7265] uppercase font-bold hidden sm:inline">
-              ISSUE N° 16 • FEB 2026
+              SPECIAL ISSUE N° 16 • FEB 2026
             </span>
             <span className="text-[#d97d93] hidden sm:inline">|</span>
             <span className="font-signature text-2xl sm:text-3xl text-[#c95874] drop-shadow-xs">
@@ -76,7 +77,7 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* CHAPTER I: 3D INTERACTIVE HERO STAGE */}
+      {/* CHAPTER I: 3D INTERACTIVE HERO STAGE WITH DUAL PORTRAITS */}
       <Hero3D />
 
       {/* POPPING SCROLL CAPSULE #1: LITTLE POGO */}
@@ -94,17 +95,22 @@ export default function HomePage() {
         }}
       />
 
-      {/* CHAPTER II: THE SOUND (TURNTABLE & MIXTAPE) */}
+      {/* CHAPTER II: INTERACTIVE DUAL-LAYER SCROLL PHOTO REVEAL */}
+      <div id="scroll-reveal">
+        <PhotoScrollReveal />
+      </div>
+
+      {/* CHAPTER III: THE SOUND (TURNTABLE & MIXTAPE) */}
       <section id="sound" className="relative z-10 max-w-5xl mx-auto px-4 py-16 flex flex-col items-center">
         <div className="text-center mb-10">
           <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
-            CHAPTER II • THE VINYL CHAMBER
+            CHAPTER III • THE VINYL CHAMBER
           </span>
           <h2 className="font-forum text-3xl sm:text-5xl text-[#241e16] uppercase tracking-[0.06em]">
             Cigarettes After Sex &amp; Our Mixtape
           </h2>
           <p className="font-signature text-2xl text-[#7d7265] mt-2">
-            &ldquo;Spinning 33 RPM • Harleen 4 Life&rdquo;
+            &ldquo;Spinning 33 RPM • Harleen 4 Life • Pucchi&rdquo;
           </p>
         </div>
 
@@ -131,11 +137,11 @@ export default function HomePage() {
 
       <div className="max-w-2xl mx-auto editorial-rule" />
 
-      {/* CHAPTER III: THE 16 REASONS (FEB 16 SPECIAL) */}
+      {/* CHAPTER IV: THE 16 REASONS (FEB 16 SPECIAL) */}
       <section id="reasons" className="relative z-10 max-w-6xl mx-auto px-4 py-16">
         <div className="text-center mb-4">
           <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
-            CHAPTER III • THE CHRONICLES
+            CHAPTER IV • THE CHRONICLES
           </span>
         </div>
         <SixteenReasons />
@@ -158,11 +164,11 @@ export default function HomePage() {
 
       <div className="max-w-2xl mx-auto editorial-rule" />
 
-      {/* CHAPTER IV: THE MIDNIGHT RITUAL (CANDLE & MOON) */}
+      {/* CHAPTER V: THE MIDNIGHT RITUAL (CANDLE & MOON) */}
       <section id="ritual" className="relative z-10 max-w-5xl mx-auto px-4 py-16">
         <div className="text-center mb-10">
           <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
-            CHAPTER IV • THE MIDNIGHT RITUAL
+            CHAPTER V • THE MIDNIGHT RITUAL
           </span>
           <h2 className="font-forum text-3xl sm:text-5xl text-[#241e16] uppercase tracking-[0.06em]">
             The Candle &amp; Lunar Alignment
@@ -191,7 +197,7 @@ export default function HomePage() {
 
       <div className="max-w-2xl mx-auto editorial-rule" />
 
-      {/* CHAPTER V: THE ARCHIVES (5 CURATED THEMED WORLDS WITH ALL 35 MEDIA ASSETS) */}
+      {/* CHAPTER VI: THE ARCHIVES (5 CURATED THEMED WORLDS WITH ALL 35 MEDIA ASSETS) */}
       <section id="memories" className="relative z-10 max-w-6xl mx-auto px-4 py-16">
         <ThemedGalleries />
       </section>
@@ -213,11 +219,11 @@ export default function HomePage() {
 
       <div className="max-w-2xl mx-auto editorial-rule" />
 
-      {/* CHAPTER VI: THE LOVE LETTER */}
+      {/* CHAPTER VII: THE LOVE LETTER */}
       <section id="letter" className="relative z-10 max-w-4xl mx-auto px-4 py-16">
         <div className="text-center mb-4">
           <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
-            CHAPTER VI • INTIMATE EPISTLE
+            CHAPTER VII • INTIMATE EPISTLE
           </span>
         </div>
         <ArchivalLetter />
@@ -225,11 +231,11 @@ export default function HomePage() {
 
       <div className="max-w-2xl mx-auto editorial-rule" />
 
-      {/* CHAPTER VII: THE SECRET VAULT */}
+      {/* CHAPTER VIII: THE SECRET VAULT ("pucchi") */}
       <section id="vault" className="relative z-10 max-w-3xl mx-auto px-4 py-16">
         <div className="text-center mb-4">
           <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
-            CHAPTER VII • CONFIDENTIAL ARCHIVE
+            CHAPTER VIII • CONFIDENTIAL ARCHIVE
           </span>
         </div>
         <MidnightVault />
@@ -237,11 +243,11 @@ export default function HomePage() {
 
       <div className="max-w-2xl mx-auto editorial-rule" />
 
-      {/* CHAPTER VIII: THE NOTES WALL */}
+      {/* CHAPTER IX: THE NOTES WALL */}
       <section id="guestbook" className="relative z-10 max-w-6xl mx-auto px-4 py-16">
         <div className="text-center mb-4">
           <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
-            CHAPTER VIII • REMINDERS FOR YOUR HEART
+            CHAPTER IX • REMINDERS FOR YOUR HEART
           </span>
         </div>
         <GuestbookWall />
@@ -254,7 +260,7 @@ export default function HomePage() {
             Harleen
           </span>
           <p className="font-forum text-xl font-normal text-[#241e16] tracking-[0.15em] uppercase">
-            FEBRUARY 16 • HARLEEN 4 LIFE
+            FEBRUARY 16 • HARLEEN 4 LIFE • PUCCHI
           </p>
           <div className="w-16 editorial-rule my-4" />
           <p className="font-signature text-2xl text-[#7d7265]">
