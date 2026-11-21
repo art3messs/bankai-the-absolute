@@ -20,13 +20,14 @@ export default function ArchivalLetter() {
         </p>
       </div>
 
-      {/* THE ARCHIVAL LUXURY ENVELOPE (OUTSIDE) */}
-      <div className="w-full flex justify-center py-4">
+      {/* THE ARCHIVAL LUXURY ENVELOPE (OUTSIDE WITH 3D PERSPECTIVE) */}
+      <div className="w-full flex justify-center py-4" style={{ perspective: 1000 }}>
         <motion.div
-          whileHover={{ scale: 1.02, y: -4 }}
+          whileHover={{ scale: 1.03, y: -8, rotateX: 4, rotateY: -2 }}
           whileTap={{ scale: 0.98 }}
+          transition={{ type: "spring", stiffness: 260, damping: 20 }}
           onClick={() => setIsOpen(true)}
-          className="relative w-full max-w-md h-72 sm:h-80 cursor-pointer select-none filter drop-shadow-[0_25px_60px_rgba(36,30,22,0.12)] group"
+          className="relative w-full max-w-md h-72 sm:h-80 cursor-pointer select-none filter drop-shadow-[0_30px_60px_rgba(74,4,78,0.18)] group transform-3d"
         >
           {/* Main Envelope Body */}
           <div className="absolute inset-0 rounded-3xl bg-[#fdfaf5] p-1 shadow-2xl border-2 border-[#d97d93]/40 overflow-hidden">
@@ -47,8 +48,8 @@ export default function ArchivalLetter() {
           {/* Envelope Flap */}
           <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-[#fdfaf5] to-[#f5ead9] rounded-t-3xl border-b border-[#d97d93]/35 shadow-sm" />
 
-          {/* Center Golden Wax Seal */}
-          <div className="absolute top-32 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center">
+          {/* Center Golden Wax Seal with 3D Depth */}
+          <div className="absolute top-32 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center" style={{ transform: "translateZ(40px)" }}>
             <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#b8860b] via-[#d4af37] to-[#f3e5ab] p-1 shadow-xl border border-[#f3e5ab] flex items-center justify-center group-hover:scale-110 transition-transform">
               <div className="w-full h-full rounded-full border border-amber-900/30 flex flex-col items-center justify-center text-amber-950 font-serif font-black shadow-inner">
                 <Heart className="w-5 h-5 text-amber-950 fill-amber-950/40" />

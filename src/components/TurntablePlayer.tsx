@@ -136,8 +136,11 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
         </button>
       </div>
 
-      {/* TURNTABLE DECK */}
-      <div className="relative w-full aspect-square max-w-[270px] bg-[#fdfaf5] rounded-3xl p-4 shadow-inner border border-[#d97d93]/25 flex items-center justify-center">
+      {/* TURNTABLE DECK WITH 3D ISOMETRIC FEEL */}
+      <div
+        className="relative w-full aspect-square max-w-[270px] bg-gradient-to-b from-[#fdfaf5] to-[#f7ecdf] rounded-3xl p-4 shadow-[0_15px_35px_rgba(74,4,78,0.08)] border-2 border-[#d97d93]/25 flex items-center justify-center transition-transform duration-500 hover:scale-[1.02] transform-3d"
+        style={{ perspective: 1000 }}
+      >
         {/* Golden Tonearm with Animation */}
         <motion.div
           animate={{ rotate: isPlaying ? 24 : 0 }}
