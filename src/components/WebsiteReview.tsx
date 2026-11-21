@@ -28,14 +28,14 @@ export default function WebsiteReview() {
     }
     return false;
   });
-  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!reviewMessage.trim() || isSubmitting) return;
 
     setIsSubmitting(true);
-    setSubmitError(null);
+    setSubmitError("");
     try {
       const res = await fetch("/api/wishes", {
         method: "POST",
@@ -50,8 +50,7 @@ export default function WebsiteReview() {
       });
 
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || "Failed to deliver review. Please try again.");
+        throw new Error("Your review couldn’t be delivered. Please try again.");
       }
 
       setIsSubmitted(true);
@@ -66,9 +65,10 @@ export default function WebsiteReview() {
         origin: { y: 0.7 },
         colors: ["#B0295F", "#FFD9E3", "#d4af37", "#f3e5ab", "#ffffff"],
       });
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Could not deliver your thoughts right now. Please try again.";
-      setSubmitError(msg);
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error ? error.message : "Something went wrong. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -115,7 +115,7 @@ export default function WebsiteReview() {
                     aria-pressed={selectedReaction === r.label}
                     onClick={() => {
                       setSelectedReaction(r.label);
-                      if (submitError) setSubmitError(null);
+                      if (submitError) setSubmitError("");
                     }}
                     className={`px-3.5 py-2 min-h-[44px] rounded-full text-xs font-raleway font-semibold transition-all cursor-pointer ${
                       selectedReaction === r.label
@@ -137,18 +137,12 @@ export default function WebsiteReview() {
                   value={reviewMessage}
                   onChange={(e) => {
                     setReviewMessage(e.target.value);
-                    if (submitError) setSubmitError(null);
+                    if (submitError) setSubmitError("");
                   }}
                   placeholder="Tell me your honest thoughts, your favorite part, or whatever you want to say to me..."
                   className="w-full p-4 rounded-2xl bg-[#FFF8F5] border border-[#FFD9E3] focus:border-[#B0295F] focus:ring-2 focus:ring-[#B0295F]/20 outline-none font-raleway text-sm text-[#3A1F2B] placeholder-[#3A1F2B]/45 transition-all shadow-inner resize-none"
                 />
               </div>
-
-              {submitError && (
-                <p role="alert" aria-live="polite" className="text-xs text-rose-600 font-semibold mb-3">
-                  {submitError}
-                </p>
-              )}
 
               {/* Submit Button */}
               <button
@@ -159,6 +153,12 @@ export default function WebsiteReview() {
                 <Send className="w-3.5 h-3.5 fill-white" />
                 <span>{isSubmitting ? "Delivering To Me..." : "Send Your Review To My Phone 💌"}</span>
               </button>
+
+              {submitError && (
+                <p role="alert" className="mt-3 text-sm text-rose-700 font-semibold">
+                  {submitError}
+                </p>
+              )}
             </motion.form>
           ) : (
             <motion.div

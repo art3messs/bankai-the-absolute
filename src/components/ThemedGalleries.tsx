@@ -201,6 +201,8 @@ export default function ThemedGalleries() {
                           <img
                             src={item.poster}
                             alt={item.title}
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                           />
                         ) : (
@@ -226,8 +228,9 @@ export default function ThemedGalleries() {
                         <img
                           src={item.src}
                           alt={item.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                           loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
                           <span className="text-xs text-rose-200 flex items-center gap-1 font-raleway font-semibold">
@@ -316,6 +319,8 @@ export default function ThemedGalleries() {
                           <img
                             src={item.poster}
                             alt={item.title}
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                           />
                         ) : (
@@ -340,8 +345,9 @@ export default function ThemedGalleries() {
                         <img
                           src={item.src}
                           alt={item.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                           loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
                           <span className="text-xs text-amber-200 flex items-center gap-1 font-raleway font-semibold">
@@ -427,8 +433,9 @@ export default function ThemedGalleries() {
                       <img
                         src={item.src}
                         alt={item.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                       <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded-full bg-white/90 backdrop-blur-xs text-[10px] font-mono text-pink-700 font-bold shadow-xs">
                         POGO #{idx + 1}
@@ -496,6 +503,8 @@ export default function ThemedGalleries() {
                           <img
                             src={item.poster}
                             alt={item.title}
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           />
                         ) : (
@@ -520,8 +529,9 @@ export default function ThemedGalleries() {
                         <img
                           src={item.src}
                           alt={item.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                         <span className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-white/90 text-amber-800 text-[9px] font-mono font-bold shadow-xs">
                           POPAAA #{idx + 1}
@@ -586,8 +596,9 @@ export default function ThemedGalleries() {
                     <img
                       src={item.src}
                       alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute top-2 right-2 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-xs text-[10px] font-mono text-purple-700 font-bold shadow-xs">
                       SET #{idx + 1}
@@ -637,6 +648,8 @@ export default function ThemedGalleries() {
                       <img
                         src={item.poster || item.src}
                         alt={item.title}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       />
                       <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
@@ -647,6 +660,8 @@ export default function ThemedGalleries() {
                     <img
                       src={item.src}
                       alt={item.title}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                     />
                   )}

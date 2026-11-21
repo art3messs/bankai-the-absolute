@@ -216,6 +216,8 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
             <img
               src={currentTrack.cover}
               alt={currentTrack.title}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover object-center filter brightness-95"
             />
             {/* Center Spindle Hole */}
@@ -347,6 +349,8 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
                   <img
                     src={t.cover}
                     alt={t.title}
+                    loading="lazy"
+                    decoding="async"
                     className="w-7 h-7 rounded-md object-cover border border-[#d97d93]/30"
                   />
                   <div>

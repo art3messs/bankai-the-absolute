@@ -76,6 +76,8 @@ export default function PhotoScrollReveal() {
           <img
             src="/media/harleen-warm-hug.jpg"
             alt="Harleen Warm Hug"
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover object-center filter brightness-[1.02]"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#4a044e]/70 via-transparent to-black/20" />
@@ -95,6 +97,8 @@ export default function PhotoScrollReveal() {
           <img
             src="/media/ethnic-dragonfly-tiara.jpg"
             alt="Harleen Royal Tiara"
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover object-center filter brightness-[1.02]"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#4a044e]/70 via-transparent to-black/20" />

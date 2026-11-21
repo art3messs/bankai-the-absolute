@@ -62,6 +62,13 @@ export default function HomePage() {
             </span>
           </div>
 
+          <nav aria-label="Main sections" className="hidden md:flex items-center gap-4 text-xs font-semibold text-[#831843]">
+            <a href="#memories" className="hover:text-[#db2777] transition-colors">Memories</a>
+            <a href="#sound" className="hover:text-[#db2777] transition-colors">Music</a>
+            <a href="#letter" className="hover:text-[#db2777] transition-colors">Letter</a>
+            <a href="#guestbook" className="hover:text-[#db2777] transition-colors">Guestbook</a>
+          </nav>
+
           <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white shadow-xs border-2 border-[#f472b6]/40 text-xs text-[#831843] font-raleway font-semibold">
             <Disc3 className="w-3.5 h-3.5 text-[#db2777] animate-spin" style={{ animationDuration: "8s" }} />
             <span className="tracking-wider uppercase text-[10px] sm:text-xs font-bold">

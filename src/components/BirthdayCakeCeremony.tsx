@@ -326,6 +326,8 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
               <img
                 src="/media/cake-pink-three-tier-high.png"
                 alt="3-Tier Pink Birthday Cake"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-contain filter contrast-[1.02] brightness-[1.02]"
               />
 

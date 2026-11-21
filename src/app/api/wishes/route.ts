@@ -142,14 +142,18 @@ async function saveWishes(wishes: WishItem[]): Promise<void> {
 // Instant notification via JSON POST to ntfy.sh (No HTTP header encoding bugs)
 async function sendInstantNotification(title: string, message: string, tags: string[] = ["sparkles", "heart"]): Promise<void> {
   try {
+    const isConfiguredTopic = Boolean(process.env.NTFY_TOPIC);
     const topic = process.env.NTFY_TOPIC || "harleen-birthday-pucchi-alert-priv-9f7a";
+    // Only send raw text if a private custom NTFY_TOPIC is configured in environment
+    const safeMessage = isConfiguredTopic ? message : "New entry submitted. Open the private dashboard to view.";
+
     const res = await fetch("https://ntfy.sh", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         topic,
         title,
-        message,
+        message: safeMessage,
         tags,
         priority: 4,
       }),
@@ -174,10 +178,11 @@ export async function GET(req: Request) {
 
     const allWishes = await loadWishes();
 
-    // Unless authorized as admin, return ONLY public notes
     const items = isAdmin
       ? allWishes
-      : allWishes.filter((item) => item.visibility === "public" || item.type === "note");
+      : allWishes.filter(
+          (item) => item.type === "note" && item.visibility === "public"
+        );
 
     return NextResponse.json(items, {
       headers: {
