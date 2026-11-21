@@ -1,29 +1,31 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Playfair_Display, Caveat } from "next/font/google";
+import { Forum, Parisienne, Raleway } from "next/font/google";
 import "./globals.css";
 import CustomCursor from "@/components/CustomCursor";
 
-const jakarta = Plus_Jakarta_Sans({
+const forum = Forum({
+  weight: "400",
   subsets: ["latin"],
-  variable: "--font-jakarta",
+  variable: "--font-forum",
   display: "swap",
 });
 
-const playfair = Playfair_Display({
+const parisienne = Parisienne({
+  weight: "400",
   subsets: ["latin"],
-  variable: "--font-playfair",
+  variable: "--font-parisienne",
   display: "swap",
 });
 
-const caveat = Caveat({
+const raleway = Raleway({
   subsets: ["latin"],
-  variable: "--font-handwriting",
+  variable: "--font-raleway",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Happy Birthday Harleen 🌸✨",
-  description: "A luminous birthday universe curated with love for Harleen",
+  title: "Harleen • The Editorial Archive 🌸",
+  description: "An intimate luxury editorial celebration for Harleen • February 16",
   icons: {
     icon: "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌸</text></svg>",
   },
@@ -35,8 +37,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${jakarta.variable} ${playfair.variable} ${caveat.variable} scroll-smooth`}>
-      <body className="font-sans antialiased bg-[#fbf7f8] text-[#2e1322] min-h-screen selection:bg-pink-300 selection:text-pink-950">
+    <html lang="en" className={`${forum.variable} ${parisienne.variable} ${raleway.variable} scroll-smooth`}>
+      <body className="font-raleway antialiased bg-[#fdfaf5] text-[#241e16] min-h-screen selection:bg-rose-200 selection:text-rose-950">
         <CustomCursor />
         {children}
       </body>

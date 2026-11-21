@@ -12,13 +12,13 @@ import MidnightVault from "@/components/MidnightVault";
 import GuestbookWall from "@/components/GuestbookWall";
 import SpotifyMixtape from "@/components/SpotifyMixtape";
 import SixteenReasons from "@/components/SixteenReasons";
-import { Sparkles, Film, Mail, Lock, MessageSquare, Disc3, Heart, Award } from "lucide-react";
+import { Sparkles, Film, Mail, Lock, MessageSquare, Disc3, Heart, Award, ArrowDown } from "lucide-react";
 
 export default function HomePage() {
   const [hasStarted, setHasStarted] = useState(false);
 
   return (
-    <main className="relative min-h-screen bg-[#fbf7f8] text-[#2e1322] overflow-x-hidden selection:bg-pink-300 selection:text-pink-950">
+    <main className="relative min-h-screen bg-[#fdfaf5] text-[#241e16] overflow-x-hidden selection:bg-rose-200 selection:text-rose-950 font-raleway">
       {/* Luminous Dreamy Atmosphere & Particle Confetti */}
       <SparklesBackground />
 
@@ -29,132 +29,237 @@ export default function HomePage() {
         recipientName={BIRTHDAY_CONFIG.recipientName}
       />
 
-      {/* Top Editorial Bar */}
-      <header className="sticky top-0 z-40 px-6 py-4 bg-[#fbf7f8]/85 backdrop-blur-xl border-b border-pink-200/60 shadow-xs">
+      {/* Top Editorial Masthead (like lovealways.earth) */}
+      <header className="sticky top-0 z-40 px-6 py-4 bg-[#fdfaf5]/85 backdrop-blur-xl border-b border-[#d97d93]/20 shadow-xs">
         <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <span className="text-xl">🌸</span>
-            <span className="font-serif font-black tracking-widest text-sm uppercase text-[#2e1322]">
-              {BIRTHDAY_CONFIG.recipientName}
+            <span className="text-[11px] font-raleway tracking-[0.25em] text-[#7d7265] uppercase font-bold hidden sm:inline">
+              ISSUE N° 16 • FEB 2026
             </span>
-            <span className="text-pink-300">|</span>
-            <span className="text-[11px] font-mono text-rose-600 font-bold uppercase tracking-widest hidden sm:inline">
-              FEBRUARY 16 • ARCHIVE
+            <span className="text-[#d97d93] hidden sm:inline">|</span>
+            <span className="font-signature text-2xl sm:text-3xl text-[#c95874] drop-shadow-xs">
+              {BIRTHDAY_CONFIG.recipientName}
             </span>
           </div>
 
-          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white shadow-xs border border-pink-200 text-xs text-rose-800 font-mono font-bold">
-            <Disc3 className="w-3.5 h-3.5 text-pink-500 animate-spin" style={{ animationDuration: "8s" }} />
-            <span className="truncate max-w-[140px] sm:max-w-xs">
-              CAS — K.
+          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white shadow-xs border border-[#d97d93]/30 text-xs text-[#241e16] font-raleway font-semibold">
+            <Disc3 className="w-3.5 h-3.5 text-[#c95874] animate-spin" style={{ animationDuration: "8s" }} />
+            <span className="tracking-wider uppercase text-[10px] sm:text-xs">
+              CAS — K. • 33 RPM
             </span>
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative z-10 max-w-6xl mx-auto px-4 pt-12 pb-20 flex flex-col items-center">
-        {/* Editorial Heading */}
-        <div className="text-center mb-12 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-pink-200 shadow-sm text-rose-700 text-xs font-mono font-bold tracking-widest uppercase mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-            <span>FEBRUARY 16 • FOR THE ONLY ONE I ADORE</span>
-            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
-          </div>
-
-          <h1 className="font-serif text-5xl sm:text-7xl md:text-8xl font-black bg-gradient-to-r from-rose-600 via-pink-600 to-amber-500 bg-clip-text text-transparent tracking-tight leading-none drop-shadow-sm">
-            HARLEEN
-          </h1>
-
-          <p className="font-hand text-2xl sm:text-3xl text-rose-700 mt-4">
-            &ldquo;You are the only person I adore. Seeing you happy is my favorite thing in life.&rdquo;
-          </p>
+      {/* CHAPTER I: THE GENESIS / THE HORIZON */}
+      <section className="relative z-10 max-w-6xl mx-auto px-4 pt-16 sm:pt-24 pb-20 flex flex-col items-center text-center">
+        {/* Chapter Indicator */}
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#d97d93]/30 shadow-xs text-[#c95874] text-[10px] sm:text-[11px] font-raleway font-bold tracking-[0.3em] uppercase mb-6">
+          <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
+          <span>CHAPTER I • THE GENESIS</span>
+          <Heart className="w-3.5 h-3.5 text-[#c95874] fill-[#c95874]" />
         </div>
 
-        {/* Centerpiece: Cigarettes After Sex Turntable Player */}
-        <div className="w-full flex flex-col items-center justify-center gap-6 mb-16">
-          <TurntablePlayer autoPlayTrigger={hasStarted} />
-          {/* Collaborative Spotify Playlist Integration */}
-          <SpotifyMixtape />
-        </div>
+        {/* Grand Signature Calligraphy */}
+        <span className="font-signature text-6xl sm:text-8xl md:text-9xl text-[#c95874] leading-none drop-shadow-sm select-none">
+          Harleen
+        </span>
 
-        {/* The Birthday Ritual: Luxury Candle + Feb 16 Moon Dial */}
-        <div className="w-full">
-          <MidnightRitual recipientName={BIRTHDAY_CONFIG.recipientName} />
-        </div>
+        {/* Antique Roman Serif Headline */}
+        <h1 className="font-forum text-4xl sm:text-6xl md:text-7xl uppercase tracking-[0.08em] text-[#241e16] font-normal mt-4 leading-tight">
+          The Only One I Adore
+        </h1>
 
-        {/* Navigation Pills */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mt-16">
+        {/* Delicate Poetic Subtitle */}
+        <p className="font-signature text-2xl sm:text-4xl text-[#7d7265] max-w-2xl mt-4 leading-relaxed">
+          &ldquo;In all of space and time, seeing you happy is my favorite thing in life.&rdquo;
+        </p>
+
+        {/* Editorial Dividing Rule */}
+        <div className="w-48 editorial-rule my-10" />
+
+        {/* Table of Contents / Chapter Index Navigation */}
+        <div className="flex flex-wrap items-center justify-center gap-3 max-w-3xl">
           <a
-            href="#memories"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full glass-pearl hover:bg-white border border-pink-300 text-rose-800 text-xs font-mono font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95 shadow-sm"
+            href="#sound"
+            className="flex items-center gap-2 px-4 py-2 rounded-full glass-pearl hover:bg-white border border-[#d97d93]/30 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.18em] transition-all hover:scale-105 active:scale-95 shadow-xs"
           >
-            <Film className="w-3.5 h-3.5 text-amber-500" />
-            <span>Photo Frames</span>
+            <Disc3 className="w-3 h-3 text-[#d4af37]" />
+            <span>01. The Sound</span>
           </a>
 
           <a
             href="#reasons"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full glass-pearl hover:bg-white border border-pink-300 text-rose-800 text-xs font-mono font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95 shadow-sm"
+            className="flex items-center gap-2 px-4 py-2 rounded-full glass-pearl hover:bg-white border border-[#d97d93]/30 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.18em] transition-all hover:scale-105 active:scale-95 shadow-xs"
           >
-            <Award className="w-3.5 h-3.5 text-amber-500" />
-            <span>16 Reasons</span>
+            <Award className="w-3 h-3 text-[#d4af37]" />
+            <span>02. 16 Reasons</span>
+          </a>
+
+          <a
+            href="#ritual"
+            className="flex items-center gap-2 px-4 py-2 rounded-full glass-pearl hover:bg-white border border-[#d97d93]/30 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.18em] transition-all hover:scale-105 active:scale-95 shadow-xs"
+          >
+            <Sparkles className="w-3 h-3 text-[#d4af37]" />
+            <span>03. The Ritual</span>
+          </a>
+
+          <a
+            href="#memories"
+            className="flex items-center gap-2 px-4 py-2 rounded-full glass-pearl hover:bg-white border border-[#d97d93]/30 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.18em] transition-all hover:scale-105 active:scale-95 shadow-xs"
+          >
+            <Film className="w-3 h-3 text-[#d4af37]" />
+            <span>04. 35mm Archives</span>
           </a>
 
           <a
             href="#letter"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full glass-pearl hover:bg-white border border-pink-300 text-rose-800 text-xs font-mono font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95 shadow-sm"
+            className="flex items-center gap-2 px-4 py-2 rounded-full glass-pearl hover:bg-white border border-[#d97d93]/30 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.18em] transition-all hover:scale-105 active:scale-95 shadow-xs"
           >
-            <Mail className="w-3.5 h-3.5 text-amber-500" />
-            <span>My Letter For You</span>
+            <Mail className="w-3 h-3 text-[#d4af37]" />
+            <span>05. Sealed Letter</span>
           </a>
 
           <a
             href="#vault"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full glass-pearl hover:bg-white border border-pink-300 text-rose-800 text-xs font-mono font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95 shadow-sm"
+            className="flex items-center gap-2 px-4 py-2 rounded-full glass-pearl hover:bg-white border border-[#d97d93]/30 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.18em] transition-all hover:scale-105 active:scale-95 shadow-xs"
           >
-            <Lock className="w-3.5 h-3.5 text-amber-500" />
-            <span>Our Secret Vault</span>
+            <Lock className="w-3 h-3 text-[#d4af37]" />
+            <span>06. Secret Vault</span>
           </a>
 
           <a
             href="#guestbook"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full glass-pearl hover:bg-white border border-pink-300 text-rose-800 text-xs font-mono font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95 shadow-sm"
+            className="flex items-center gap-2 px-4 py-2 rounded-full glass-pearl hover:bg-white border border-[#d97d93]/30 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.18em] transition-all hover:scale-105 active:scale-95 shadow-xs"
           >
-            <MessageSquare className="w-3.5 h-3.5 text-amber-500" />
-            <span>Little Notes For You</span>
+            <MessageSquare className="w-3 h-3 text-[#d4af37]" />
+            <span>07. Notes Wall</span>
           </a>
+        </div>
+
+        {/* Gentle Scroll Prompt */}
+        <div className="flex flex-col items-center gap-1.5 mt-16 text-[#7d7265]/70 text-[10px] font-raleway tracking-[0.25em] uppercase">
+          <span>Scroll to begin story</span>
+          <ArrowDown className="w-3.5 h-3.5 animate-bounce text-[#c95874]" />
         </div>
       </section>
 
-      {/* 1. Curated Photo Contact Sheet */}
-      <FilmContactSheet />
-
-      {/* 2. 16 Reasons Why I Adore You (Feb 16 Special) */}
-      <SixteenReasons />
-
-      {/* 3. Archival Love Letter */}
-      <ArchivalLetter />
-
-      {/* 4. Inside-Joke Secret Vault */}
-      <MidnightVault />
-
-      {/* 5. Live Little Notes Wall */}
-      <GuestbookWall />
-
-      {/* Luminous Footer */}
-      <footer className="relative z-10 py-16 text-center border-t border-pink-200 bg-white">
-        <div className="max-w-md mx-auto px-4 flex flex-col items-center">
-          <span className="text-2xl mb-2">🌸</span>
-          <p className="font-serif text-lg font-bold text-rose-900 tracking-widest uppercase">
-            HARLEEN 4 LIFE • FEBRUARY 16
-          </p>
-          <p className="font-hand text-2xl text-rose-600 mt-1">
-            &ldquo;You are the only person I adore.&rdquo;
-          </p>
-          <span className="text-xs text-rose-400 font-sans mt-3">
-            Made with all my heart, just for Harleen ✨
+      {/* CHAPTER II: THE SOUND (TURNTABLE & MIXTAPE) */}
+      <section id="sound" className="relative z-10 max-w-5xl mx-auto px-4 py-20 flex flex-col items-center">
+        <div className="text-center mb-10">
+          <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
+            CHAPTER II • THE VINYL CHAMBER
           </span>
+          <h2 className="font-forum text-3xl sm:text-5xl text-[#241e16] uppercase tracking-[0.06em]">
+            Cigarettes After Sex &amp; Our Mixtape
+          </h2>
+          <p className="font-signature text-2xl text-[#7d7265] mt-2">
+            &ldquo;Spinning 33 RPM • Harleen 4 Life&rdquo;
+          </p>
+        </div>
+
+        <div className="w-full flex flex-col items-center justify-center gap-6">
+          <TurntablePlayer autoPlayTrigger={hasStarted} />
+          <SpotifyMixtape />
+        </div>
+      </section>
+
+      <div className="max-w-2xl mx-auto editorial-rule" />
+
+      {/* CHAPTER III: THE 16 REASONS (FEB 16 SPECIAL) */}
+      <section id="reasons" className="relative z-10 max-w-6xl mx-auto px-4 py-20">
+        <div className="text-center mb-4">
+          <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
+            CHAPTER III • THE CHRONICLES
+          </span>
+        </div>
+        <SixteenReasons />
+      </section>
+
+      <div className="max-w-2xl mx-auto editorial-rule" />
+
+      {/* CHAPTER IV: THE MIDNIGHT RITUAL (CANDLE & MOON) */}
+      <section id="ritual" className="relative z-10 max-w-5xl mx-auto px-4 py-20">
+        <div className="text-center mb-10">
+          <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
+            CHAPTER IV • THE MIDNIGHT RITUAL
+          </span>
+          <h2 className="font-forum text-3xl sm:text-5xl text-[#241e16] uppercase tracking-[0.06em]">
+            The Candle &amp; Lunar Alignment
+          </h2>
+          <p className="font-signature text-2xl text-[#7d7265] mt-2">
+            &ldquo;Extinguish the flame with your breath to reveal your February 16 wish&rdquo;
+          </p>
+        </div>
+        <MidnightRitual recipientName={BIRTHDAY_CONFIG.recipientName} />
+      </section>
+
+      <div className="max-w-2xl mx-auto editorial-rule" />
+
+      {/* CHAPTER V: THE ARCHIVES (35MM CONTACT SHEET) */}
+      <section id="memories" className="relative z-10 max-w-6xl mx-auto px-4 py-20">
+        <div className="text-center mb-4">
+          <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
+            CHAPTER V • THE ARCHIVES
+          </span>
+        </div>
+        <FilmContactSheet />
+      </section>
+
+      <div className="max-w-2xl mx-auto editorial-rule" />
+
+      {/* CHAPTER VI: THE LOVE LETTER */}
+      <section id="letter" className="relative z-10 max-w-4xl mx-auto px-4 py-20">
+        <div className="text-center mb-4">
+          <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
+            CHAPTER VI • INTIMATE EPISTLE
+          </span>
+        </div>
+        <ArchivalLetter />
+      </section>
+
+      <div className="max-w-2xl mx-auto editorial-rule" />
+
+      {/* CHAPTER VII: THE SECRET VAULT */}
+      <section id="vault" className="relative z-10 max-w-3xl mx-auto px-4 py-20">
+        <div className="text-center mb-4">
+          <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
+            CHAPTER VII • CONFIDENTIAL ARCHIVE
+          </span>
+        </div>
+        <MidnightVault />
+      </section>
+
+      <div className="max-w-2xl mx-auto editorial-rule" />
+
+      {/* CHAPTER VIII: THE NOTES WALL */}
+      <section id="guestbook" className="relative z-10 max-w-6xl mx-auto px-4 py-20">
+        <div className="text-center mb-4">
+          <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
+            CHAPTER VIII • REMINDERS FOR YOUR HEART
+          </span>
+        </div>
+        <GuestbookWall />
+      </section>
+
+      {/* THE COLOPHON / EDITORIAL FOOTER */}
+      <footer className="relative z-10 py-24 text-center border-t border-[#d97d93]/20 bg-[#ffffff]">
+        <div className="max-w-xl mx-auto px-4 flex flex-col items-center">
+          <span className="font-signature text-4xl sm:text-5xl text-[#c95874] mb-2">
+            Harleen
+          </span>
+          <p className="font-forum text-xl font-normal text-[#241e16] tracking-[0.15em] uppercase">
+            FEBRUARY 16 • HARLEEN 4 LIFE
+          </p>
+          <div className="w-16 editorial-rule my-4" />
+          <p className="font-signature text-2xl text-[#7d7265]">
+            &ldquo;You are the only person I adore. Always and forever.&rdquo;
+          </p>
+          <div className="flex items-center gap-2 text-[10px] font-raleway tracking-[0.3em] uppercase text-[#7d7265] mt-6">
+            <span>SOUNDTRACK: CAS &ldquo;K.&rdquo;</span>
+            <span>•</span>
+            <span>COLLECTION 2026</span>
+          </div>
         </div>
       </footer>
     </main>

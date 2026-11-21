@@ -26,7 +26,7 @@ export default function CustomCursor() {
 
   useEffect(() => {
     let particleId = 0;
-    const colors = ["#ff758f", "#fde047", "#ffb3c1", "#fbbf24", "#ffffff"];
+    const colors = ["#d97d93", "#d4af37", "#f2ccd6", "#e5c07b", "#ffffff"];
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
@@ -108,7 +108,7 @@ export default function CustomCursor() {
 
       {/* Outer Magnetic Glowing Ring */}
       <motion.div
-        className="fixed top-0 left-0 rounded-full border border-pink-400/60 pointer-events-none flex items-center justify-center shadow-[0_0_15px_rgba(255,117,143,0.35)]"
+        className="fixed top-0 left-0 rounded-full border border-rose-300/60 pointer-events-none flex items-center justify-center shadow-[0_0_15px_rgba(217,125,147,0.3)]"
         style={{
           x: smoothX,
           y: smoothY,
@@ -116,8 +116,8 @@ export default function CustomCursor() {
           translateY: "-50%",
           width: isHovered ? 48 : 32,
           height: isHovered ? 48 : 32,
-          backgroundColor: isHovered ? "rgba(253, 224, 71, 0.15)" : "rgba(255, 117, 143, 0.08)",
-          borderColor: isHovered ? "rgba(253, 224, 71, 0.85)" : "rgba(255, 117, 143, 0.6)",
+          backgroundColor: isHovered ? "rgba(212, 175, 55, 0.15)" : "rgba(217, 125, 147, 0.08)",
+          borderColor: isHovered ? "rgba(212, 175, 55, 0.85)" : "rgba(217, 125, 147, 0.6)",
           transition: "width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s",
         }}
       />
@@ -135,8 +135,8 @@ export default function CustomCursor() {
         <div
           className={`rounded-full transition-all duration-150 ${
             isHovered
-              ? "w-2.5 h-2.5 bg-amber-400 shadow-[0_0_12px_#fde047] scale-125"
-              : "w-2 h-2 bg-pink-500 shadow-[0_0_10px_#ff4d6d]"
+              ? "w-2.5 h-2.5 bg-[#d4af37] shadow-[0_0_12px_#d4af37] scale-125"
+              : "w-2 h-2 bg-[#d97d93] shadow-[0_0_10px_#d97d93]"
           }`}
         />
       </motion.div>
