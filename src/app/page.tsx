@@ -232,7 +232,7 @@ export default function HomePage() {
 
       <div className="max-w-2xl mx-auto editorial-rule my-6" />
 
-      {/* CHAPTER X: HER REVIEW & REACTION */}
+      {/* CHAPTER X: YOUR REVIEW & THOUGHTS */}
       <WebsiteReview />
 
       {/* THE COLOPHON / EDITORIAL FOOTER (DREAMY STRAWBERRY FROSTED) */}

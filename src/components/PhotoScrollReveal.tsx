@@ -26,11 +26,11 @@ export default function PhotoScrollReveal() {
         <Heart className="w-3.5 h-3.5 text-[#ec4899] fill-[#ec4899]" />
       </div>
 
-      <h2 className="font-forum text-3xl sm:text-4xl text-[#831843] uppercase tracking-[0.06em]">
-        Slide To Unveil Her World 🤍
+      <h2 className="font-forum text-3xl sm:text-4xl text-[#3A1F2B] uppercase tracking-[0.06em]">
+        Slide To Unveil Your World 🤍
       </h2>
-      <p className="font-signature text-2xl text-[#9d174d] mt-1">
-        &ldquo;Drag the golden handle across to switch between her royal elegance &amp; sweetest embrace.&rdquo;
+      <p className="font-signature text-2xl text-[#B0295F] mt-1">
+        &ldquo;Drag the golden handle across to switch between your royal elegance &amp; sweetest embrace.&rdquo;
       </p>
 
       {/* Interactive Photo Comparison Card */}
@@ -39,7 +39,7 @@ export default function PhotoScrollReveal() {
         onPointerMove={handlePointerMove}
         onPointerDown={() => setIsDragging(true)}
         onPointerUp={() => setIsDragging(false)}
-        className="relative w-full max-w-2xl aspect-[4/5] sm:aspect-[16/11] mt-6 rounded-3xl overflow-hidden border-3 border-[#f472b6]/40 shadow-[0_20px_50px_rgba(236,72,153,0.18)] cursor-ew-resize select-none bg-stone-950 group"
+        className="relative w-full max-w-2xl aspect-[4/5] sm:aspect-[16/11] mt-6 rounded-2xl overflow-hidden border-2 border-[#FFD9E3] shadow-[0_20px_50px_rgba(176,41,95,0.12)] cursor-ew-resize select-none bg-stone-950 group"
       >
         {/* UNDER LAYER: Warm Hug & Pucchi Smile */}
         <div className="absolute inset-0 w-full h-full">
@@ -51,8 +51,8 @@ export default function PhotoScrollReveal() {
           <div className="absolute inset-0 bg-gradient-to-t from-[#4a044e]/70 via-transparent to-black/20" />
 
           {/* Under Label */}
-          <div className="absolute bottom-5 right-5 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-[#f472b6]/40 shadow-md text-xs font-bold text-[#831843] flex items-center gap-1.5">
-            <Heart className="w-3 h-3 text-[#ec4899] fill-[#ec4899]" />
+          <div className="absolute bottom-5 right-5 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-[#FFD9E3] shadow-md text-xs font-bold text-[#3A1F2B] flex items-center gap-1.5">
+            <Heart className="w-3 h-3 text-[#B0295F] fill-[#B0295F]" />
             <span>Warm Embrace • Safe &amp; Cherished</span>
           </div>
         </div>
@@ -70,7 +70,7 @@ export default function PhotoScrollReveal() {
           <div className="absolute inset-0 bg-gradient-to-t from-[#4a044e]/70 via-transparent to-black/20" />
 
           {/* Top Label */}
-          <div className="absolute bottom-5 left-5 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-amber-300 shadow-md text-xs font-bold text-[#831843] flex items-center gap-1.5">
+          <div className="absolute bottom-5 left-5 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-amber-300 shadow-md text-xs font-bold text-[#3A1F2B] flex items-center gap-1.5">
             <Crown className="w-3 h-3 text-[#fbbf24]" />
             <span>Royal Emerald Grace • Desi Queen</span>
           </div>

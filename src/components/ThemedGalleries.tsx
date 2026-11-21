@@ -79,13 +79,13 @@ export default function ThemedGalleries() {
 
         {/* View Mode Toggle Bar & Jump Anchors */}
         <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-          <div className="inline-flex items-center p-1 rounded-full bg-white border-2 border-[#f472b6]/40 shadow-xs">
+          <div className="inline-flex items-center p-1 rounded-full bg-white border-2 border-[#FFD9E3] shadow-xs">
             <button
               onClick={() => setViewMode("thematic")}
-              className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-raleway font-bold uppercase tracking-wider transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-4 py-2 min-h-[44px] rounded-full text-xs font-raleway font-bold uppercase tracking-wider transition-all cursor-pointer ${
                 viewMode === "thematic"
-                  ? "bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-xs"
-                  : "text-[#7d7265] hover:text-[#241e16]"
+                  ? "bg-[#B0295F] text-white shadow-xs"
+                  : "text-[#3A1F2B]/70 hover:text-[#3A1F2B]"
               }`}
             >
               <Columns className="w-3.5 h-3.5" />
@@ -93,10 +93,10 @@ export default function ThemedGalleries() {
             </button>
             <button
               onClick={() => setViewMode("contact-sheet")}
-              className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-raleway font-bold uppercase tracking-wider transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-4 py-2 min-h-[44px] rounded-full text-xs font-raleway font-bold uppercase tracking-wider transition-all cursor-pointer ${
                 viewMode === "contact-sheet"
-                  ? "bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-xs"
-                  : "text-[#7d7265] hover:text-[#241e16]"
+                  ? "bg-[#B0295F] text-white shadow-xs"
+                  : "text-[#3A1F2B]/70 hover:text-[#3A1F2B]"
               }`}
             >
               <LayoutGrid className="w-3.5 h-3.5" />
@@ -110,35 +110,35 @@ export default function ThemedGalleries() {
           <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
             <a
               href="#sec-harleen"
-              className="px-3.5 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-900 border border-rose-200 text-xs font-raleway font-semibold flex items-center gap-1.5 transition-transform hover:scale-105"
+              className="px-3.5 py-2 min-h-[44px] rounded-full bg-rose-50 hover:bg-rose-100 text-rose-900 border border-rose-200 text-xs font-raleway font-semibold flex items-center gap-1.5 transition-transform hover:scale-105"
             >
               <Crown className="w-3 h-3 text-rose-600" />
               <span>Harleen 4 Life ({harleenItems.length})</span>
             </a>
             <a
               href="#sec-ethnic"
-              className="px-3.5 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 text-xs font-raleway font-semibold flex items-center gap-1.5 transition-transform hover:scale-105"
+              className="px-3.5 py-2 min-h-[44px] rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 text-xs font-raleway font-semibold flex items-center gap-1.5 transition-transform hover:scale-105"
             >
               <Gem className="w-3 h-3 text-emerald-700" />
               <span>Sick in Ethnic ({ethnicItems.length})</span>
             </a>
             <a
               href="#sec-pogo"
-              className="px-3.5 py-1.5 rounded-full bg-pink-50 hover:bg-pink-100 text-pink-900 border border-pink-200 text-xs font-raleway font-semibold flex items-center gap-1.5 transition-transform hover:scale-105"
+              className="px-3.5 py-2 min-h-[44px] rounded-full bg-pink-50 hover:bg-pink-100 text-pink-900 border border-pink-200 text-xs font-raleway font-semibold flex items-center gap-1.5 transition-transform hover:scale-105"
             >
               <Baby className="w-3 h-3 text-pink-600" />
               <span>Little Pogo ({pogoItems.length})</span>
             </a>
             <a
               href="#sec-popaaa"
-              className="px-3.5 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-xs font-raleway font-semibold flex items-center gap-1.5 transition-transform hover:scale-105"
+              className="px-3.5 py-2 min-h-[44px] rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-xs font-raleway font-semibold flex items-center gap-1.5 transition-transform hover:scale-105"
             >
               <Smile className="w-3 h-3 text-amber-700" />
               <span>Popaaa Moments ({popaaaItems.length})</span>
             </a>
             <a
               href="#sec-nails"
-              className="px-3.5 py-1.5 rounded-full bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-200 text-xs font-raleway font-semibold flex items-center gap-1.5 transition-transform hover:scale-105"
+              className="px-3.5 py-2 min-h-[44px] rounded-full bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-200 text-xs font-raleway font-semibold flex items-center gap-1.5 transition-transform hover:scale-105"
             >
               <Sparkles className="w-3 h-3 text-purple-600" />
               <span>Aesthick Nails ({nailsItems.length})</span>

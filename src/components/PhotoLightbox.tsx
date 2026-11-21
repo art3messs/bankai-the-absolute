@@ -176,10 +176,10 @@ export default function PhotoLightbox({
             <div className="flex items-center gap-2">
               <button
                 onClick={onClose}
-                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all active:scale-95 border border-white/15"
+                className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all active:scale-95 border border-white/15 cursor-pointer"
                 title="Close (Esc)"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -216,19 +216,19 @@ export default function PhotoLightbox({
                 <div className="absolute bottom-4 right-4 z-20 flex items-center gap-2">
                   <button
                     onClick={toggleMute}
-                    className="px-3 py-1.5 rounded-full bg-black/70 hover:bg-black/90 backdrop-blur-md text-white text-xs flex items-center gap-1.5 border border-white/20 shadow-md transition-all active:scale-95"
+                    className="px-3.5 py-2 min-h-[44px] rounded-full bg-black/75 hover:bg-black/90 backdrop-blur-md text-white text-xs flex items-center gap-1.5 border border-white/20 shadow-md transition-all active:scale-95 cursor-pointer"
                     title={isMuted ? "Unmute" : "Mute"}
                   >
-                    {isMuted ? <VolumeX className="w-3.5 h-3.5 text-rose-300" /> : <Volume2 className="w-3.5 h-3.5 text-green-300" />}
+                    {isMuted ? <VolumeX className="w-4 h-4 text-rose-300" /> : <Volume2 className="w-4 h-4 text-green-300" />}
                     <span className="text-[11px] font-mono">{isMuted ? "MUTED" : "SOUND ON"}</span>
                   </button>
 
                   <button
                     onClick={togglePlay}
-                    className="w-8 h-8 rounded-full bg-black/70 hover:bg-black/90 backdrop-blur-md text-white flex items-center justify-center border border-white/20 shadow-md transition-all active:scale-95"
+                    className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-black/75 hover:bg-black/90 backdrop-blur-md text-white flex items-center justify-center border border-white/20 shadow-md transition-all active:scale-95 cursor-pointer"
                     title={isPlaying ? "Pause" : "Play"}
                   >
-                    {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5 fill-white" />}
+                    {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5 fill-white" />}
                   </button>
                 </div>
               </div>

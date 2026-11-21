@@ -130,7 +130,7 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
         </div>
         <button
           onClick={() => setShowPlaylist(!showPlaylist)}
-          className="text-[10px] font-raleway tracking-wider uppercase text-[#831843] hover:text-[#4a044e] font-bold bg-[#fce7f3] px-3 py-1 rounded-full border border-[#f472b6]/40 transition-all cursor-pointer shadow-xs"
+          className="text-[10px] font-raleway tracking-wider uppercase text-[#3A1F2B] hover:text-[#B0295F] font-bold bg-[#FFD9E3] px-3.5 py-2 min-h-[44px] rounded-full border border-[#d97d93]/40 transition-all cursor-pointer shadow-xs flex items-center"
         >
           {showPlaylist ? "Hide Tracks" : `Playlist (${tracks.length})`}
         </button>
@@ -204,20 +204,20 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
       </div>
 
       {/* Playback Controls & Track Switcher */}
-      <div className="flex items-center justify-center gap-3 sm:gap-4 mt-4">
+      <div className="flex items-center justify-center gap-2 sm:gap-3 mt-4">
         {/* Mute Button */}
         <button
           onClick={toggleMute}
-          className="p-2 rounded-full hover:bg-neutral-100 text-[#7d7265] transition-colors cursor-pointer"
+          className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full hover:bg-neutral-100 text-[#3A1F2B]/70 flex items-center justify-center transition-colors cursor-pointer"
           title={isMuted ? "Unmute" : "Mute"}
         >
-          {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+          {isMuted ? <VolumeX className="w-4 h-4 text-[#B0295F]" /> : <Volume2 className="w-4 h-4" />}
         </button>
 
         {/* Previous Track */}
         <button
           onClick={handlePrevTrack}
-          className="p-2.5 rounded-full hover:bg-neutral-100 text-[#241e16] border border-[#d97d93]/30 transition-transform active:scale-90 cursor-pointer"
+          className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full hover:bg-neutral-100 text-[#3A1F2B] border border-[#d97d93]/30 flex items-center justify-center transition-transform active:scale-90 cursor-pointer shadow-xs"
           title="Previous Track"
         >
           <SkipBack className="w-4 h-4" />
@@ -226,7 +226,7 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
         {/* Main Play / Pause Button */}
         <button
           onClick={togglePlay}
-          className="px-7 py-3 rounded-full bg-gradient-to-r from-[#d97d93] via-[#c95874] to-[#d4af37] hover:opacity-95 text-white font-raleway font-bold text-xs uppercase tracking-[0.2em] shadow-md hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
+          className="px-6 sm:px-7 py-3 min-h-[44px] rounded-full bg-[#B0295F] hover:bg-[#8F1D4B] text-white font-raleway font-bold text-xs uppercase tracking-[0.2em] shadow-md hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
         >
           {isPlaying ? (
             <>
@@ -244,7 +244,7 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
         {/* Next Track */}
         <button
           onClick={handleNextTrack}
-          className="p-2.5 rounded-full hover:bg-neutral-100 text-[#241e16] border border-[#d97d93]/30 transition-transform active:scale-90 cursor-pointer"
+          className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full hover:bg-neutral-100 text-[#3A1F2B] border border-[#d97d93]/30 flex items-center justify-center transition-transform active:scale-90 cursor-pointer shadow-xs"
           title="Next Track"
         >
           <SkipForward className="w-4 h-4" />
@@ -255,7 +255,7 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
           href={BIRTHDAY_CONFIG.spotifyPlaylistUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="p-2 rounded-full hover:bg-neutral-100 text-[#1DB954] transition-colors cursor-pointer"
+          className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full hover:bg-neutral-100 text-[#1DB954] flex items-center justify-center transition-colors cursor-pointer"
           title="Open Curated Playlist on Spotify"
         >
           <ExternalLink className="w-4 h-4" />

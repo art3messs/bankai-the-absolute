@@ -17,7 +17,7 @@ export default function MidnightVault() {
     const cleanInput = inputAnswer.trim().toLowerCase();
     const expected = BIRTHDAY_CONFIG.secretVault.answerHash.trim().toLowerCase();
 
-    // Accept "pucchi" and common sweet variations so she is never locked out
+    // Accept "pucchi" and common sweet variations so you are never locked out
     if (
       cleanInput === expected ||
       cleanInput === "pucchi" ||

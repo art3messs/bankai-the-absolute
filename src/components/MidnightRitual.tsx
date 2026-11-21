@@ -261,10 +261,10 @@ export default function MidnightRitual({ recipientName }: MidnightRitualProps) {
           {!candleBlown && (
             <button
               onClick={micActive ? stopMic : startMic}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold transition-all mt-2 shadow-xs cursor-pointer ${
+              className={`flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-full text-xs font-semibold transition-all mt-2 shadow-xs cursor-pointer ${
                 micActive
                   ? "bg-[#d4af37] text-black shadow-md animate-pulse font-bold"
-                  : "bg-white hover:bg-neutral-50 text-[#c95874] border border-[#d97d93]/30"
+                  : "bg-white hover:bg-neutral-50 text-[#B0295F] border border-[#FFD9E3]"
               }`}
             >
               <Mic className="w-3.5 h-3.5" />
@@ -356,10 +356,10 @@ export default function MidnightRitual({ recipientName }: MidnightRitualProps) {
                 <button
                   type="submit"
                   disabled={!wishText.trim() || isSubmitting}
-                  className="mt-4 px-8 py-3.5 rounded-full bg-gradient-to-r from-[#d97d93] via-[#c95874] to-[#d4af37] text-white font-raleway font-bold text-xs uppercase tracking-[0.2em] shadow-md hover:scale-105 active:scale-95 disabled:opacity-50 transition-all flex items-center gap-2.5 cursor-pointer"
+                  className="mt-4 px-8 py-3.5 min-h-[44px] rounded-full bg-[#B0295F] hover:bg-[#8F1D4B] text-white font-raleway font-bold text-xs uppercase tracking-[0.2em] shadow-md hover:scale-105 active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
                 >
                   <Send className="w-3.5 h-3.5 fill-white" />
-                  <span>{isSubmitting ? "Delivering To His Phone..." : "Send Wish To His Phone 💌"}</span>
+                  <span>{isSubmitting ? "Delivering To My Phone..." : "Send Wish To My Phone 💌"}</span>
                   <Sparkles className="w-3.5 h-3.5 text-amber-200" />
                 </button>
               </form>
@@ -372,14 +372,14 @@ export default function MidnightRitual({ recipientName }: MidnightRitualProps) {
                 <div className="w-12 h-12 rounded-full bg-emerald-100 border border-emerald-300 flex items-center justify-center text-emerald-600 mb-3">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
-                <h4 className="font-forum text-2xl uppercase tracking-wider text-[#241e16]">
+                <h4 className="font-forum text-2xl uppercase tracking-wider text-[#3A1F2B]">
                   Your Wish Has Been Delivered! 🤍
                 </h4>
-                <p className="font-signature text-2xl text-[#c95874] mt-2">
+                <p className="font-signature text-2xl text-[#B0295F] mt-2">
                   &ldquo;I received your wish on my phone. I promise to do everything in my power to make it come true. Pucchi 4 Life.&rdquo;
                 </p>
-                <div className="mt-4 px-4 py-1.5 rounded-full bg-white border border-[#d97d93]/30 text-xs text-[#7d7265] font-mono">
-                  Delivered with love • February 16
+                <div className="mt-4 px-4 py-1.5 rounded-full bg-white border border-[#FFD9E3] text-xs text-[#3A1F2B]/70 font-mono">
+                  Delivered straight to me • February 16
                 </div>
               </motion.div>
             )}

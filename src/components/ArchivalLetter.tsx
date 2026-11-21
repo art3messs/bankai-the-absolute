@@ -110,7 +110,7 @@ export default function ArchivalLetter() {
               {/* Close Button */}
               <button
                 onClick={() => setIsOpen(false)}
-                className="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/90 hover:bg-neutral-100 text-[#241e16] border border-[#d97d93]/30 flex items-center justify-center transition-all shadow-xs cursor-pointer z-20"
+                className="absolute top-5 right-5 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/95 hover:bg-neutral-100 text-[#3A1F2B] border border-[#d97d93]/30 flex items-center justify-center transition-all shadow-xs cursor-pointer z-20"
                 title="Close Letter"
               >
                 <X className="w-4 h-4" />

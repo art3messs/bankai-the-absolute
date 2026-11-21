@@ -153,17 +153,18 @@ export default function GuestbookWall() {
             >
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white hover:bg-neutral-100 text-[#241e16] border border-[#d97d93]/30 flex items-center justify-center transition-all"
+                className="absolute top-4 right-4 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white hover:bg-neutral-100 text-[#3A1F2B] border border-[#d97d93]/30 flex items-center justify-center transition-all shadow-xs cursor-pointer"
+                title="Close"
               >
                 <X className="w-4 h-4" />
               </button>
 
               <div className="text-center mb-6">
-                <span className="font-signature text-3xl text-[#c95874] block mb-1">
+                <span className="font-signature text-3xl text-[#B0295F] block mb-1">
                   Harleen
                 </span>
-                <h4 className="font-forum text-xl uppercase tracking-wider text-[#241e16]">
-                  Leave A Note For Her
+                <h4 className="font-forum text-xl uppercase tracking-wider text-[#3A1F2B]">
+                  Leave A Reminder For You
                 </h4>
               </div>
 

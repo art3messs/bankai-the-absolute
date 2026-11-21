@@ -228,10 +228,10 @@ export default function StartGate({ onStart, isOpen, recipientName }: StartGateP
             {/* Tap To Enter Button Alternative */}
             <button
               onClick={handleTriggerStart}
-              className="mt-6 px-8 py-3.5 rounded-full bg-gradient-to-r from-[#db2777] via-[#ec4899] to-[#fbbf24] text-white font-raleway font-bold text-xs uppercase tracking-[0.22em] shadow-[0_10px_35px_rgba(219,39,119,0.4)] hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5 cursor-pointer z-10"
+              className="mt-6 px-8 py-3.5 min-h-[44px] rounded-full bg-gradient-to-r from-[#db2777] via-[#ec4899] to-[#fbbf24] text-white font-raleway font-bold text-xs uppercase tracking-[0.22em] shadow-[0_10px_35px_rgba(219,39,119,0.4)] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2.5 cursor-pointer z-10"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-200" />
-              <span>Step Into Her Universe ✦</span>
+              <span>Step Into Your Universe ✦</span>
             </button>
 
             {/* Soundtrack Notice */}
