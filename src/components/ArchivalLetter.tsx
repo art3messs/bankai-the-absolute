@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, X, Heart, Sparkles } from "lucide-react";
+import { X, Heart, Sparkles } from "lucide-react";
 import { BIRTHDAY_CONFIG } from "@/data/config";
 
 export default function ArchivalLetter() {
@@ -83,14 +83,14 @@ export default function ArchivalLetter() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-md select-none overflow-y-auto"
+            className="fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-md overflow-y-auto"
           >
             <motion.div
               initial={{ scale: 0.9, y: 30 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 30 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative max-w-2xl w-full my-8 bg-[#fdfaf5] rounded-3xl border-2 border-[#d4af37]/50 shadow-2xl overflow-hidden text-[#241e16]"
+              className="relative max-w-2xl w-full m-auto my-auto max-h-[calc(100dvh-2rem)] flex flex-col bg-[#fdfaf5] rounded-3xl border-2 border-[#d4af37]/50 shadow-2xl overflow-hidden text-[#241e16]"
             >
               {/* TRANSPARENT CINEMATIC VIDEO & PHOTO BACKGROUND */}
               <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">

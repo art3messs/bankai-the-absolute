@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -11,14 +11,12 @@ import {
   VolumeX,
   Play,
   Pause,
-  Sparkles,
-  Maximize2,
 } from "lucide-react";
 import { MediaItem } from "@/data/mediaCatalog";
 
 interface PhotoLightboxProps {
   item?: MediaItem | null;
-  photo?: any | null; // backward compatibility
+  photo?: { id?: string; url?: string; caption?: string; category?: string } | null;
   items?: MediaItem[];
   currentIndex?: number;
   onNavigate?: (index: number) => void;
@@ -33,16 +31,18 @@ export default function PhotoLightbox({
   onNavigate,
   onClose,
 }: PhotoLightboxProps) {
-  // Normalize current item
-  const currentMedia: MediaItem | null = item || (photo ? {
-    id: photo.id || "legacy",
-    src: photo.url || "",
-    type: "image",
-    category: photo.category || "harleen 4 life",
-    title: photo.caption || "Special Moment",
-    caption: photo.caption || "",
-    aspectRatio: "portrait",
-  } : null);
+  // Normalize current item with stable memo
+  const currentMedia: MediaItem | null = useMemo(() => {
+    return item || (photo ? {
+      id: photo.id || "legacy",
+      src: photo.url || "",
+      type: "image",
+      category: (photo.category as MediaItem["category"]) || "harleen 4 life",
+      title: photo.caption || "Special Moment",
+      caption: photo.caption || "",
+      aspectRatio: "portrait",
+    } : null);
+  }, [item, photo]);
 
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
@@ -69,10 +69,10 @@ export default function PhotoLightbox({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [currentMedia, currentIndex, items, onNavigate, onClose]);
 
-  // Reset video state on item switch
+  // Reset video state on item switch and pause global music
   useEffect(() => {
     if (currentMedia?.type === "video") {
-      setIsPlaying(true);
+      window.dispatchEvent(new CustomEvent("harleen:pause-music"));
       if (videoRef.current) {
         videoRef.current.currentTime = 0;
         videoRef.current.play().catch(() => {
@@ -85,9 +85,7 @@ export default function PhotoLightbox({
         });
       }
     }
-  }, [currentMedia?.id]);
-
-  if (!currentMedia) return null;
+  }, [currentMedia?.id, currentMedia?.type]);
 
   const hasMultiple = items.length > 1;
 
@@ -109,8 +107,7 @@ export default function PhotoLightbox({
     setIsMuted(nextMuted);
   };
 
-  const spawnHearts = (e: React.MouseEvent) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+  const spawnHearts = () => {
     const newHearts = Array.from({ length: 6 }).map((_, i) => ({
       id: Date.now() + i,
       x: (Math.random() - 0.5) * 60,
@@ -141,21 +138,23 @@ export default function PhotoLightbox({
 
   return (
     <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={onClose}
-        className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-xl select-none"
-      >
+      {currentMedia && (
         <motion.div
-          initial={{ scale: 0.9, opacity: 0, y: 25 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.9, opacity: 0, y: 25 }}
-          transition={{ type: "spring", damping: 28, stiffness: 320 }}
-          onClick={(e) => e.stopPropagation()}
-          className="relative max-w-4xl w-full bg-[#1c1713]/95 text-[#fdfaf5] rounded-3xl p-4 sm:p-7 border border-[#d4af37]/30 shadow-[0_0_80px_rgba(217,125,147,0.25)] flex flex-col items-center overflow-hidden"
+          key="photo-lightbox-modal"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+          className="fixed inset-0 z-50 flex items-start justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-xl overflow-y-auto"
         >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0, y: 25 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.9, opacity: 0, y: 25 }}
+            transition={{ type: "spring", damping: 28, stiffness: 320 }}
+            onClick={(e) => e.stopPropagation()}
+            className="relative max-w-4xl w-full m-auto my-auto max-h-[calc(100dvh-2rem)] bg-[#1c1713]/95 text-[#fdfaf5] rounded-3xl p-4 sm:p-7 border border-[#d4af37]/30 shadow-[0_0_80px_rgba(217,125,147,0.25)] flex flex-col items-center overflow-hidden"
+          >
           {/* Subtle Golden Vignette Glow */}
           <div className="absolute top-0 right-0 w-72 h-72 bg-gradient-to-bl from-[#c95874]/20 via-[#d4af37]/10 to-transparent rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-72 h-72 bg-gradient-to-tr from-[#d4af37]/15 to-transparent rounded-full blur-3xl pointer-events-none" />
@@ -198,6 +197,8 @@ export default function PhotoLightbox({
                   muted={isMuted}
                   className="w-full h-full object-contain"
                   onClick={togglePlay}
+                  onPlay={() => setIsPlaying(true)}
+                  onPause={() => setIsPlaying(false)}
                 />
 
                 {/* Video Play/Pause Overlay Indicator */}
@@ -306,6 +307,7 @@ export default function PhotoLightbox({
           </div>
         </motion.div>
       </motion.div>
+      )}
     </AnimatePresence>
   );
 }

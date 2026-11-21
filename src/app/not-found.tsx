@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Sparkles, Heart, ArrowLeft } from "lucide-react";
+import { Heart, ArrowLeft } from "lucide-react";
 
 export default function NotFound() {
   return (

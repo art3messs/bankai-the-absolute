@@ -8,13 +8,29 @@ import { BIRTHDAY_CONFIG } from "@/data/config";
 export default function SpotifyMixtape() {
   const [isOpen, setIsOpen] = useState(false);
 
+  const handleOpen = () => {
+    window.dispatchEvent(new CustomEvent("harleen:pause-music"));
+    setIsOpen(true);
+  };
+
+  const spotifyEmbedSrc = `https://open.spotify.com/embed/playlist/${BIRTHDAY_CONFIG.spotifyPlaylistId || "06Aj93NfdzlxVX8Sw1dlXK"}?utm_source=generator&theme=0`;
+
   return (
     <>
       {/* Interactive Trigger Card / Banner */}
       <motion.div
+        role="button"
+        tabIndex={0}
+        aria-label="Open Interactive Spotify Mixtape Player"
         whileHover={{ scale: 1.02, y: -2 }}
         whileTap={{ scale: 0.98 }}
-        onClick={() => setIsOpen(true)}
+        onClick={handleOpen}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handleOpen();
+          }
+        }}
         className="cursor-pointer max-w-xl w-full mx-auto p-4 rounded-3xl bg-white/95 border-2 border-[#f472b6]/45 shadow-[0_12px_35px_rgba(236,72,153,0.12)] hover:shadow-[0_20px_45px_rgba(236,72,153,0.2)] transition-all flex items-center justify-between gap-4 group select-none"
       >
         <div className="flex items-center gap-3.5">
@@ -40,10 +56,10 @@ export default function SpotifyMixtape() {
           </div>
         </div>
 
-        <button className="px-5 py-2.5 rounded-full bg-[#1DB954] hover:bg-[#1ed760] text-black font-raleway font-bold text-xs uppercase tracking-wider shadow-xs hover:scale-105 active:scale-95 transition-all shrink-0 flex items-center gap-1.5 cursor-pointer">
+        <span className="px-5 py-2.5 rounded-full bg-[#1DB954] hover:bg-[#1ed760] text-black font-raleway font-bold text-xs uppercase tracking-wider shadow-xs hover:scale-105 active:scale-95 transition-all shrink-0 flex items-center gap-1.5 cursor-pointer">
           <span>Open Player</span>
           <Sparkles className="w-3.5 h-3.5" />
-        </button>
+        </span>
       </motion.div>
 
       {/* Embedded Spotify Modal */}
@@ -54,7 +70,7 @@ export default function SpotifyMixtape() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-md select-none"
+            className="fixed inset-0 z-50 flex items-start justify-center p-4 bg-black/65 backdrop-blur-md overflow-y-auto"
           >
             <motion.div
               initial={{ scale: 0.9, y: 20, opacity: 0 }}
@@ -62,12 +78,12 @@ export default function SpotifyMixtape() {
               exit={{ scale: 0.9, y: 20, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative max-w-lg w-full rounded-3xl bg-[#121212] p-5 shadow-2xl border border-white/20 overflow-hidden text-white"
+              className="relative max-w-lg w-full m-auto my-auto max-h-[calc(100dvh-2rem)] flex flex-col rounded-3xl bg-[#121212] p-5 shadow-2xl border border-white/20 overflow-hidden text-white"
             >
               {/* Close Button */}
               <button
                 onClick={() => setIsOpen(false)}
-                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all cursor-pointer z-10"
+                className="absolute top-4 right-4 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all cursor-pointer z-10"
                 title="Close"
               >
                 <X className="w-4 h-4" />
@@ -92,7 +108,7 @@ export default function SpotifyMixtape() {
               <div className="rounded-2xl overflow-hidden bg-black/50 border border-white/10">
                 <iframe
                   style={{ borderRadius: "12px" }}
-                  src="https://open.spotify.com/embed/playlist/06Aj93NfdzlxVX8Sw1dlXK?utm_source=generator&theme=0"
+                  src={spotifyEmbedSrc}
                   width="100%"
                   height="380"
                   frameBorder="0"

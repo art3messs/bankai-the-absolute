@@ -1,6 +1,8 @@
 [
   {
     "id": "1",
+    "type": "note",
+    "visibility": "public",
     "name": "From My Heart",
     "message": "You are genuinely my entire universe in this world. Seeing you smile effortlessly is my favorite sight in life. Harleen 4 life 🌸",
     "stamp": "💖",
@@ -8,6 +10,8 @@
   },
   {
     "id": "2",
+    "type": "note",
+    "visibility": "public",
     "name": "Little Reminder",
     "message": "Nothing makes me happier than seeing you genuinely smile. Every little laugh of yours makes everything around you so much better. Never forget how special you are ✨",
     "stamp": "✨",
@@ -15,6 +19,8 @@
   },
   {
     "id": "3",
+    "type": "note",
+    "visibility": "public",
     "name": "Midnight Thought",
     "message": "In a world full of noise, you bring a quiet peace I can't find anywhere else. Thank you for existing, Harleen. Always here for you 🌙",
     "stamp": "💌",
@@ -22,6 +28,8 @@
   },
   {
     "id": "4",
+    "type": "note",
+    "visibility": "public",
     "name": "My Favorite Person",
     "message": "If I could give you one thing in life, it would be the ability to see yourself through my eyes — so you'd know just how truly rare and adored you are 🎀",
     "stamp": "🎀",

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate } from "framer-motion";
 import confetti from "canvas-confetti";
 import {
   Sparkles,
@@ -16,6 +16,7 @@ import {
   Cake,
   Clock,
   Camera,
+  MessageSquare,
 } from "lucide-react";
 
 export default function Hero3D() {
@@ -30,7 +31,7 @@ export default function Hero3D() {
   useEffect(() => {
     const updateCountdown = () => {
       const now = new Date();
-      let year = now.getFullYear();
+      const year = now.getFullYear();
       let bday = new Date(year, 1, 16, 0, 0, 0);
       if (now.getTime() > bday.getTime()) {
         bday = new Date(year + 1, 1, 16, 0, 0, 0);
@@ -55,6 +56,9 @@ export default function Hero3D() {
   const springConfig = { damping: 25, stiffness: 180, mass: 0.6 };
   const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [10, -10]), springConfig);
   const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-10, 10]), springConfig);
+  const glareX = useTransform(mouseX, [-0.5, 0.5], ["20%", "80%"]);
+  const glareY = useTransform(mouseY, [-0.5, 0.5], ["20%", "80%"]);
+  const glareBackground = useMotionTemplate`radial-gradient(circle 420px at ${glareX} ${glareY}, rgba(255,255,255,0.7), transparent 70%)`;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
@@ -129,9 +133,9 @@ export default function Hero3D() {
         >
           {/* Dynamic 3D Specular Light Overlay */}
           <motion.div
-            className="absolute inset-0 pointer-events-none opacity-30 transition-opacity duration-300"
+            className={`absolute inset-0 pointer-events-none transition-opacity duration-300 ${isHovered ? "opacity-45" : "opacity-25"}`}
             style={{
-              background: `radial-gradient(circle 350px at ${isHovered ? "50%" : "50%"} 40%, rgba(255,255,255,0.9), transparent 70%)`,
+              background: glareBackground,
             }}
           />
 
@@ -397,7 +401,15 @@ export default function Hero3D() {
             className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-[#FFF8F5] border-2 border-[#FFD9E3] text-[#3A1F2B] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer min-h-[44px]"
           >
             <Lock className="w-3.5 h-3.5 text-[#B0295F]" />
-            <span>07. Secret Vault (&ldquo;pucchi&rdquo;)</span>
+            <span>07. Secret Vault</span>
+          </a>
+
+          <a
+            href="#guestbook"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-[#FFF8F5] border-2 border-[#FFD9E3] text-[#3A1F2B] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer min-h-[44px]"
+          >
+            <MessageSquare className="w-3.5 h-3.5 text-[#B0295F]" />
+            <span>08. Notes Wall</span>
           </a>
 
           <a
@@ -405,7 +417,7 @@ export default function Hero3D() {
             className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-[#FFF8F5] border-2 border-[#FFD9E3] text-[#3A1F2B] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer min-h-[44px]"
           >
             <Heart className="w-3.5 h-3.5 text-[#B0295F] fill-[#B0295F]" />
-            <span>08. Your Reaction</span>
+            <span>09. Your Thoughts</span>
           </a>
         </div>
       </motion.div>

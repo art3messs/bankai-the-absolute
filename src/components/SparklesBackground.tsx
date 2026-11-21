@@ -24,45 +24,58 @@ interface Petal {
   symbol: string;
 }
 
+// Deterministic pseudo-random helper to avoid SSR hydration mismatch
+function pseudoRand(seed: number) {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+
+// 36 ambient twinkle stars
+const STARS: Star[] = Array.from({ length: 36 }, (_, i) => ({
+  id: i,
+  x: pseudoRand(i * 1.31 + 2.7) * 98 + 1,
+  y: pseudoRand(i * 2.73 + 5.1) * 98 + 1,
+  size: pseudoRand(i * 3.17 + 1.2) * 2.2 + 1.2,
+  duration: pseudoRand(i * 4.39 + 3.4) * 3 + 2.5,
+  delay: pseudoRand(i * 5.91 + 0.8) * 2.5,
+  opacity: pseudoRand(i * 7.13 + 6.2) * 0.5 + 0.35,
+}));
+
+// 22 drifting romantic rose petals & blossoms
+const PETAL_SYMBOLS = ["🌸", "🌹", "✨", "🤍", "🌸"];
+const PETALS: Petal[] = Array.from({ length: 22 }, (_, i) => ({
+  id: i,
+  left: pseudoRand(i * 2.45 + 1.7) * 94 + 2,
+  size: 14 + (i % 4) * 4,
+  duration: 11 + ((i * 1.7) % 8),
+  delay: ((i * 1.1) % 9),
+  rotate: pseudoRand(i * 8.21 + 4.1) * 360,
+  swayDistance: 25 + (i % 3) * 15,
+  symbol: PETAL_SYMBOLS[i % PETAL_SYMBOLS.length],
+}));
+
 export default function SparklesBackground() {
-  const [stars, setStars] = useState<Star[]>([]);
-  const [petals, setPetals] = useState<Petal[]>([]);
-
   useEffect(() => {
-    // 36 ambient twinkle stars
-    const newStars: Star[] = Array.from({ length: 36 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 2.2 + 1.2,
-      duration: Math.random() * 3 + 2.5,
-      delay: Math.random() * 2.5,
-      opacity: Math.random() * 0.6 + 0.35,
-    }));
-    setStars(newStars);
+    let lastClickTime = 0;
 
-    // 22 drifting romantic rose petals & blossoms
-    const symbols = ["🌸", "🌹", "✨", "🤍", "🌸"];
-    const newPetals: Petal[] = Array.from({ length: 22 }, (_, i) => ({
-      id: i,
-      left: Math.random() * 96,
-      size: 14 + (i % 4) * 4,
-      duration: 11 + ((i * 1.7) % 8),
-      delay: ((i * 1.1) % 9),
-      rotate: Math.random() * 360,
-      swayDistance: 25 + (i % 3) * 15,
-      symbol: symbols[i % symbols.length],
-    }));
-    setPetals(newPetals);
-
-    // Global click: Romantic Rose Petal & Champagne Gold Burst
+    // Global click: Romantic Rose Petal & Champagne Gold Burst (throttled & accessible)
     const handleGlobalClick = (e: MouseEvent) => {
+      // Check prefers-reduced-motion
+      if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+      }
+
+      const now = Date.now();
+      if (now - lastClickTime < 350) return;
+      lastClickTime = now;
+
       const target = e.target as HTMLElement;
       if (
         target.closest("button") ||
         target.closest("input") ||
         target.closest("textarea") ||
-        target.closest("a")
+        target.closest("a") ||
+        target.closest("[role='button']")
       ) {
         return;
       }
@@ -76,7 +89,7 @@ export default function SparklesBackground() {
         spread: 75,
         origin: { x, y },
         colors: ["#db2777", "#ec4899", "#f472b6", "#fbbf24", "#fed7aa", "#ffffff"],
-        ticks: 220,
+        ticks: 200,
         gravity: 0.7,
         scalar: 0.95,
         shapes: ["circle"],
@@ -89,7 +102,7 @@ export default function SparklesBackground() {
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      {/* Dreamy Girly Pop Ambient Sparkle Orbs (from Importance_of_Cinema_in_Indian_Culture) */}
+      {/* Dreamy Girly Pop Ambient Sparkle Orbs */}
       <div className="absolute -top-28 -left-28 w-[36rem] h-[36rem] bg-[#f472b6]/25 rounded-full blur-[100px] animate-dreamy" />
       <div
         className="absolute top-1/4 -right-24 w-[34rem] h-[34rem] bg-[#fed7aa]/35 rounded-full blur-[110px] animate-dreamy"
@@ -105,7 +118,7 @@ export default function SparklesBackground() {
       />
 
       {/* Golden Fairy Dust Stars */}
-      {stars.map((star) => (
+      {STARS.map((star) => (
         <div
           key={star.id}
           className="absolute rounded-full bg-gradient-to-r from-[#fbbf24] to-[#fef08a] shadow-[0_0_8px_rgba(251,191,36,0.85)]"
@@ -122,7 +135,7 @@ export default function SparklesBackground() {
       ))}
 
       {/* Romantic Falling Rose Petals & Stardust */}
-      {petals.map((petal) => (
+      {PETALS.map((petal) => (
         <div
           key={petal.id}
           className="absolute select-none pointer-events-none text-rose-400/40"

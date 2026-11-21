@@ -10,11 +10,9 @@ import {
   Disc3,
   SkipForward,
   SkipBack,
-  Sparkles,
-  Music,
   ExternalLink,
 } from "lucide-react";
-import { BIRTHDAY_CONFIG, SongTrack } from "@/data/config";
+import { BIRTHDAY_CONFIG } from "@/data/config";
 
 interface TurntablePlayerProps {
   autoPlayTrigger?: boolean;
@@ -42,9 +40,12 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
   const [currentTimeFormatted, setCurrentTimeFormatted] = useState("0:00");
   const [durationFormatted, setDurationFormatted] = useState("0:00");
   const [showPlaylist, setShowPlaylist] = useState(false);
+  const [audioError, setAudioError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const isFirstMount = useRef(true);
 
   const formatTime = (secs: number) => {
+    if (isNaN(secs) || secs < 0) return "0:00";
     const mins = Math.floor(secs / 60);
     const remainder = Math.floor(secs % 60);
     return `${mins}:${remainder < 10 ? "0" : ""}${remainder}`;
@@ -52,6 +53,7 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
 
   const togglePlay = () => {
     if (!audioRef.current) return;
+    setAudioError(null);
     if (isPlaying) {
       audioRef.current.pause();
       setIsPlaying(false);
@@ -59,7 +61,10 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
       audioRef.current
         .play()
         .then(() => setIsPlaying(true))
-        .catch(() => setIsPlaying(false));
+        .catch(() => {
+          setIsPlaying(false);
+          setAudioError("Click 'Spin & Play' to start audio.");
+        });
     }
   };
 
@@ -81,9 +86,14 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
     setIsPlaying(true);
   };
 
-  // Switch track in audio element
+  // Switch track in audio element ONLY when track index changes
   useEffect(() => {
     if (!audioRef.current) return;
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      audioRef.current.src = currentTrack.src;
+      return;
+    }
     audioRef.current.src = currentTrack.src;
     audioRef.current.load();
     if (isPlaying) {
@@ -92,7 +102,32 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
         .then(() => setIsPlaying(true))
         .catch(() => {});
     }
-  }, [currentTrackIndex, isPlaying]);
+  }, [currentTrackIndex]);
+
+  // Global listeners: pause audio when videos play, and start audio on StartGate unlock
+  useEffect(() => {
+    const handleGlobalPause = () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      }
+    };
+    const handleGlobalStart = () => {
+      if (audioRef.current) {
+        audioRef.current
+          .play()
+          .then(() => setIsPlaying(true))
+          .catch(() => {});
+      }
+    };
+
+    window.addEventListener("harleen:pause-music", handleGlobalPause);
+    window.addEventListener("harleen:start-audio", handleGlobalStart);
+    return () => {
+      window.removeEventListener("harleen:pause-music", handleGlobalPause);
+      window.removeEventListener("harleen:start-audio", handleGlobalStart);
+    };
+  }, []);
 
   useEffect(() => {
     if (autoPlayTrigger && audioRef.current) {
@@ -112,6 +147,15 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
     setDurationFormatted(formatTime(duration));
   };
 
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!audioRef.current) return;
+    const newPct = Number(e.target.value);
+    const duration = audioRef.current.duration || 1;
+    audioRef.current.currentTime = (newPct / 100) * duration;
+    setProgress(newPct);
+    setCurrentTimeFormatted(formatTime(audioRef.current.currentTime));
+  };
+
   return (
     <div className="girly-card p-6 sm:p-8 rounded-3xl max-w-lg w-full flex flex-col items-center select-none shadow-[0_20px_50px_rgba(236,72,153,0.15)] border-3 border-[#f472b6]/45 relative overflow-hidden bg-white/95 backdrop-blur-md">
       {/* Audio Element */}
@@ -120,12 +164,13 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
         src={currentTrack.src}
         onTimeUpdate={handleTimeUpdate}
         onEnded={handleNextTrack}
+        onError={() => setAudioError("Unable to play audio track.")}
       />
 
       {/* Top Track Pill */}
       <div className="flex items-center justify-between w-full mb-4 px-2">
         <div className="flex items-center gap-2 text-[10px] font-mono tracking-widest uppercase text-[#db2777] font-bold">
-          <Disc3 className="w-3.5 h-3.5 animate-spin text-[#fbbf24]" style={{ animationDuration: "10s" }} />
+          <Disc3 className={`w-3.5 h-3.5 text-[#fbbf24] ${isPlaying ? "animate-spin" : ""}`} style={{ animationDuration: "10s" }} />
           <span>HARLEEN VINYL • 33 RPM</span>
         </div>
         <button
@@ -189,18 +234,29 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
         </p>
       </div>
 
-      {/* Progress Bar */}
+      {/* Progress & Seeking Bar */}
       <div className="w-full mt-4 px-2">
-        <div className="w-full bg-[#f2ccd6]/30 h-1.5 rounded-full overflow-hidden cursor-pointer">
-          <div
-            className="bg-gradient-to-r from-[#d97d93] to-[#d4af37] h-full transition-all duration-200"
-            style={{ width: `${progress}%` }}
+        <div className="relative w-full flex items-center group py-1">
+          <input
+            type="range"
+            min="0"
+            max="100"
+            step="0.1"
+            value={progress}
+            onChange={handleSeek}
+            aria-label="Seek track position"
+            className="w-full h-1.5 bg-[#f2ccd6]/40 rounded-full appearance-none cursor-pointer accent-[#B0295F] focus:outline-none"
           />
         </div>
         <div className="flex justify-between items-center text-[10px] text-[#7d7265] mt-1 font-mono">
           <span>{currentTimeFormatted}</span>
-          <span>{currentTrack.duration}</span>
+          <span>{durationFormatted !== "0:00" ? durationFormatted : currentTrack.duration}</span>
         </div>
+        {audioError && (
+          <p role="alert" className="text-[10px] text-rose-500 font-mono text-center mt-1">
+            {audioError}
+          </p>
+        )}
       </div>
 
       {/* Playback Controls & Track Switcher */}

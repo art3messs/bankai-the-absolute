@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion } from "framer-motion";
 import { BIRTHDAY_CONFIG } from "@/data/config";
 import SparklesBackground from "@/components/SparklesBackground";
 import StartGate from "@/components/StartGate";
@@ -22,18 +21,11 @@ import {
   ScrollyStickers,
 } from "@/components/ScrollyPopups";
 import {
-  Sparkles,
-  Film,
   Mail,
   Lock,
   MessageSquare,
   Disc3,
   Heart,
-  Award,
-  ArrowDown,
-  Camera,
-  Star,
-  Cake,
 } from "lucide-react";
 
 export default function HomePage() {

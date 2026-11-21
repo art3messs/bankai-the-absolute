@@ -10,14 +10,25 @@ interface BirthdayCakeCeremonyProps {
 }
 
 export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCeremonyProps) {
-  const [candlesOut, setCandlesOut] = useState(false);
+  const [candlesOut, setCandlesOut] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("harleen_wish_sent") === "true";
+    }
+    return false;
+  });
   const [micActive, setMicActive] = useState(false);
   const [micError, setMicError] = useState<string | null>(null);
   const [puffParticles, setPuffParticles] = useState<{ id: number; left: number }[]>([]);
 
   // Wish form state
   const [wishText, setWishText] = useState("");
-  const [wishSent, setWishSent] = useState(false);
+  const [wishSent, setWishSent] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("harleen_wish_sent") === "true";
+    }
+    return false;
+  });
+  const [wishError, setWishError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 3D physics tilt
@@ -107,8 +118,9 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
     if (!wishText.trim() || isSubmitting) return;
 
     setIsSubmitting(true);
+    setWishError(null);
     try {
-      await fetch("/api/wishes", {
+      const res = await fetch("/api/wishes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -119,15 +131,24 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
         }),
       });
 
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Failed to deliver wish. Please try again.");
+      }
+
       setWishSent(true);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("harleen_wish_sent", "true");
+      }
       confetti({
         particleCount: 100,
         spread: 95,
         origin: { y: 0.65 },
         colors: ["#db2777", "#fbbf24", "#f472b6", "#ffffff"],
       });
-    } catch {
-      setWishSent(true);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Could not deliver your wish right now. Please try again.";
+      setWishError(msg);
     } finally {
       setIsSubmitting(false);
     }
@@ -136,14 +157,23 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
   const startMic = async () => {
     try {
       setMicError(null);
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Pause background music so it does not trigger false microphone blows
+      window.dispatchEvent(new CustomEvent("harleen:pause-music"));
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: false,
+          autoGainControl: false,
+        },
+      });
       micStreamRef.current = stream;
 
       const audioCtx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
       audioContextRef.current = audioCtx;
 
       const analyser = audioCtx.createAnalyser();
-      analyser.fftSize = 256;
+      analyser.fftSize = 512;
       analyserRef.current = analyser;
 
       const source = audioCtx.createMediaStreamSource(stream);
@@ -152,16 +182,44 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
       setMicActive(true);
 
       const dataArray = new Uint8Array(analyser.frequencyBinCount);
+      let calibrationFrames = 0;
+      let baselineSum = 0;
+      let baselineNoise = 18;
+      let sustainedPuffFrames = 0;
+
       const checkBlow = () => {
         analyser.getByteFrequencyData(dataArray);
-        let sum = 0;
-        for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
-        const avg = sum / dataArray.length;
 
-        if (avg > 40) {
-          blowOutCandles();
+        // Low frequency bins (sub-500Hz: indices 1 to 5) where breath turbulence concentrates
+        let lowFreqSum = 0;
+        const lowBinsCount = 5;
+        for (let i = 1; i <= lowBinsCount; i++) {
+          lowFreqSum += dataArray[i];
+        }
+        const lowFreqAvg = lowFreqSum / lowBinsCount;
+
+        // Calibrate ambient noise floor during first 30 frames (~500ms)
+        if (calibrationFrames < 30) {
+          baselineSum += lowFreqAvg;
+          calibrationFrames++;
+          if (calibrationFrames === 30) {
+            baselineNoise = Math.max(15, baselineSum / 30);
+          }
+          animationFrameRef.current = requestAnimationFrame(checkBlow);
           return;
         }
+
+        // Blow detection: energy exceeds baseline by 25+ sustained over 12 frames (~200ms)
+        if (lowFreqAvg > baselineNoise + 25) {
+          sustainedPuffFrames++;
+          if (sustainedPuffFrames >= 12) {
+            blowOutCandles();
+            return;
+          }
+        } else {
+          sustainedPuffFrames = Math.max(0, sustainedPuffFrames - 1);
+        }
+
         animationFrameRef.current = requestAnimationFrame(checkBlow);
       };
       animationFrameRef.current = requestAnimationFrame(checkBlow);
@@ -203,7 +261,7 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
         Blow Out The Candles, Harleen 🎂
       </h2>
       <p className="font-signature text-2xl sm:text-3xl text-[#9d174d] mt-2 leading-relaxed">
-        &ldquo;Tilt the 3D stage with your mouse. Blow into your mic or tap the flames to make your 16th February wish.&rdquo;
+        &ldquo;Tilt the 3D stage with your touch or mouse. Blow into your mic or tap the flames to make your 16th February wish.&rdquo;
       </p>
 
       {/* THE 3D INTERACTIVE CAKE STAGE (PERSPECTIVE + GYRO/MOUSE TILT) */}
@@ -430,7 +488,7 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ type: "spring", stiffness: 220, damping: 20 }}
-            className="w-full max-w-2xl mt-8 p-6 sm:p-8 rounded-3xl bg-white/95 border-3 border-[#f472b6]/60 shadow-[0_20px_50px_rgba(236,72,153,0.2)] text-center relative select-none"
+            className="w-full max-w-2xl mt-8 p-6 sm:p-8 rounded-3xl bg-white/95 border-3 border-[#f472b6]/60 shadow-[0_20px_50px_rgba(236,72,153,0.2)] text-center relative"
           >
             {!wishSent ? (
               <form onSubmit={handleSendWish} className="flex flex-col items-center">
@@ -449,20 +507,31 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
                 <div className="w-full mt-5 relative">
                   <textarea
                     rows={3}
+                    maxLength={500}
                     value={wishText}
-                    onChange={(e) => setWishText(e.target.value)}
+                    onChange={(e) => {
+                      setWishText(e.target.value);
+                      if (wishError) setWishError(null);
+                    }}
                     placeholder="Type your secret birthday wish here (anything you want in this world)..."
+                    aria-label="Your birthday wish"
                     className="w-full p-4 rounded-2xl bg-[#fdf2f8] border-2 border-[#f472b6]/40 focus:border-[#ec4899] focus:ring-2 focus:ring-[#ec4899]/20 outline-none font-raleway text-sm text-[#4a044e] placeholder-[#831843]/50 transition-all shadow-inner resize-none"
                   />
                 </div>
 
+                {wishError && (
+                  <p role="alert" aria-live="polite" className="text-xs text-rose-600 font-semibold mt-2">
+                    {wishError}
+                  </p>
+                )}
+
                 <button
                   type="submit"
                   disabled={!wishText.trim() || isSubmitting}
-                  className="mt-4 px-8 py-3.5 rounded-full bg-gradient-to-r from-[#ec4899] via-[#db2777] to-[#fbbf24] text-white font-raleway font-bold text-xs uppercase tracking-[0.2em] shadow-md hover:scale-105 active:scale-95 disabled:opacity-50 transition-all flex items-center gap-2.5 cursor-pointer"
+                  className="mt-4 px-8 py-3.5 min-h-[44px] rounded-full bg-gradient-to-r from-[#ec4899] via-[#db2777] to-[#fbbf24] text-white font-raleway font-bold text-xs uppercase tracking-[0.2em] shadow-md hover:scale-105 active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
                 >
                   <Send className="w-3.5 h-3.5 fill-white" />
-                  <span>{isSubmitting ? "Delivering To His Phone..." : "Send Wish To His Phone 💌"}</span>
+                  <span>{isSubmitting ? "Delivering To My Phone..." : "Send Wish To My Phone 💌"}</span>
                   <Sparkles className="w-3.5 h-3.5 text-amber-200" />
                 </button>
               </form>

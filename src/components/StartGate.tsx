@@ -51,6 +51,9 @@ export default function StartGate({ onStart, isOpen, recipientName }: StartGateP
     if (isUnveiling) return;
     setIsUnveiling(true);
 
+    // Synchronously unlock and trigger audio playback on user gesture (bypasses mobile Safari audio blocks)
+    window.dispatchEvent(new CustomEvent("harleen:start-audio"));
+
     // Rose & champagne gold particle shower
     confetti({
       particleCount: 85,
@@ -63,6 +66,17 @@ export default function StartGate({ onStart, isOpen, recipientName }: StartGateP
       onStart();
     }, 650);
   };
+
+  // Lock body scroll while StartGate is open
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen]);
 
   // Scroll or swipe down anywhere on screen to unveil
   useEffect(() => {
@@ -105,6 +119,9 @@ export default function StartGate({ onStart, isOpen, recipientName }: StartGateP
             scale: 1.08,
             transition: { duration: 0.75, ease: "easeInOut" },
           }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Welcome Gate for Harleen's Birthday"
           className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 sm:p-6 select-none overflow-hidden"
           style={{
             background: "radial-gradient(circle at 50% 35%, #4a044e 0%, #2b0630 45%, #140217 100%)",

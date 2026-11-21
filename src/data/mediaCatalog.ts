@@ -276,16 +276,6 @@ export const MEDIA_CATALOG: MediaItem[] = [
     poster: "/media/vid-pout-walk-laugh-poster.jpg",
     aspectRatio: "portrait",
   },
-  {
-    id: "vid-videocall-whisper",
-    src: "/media/vid-videocall-whisper.mp4",
-    type: "video",
-    category: "popaaa moments",
-    title: "Late Night Pillow Talk Whisper",
-    caption: "The softest voice reminding me why you are my favorite 🌙",
-    poster: "/media/vid-videocall-whisper-poster.jpg",
-    aspectRatio: "portrait",
-  },
 
   // --- LITTLE POGO (Childhood & young age throwbacks) ---
   {

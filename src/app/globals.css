@@ -46,8 +46,28 @@ body {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  body, a, button, [role="button"], input, textarea {
+  html.custom-cursor-active body,
+  html.custom-cursor-active a,
+  html.custom-cursor-active button,
+  html.custom-cursor-active [role="button"] {
     cursor: none !important;
+  }
+
+  /* Always keep native text caret visible for form inputs */
+  input,
+  textarea {
+    cursor: text !important;
+  }
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.2);
   }
 }
 

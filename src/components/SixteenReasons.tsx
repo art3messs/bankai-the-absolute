@@ -116,19 +116,22 @@ export default function SixteenReasons() {
   const [hasCelebrated, setHasCelebrated] = useState(false);
 
   const toggleCard = (num: number) => {
-    setFlippedCards((prev) => {
-      const next = prev.includes(num) ? prev.filter((n) => n !== num) : [...prev, num];
-      if (next.length === REASONS.length && !hasCelebrated) {
-        setHasCelebrated(true);
-        confetti({
-          particleCount: 120,
-          spread: 100,
-          origin: { y: 0.6 },
-          colors: ["#d97d93", "#c95874", "#d4af37", "#f3e5ab", "#ffffff"],
-        });
-      }
-      return next;
-    });
+    const isCurrentlyFlipped = flippedCards.includes(num);
+    const nextFlipped = isCurrentlyFlipped
+      ? flippedCards.filter((n) => n !== num)
+      : [...flippedCards, num];
+
+    setFlippedCards(nextFlipped);
+
+    if (nextFlipped.length === REASONS.length && !hasCelebrated) {
+      setHasCelebrated(true);
+      confetti({
+        particleCount: 120,
+        spread: 100,
+        origin: { y: 0.6 },
+        colors: ["#d97d93", "#c95874", "#d4af37", "#f3e5ab", "#ffffff"],
+      });
+    }
   };
 
   const revealAll = () => {
@@ -171,12 +174,15 @@ export default function SixteenReasons() {
         {REASONS.map((item) => {
           const isFlipped = flippedCards.includes(item.number);
           return (
-            <motion.div
+            <motion.button
+              type="button"
               key={item.number}
+              aria-pressed={isFlipped}
+              aria-label={`Chronicle ${item.number}: ${item.title}`}
               whileHover={{ y: -8, scale: 1.03, rotateX: 4, rotateY: -3 }}
               transition={{ duration: 0.35, ease: "easeOut" }}
               onClick={() => toggleCard(item.number)}
-              className="relative h-60 rounded-3xl cursor-pointer perspective-[1200px] select-none group"
+              className="relative h-60 w-full text-left rounded-3xl cursor-pointer perspective-[1200px] select-none group block p-0 bg-transparent border-0"
             >
               <motion.div
                 animate={{ rotateY: isFlipped ? 180 : 0 }}
@@ -236,7 +242,7 @@ export default function SixteenReasons() {
                   </div>
                 </div>
               </motion.div>
-            </motion.div>
+            </motion.button>
           );
         })}
       </div>

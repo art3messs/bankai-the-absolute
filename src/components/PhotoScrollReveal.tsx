@@ -1,24 +1,52 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { motion } from "framer-motion";
-import { Sparkles, Heart, Eye, ArrowLeftRight, Crown } from "lucide-react";
+import { Sparkles, Heart, ArrowLeftRight, Crown } from "lucide-react";
 
 export default function PhotoScrollReveal() {
   const [sliderPos, setSliderPos] = useState(50); // percentage 0 to 100
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+  const updatePosition = (clientX: number) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+    const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
     const pct = (x / rect.width) * 100;
     setSliderPos(pct);
   };
 
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    setIsDragging(true);
+    e.currentTarget.setPointerCapture(e.pointerId);
+    updatePosition(e.clientX);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDragging) return;
+    updatePosition(e.clientX);
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    setIsDragging(false);
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch {}
+  };
+
   return (
     <section className="relative z-10 max-w-4xl mx-auto px-4 py-8 flex flex-col items-center text-center">
+      {/* Accessible hidden range input */}
+      <input
+        type="range"
+        min="0"
+        max="100"
+        value={Math.round(sliderPos)}
+        onChange={(e) => setSliderPos(Number(e.target.value))}
+        className="sr-only"
+        aria-label="Slide to compare warm embrace and royal emerald tiara photos"
+      />
+
       {/* Eyebrow Tag */}
       <div className="girly-tag mb-3">
         <Sparkles className="w-3.5 h-3.5 text-[#fbbf24]" />
@@ -36,9 +64,11 @@ export default function PhotoScrollReveal() {
       {/* Interactive Photo Comparison Card */}
       <div
         ref={containerRef}
+        onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
-        onPointerDown={() => setIsDragging(true)}
-        onPointerUp={() => setIsDragging(false)}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        style={{ touchAction: "pan-y" }}
         className="relative w-full max-w-2xl aspect-[4/5] sm:aspect-[16/11] mt-6 rounded-2xl overflow-hidden border-2 border-[#FFD9E3] shadow-[0_20px_50px_rgba(176,41,95,0.12)] cursor-ew-resize select-none bg-stone-950 group"
       >
         {/* UNDER LAYER: Warm Hug & Pucchi Smile */}

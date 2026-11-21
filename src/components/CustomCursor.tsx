@@ -34,6 +34,8 @@ export default function CustomCursor() {
     // Only show on desktop / pointer devices
     if (window.matchMedia("(pointer: coarse)").matches) return;
 
+    document.documentElement.classList.add("custom-cursor-active");
+
     const sparkleChars = ["♥", "✦", "✨", "✧", "🤍"];
     const colors = ["#d4af37", "#f43f5e", "#ff758f", "#fbbf24", "#ffffff"];
 
@@ -60,7 +62,7 @@ export default function CustomCursor() {
           color: colors[Math.floor(Math.random() * colors.length)],
         };
 
-        setTrails((prev) => [...prev.slice(-14), newTrail]);
+        setTrails((prev) => [...prev.slice(-12), newTrail]);
       }
     };
 
@@ -71,8 +73,13 @@ export default function CustomCursor() {
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
+      const isInput = !!target.closest("input, textarea");
+      if (isInput) {
+        setIsHovered(false);
+        return;
+      }
       const isInteractive = !!target.closest(
-        'button, a, input, [role="button"], video, img, .cursor-pointer'
+        'button, a, [role="button"], video, img, .cursor-pointer'
       );
       setIsHovered(isInteractive);
     };
@@ -83,6 +90,7 @@ export default function CustomCursor() {
     window.addEventListener("mouseover", handleMouseOver, { passive: true });
 
     return () => {
+      document.documentElement.classList.remove("custom-cursor-active");
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);

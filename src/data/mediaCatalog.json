@@ -297,15 +297,6 @@
     "poster": "/media/vid-leopard-lookback-poster.jpg"
   },
   {
-    "id": "vid-videocall-whisper",
-    "src": "/media/vid-videocall-whisper.mp4",
-    "type": "video",
-    "category": "popaaa moments",
-    "title": "Late Night Pillow Talk Whisper",
-    "caption": "The softest voice reminding me why you are my favorite \ud83c\udf19",
-    "poster": "/media/vid-videocall-whisper-poster.jpg"
-  },
-  {
     "id": "vid-magenta-lehenga-night",
     "src": "/media/vid-magenta-lehenga-night.mp4",
     "type": "video",

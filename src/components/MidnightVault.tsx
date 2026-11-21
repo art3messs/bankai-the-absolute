@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, Unlock, Key, Sparkles, HelpCircle, Heart, Video } from "lucide-react";
+import { Lock, Unlock, Key, Sparkles, HelpCircle, Video } from "lucide-react";
 import confetti from "canvas-confetti";
 import { BIRTHDAY_CONFIG } from "@/data/config";
 
@@ -14,17 +14,10 @@ export default function MidnightVault() {
 
   const handleUnlock = (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanInput = inputAnswer.trim().toLowerCase();
-    const expected = BIRTHDAY_CONFIG.secretVault.answerHash.trim().toLowerCase();
+    const cleanInput = inputAnswer.trim().toLowerCase().replace(/[^a-z]/g, "");
+    const accepted = BIRTHDAY_CONFIG.secretVault.acceptedAnswers || ["pucchi", "puchhi", "puchi", "pucchii"];
 
-    // Accept "pucchi" and common sweet variations so you are never locked out
-    if (
-      cleanInput === expected ||
-      cleanInput === "pucchi" ||
-      cleanInput === "puchhi" ||
-      cleanInput === "puchi" ||
-      cleanInput === "pucchii"
-    ) {
+    if (accepted.some((ans) => ans.toLowerCase().replace(/[^a-z]/g, "") === cleanInput)) {
       setIsUnlocked(true);
       setErrorMsg("");
 
@@ -35,7 +28,7 @@ export default function MidnightVault() {
         colors: ["#d97d93", "#c95874", "#d4af37", "#f3e5ab", "#ffffff"],
       });
     } else {
-      setErrorMsg("Incorrect secret code! Hint: used to say before going to bed... 🥺");
+      setErrorMsg("That's not the secret code word... 🥺 Tap the hint below if you need a reminder!");
     }
   };
 
@@ -92,13 +85,18 @@ export default function MidnightVault() {
                     setInputAnswer(e.target.value);
                     if (errorMsg) setErrorMsg("");
                   }}
-                  placeholder='Enter secret answer (e.g. "pucchi")...'
+                  placeholder="Enter our secret code..."
+                  aria-label="Secret code word"
                   className="w-full px-5 py-3.5 rounded-full bg-white border border-[#d97d93]/40 focus:border-[#d4af37] focus:ring-2 focus:ring-[#d4af37]/20 outline-none text-center font-raleway text-sm text-[#241e16] placeholder-[#7d7265]/60 transition-all shadow-xs"
                 />
               </div>
 
               {errorMsg && (
-                <p className="text-xs text-[#c95874] font-raleway font-semibold mb-3">
+                <p
+                  role="alert"
+                  aria-live="polite"
+                  className="text-xs text-[#c95874] font-raleway font-semibold mb-3"
+                >
                   {errorMsg}
                 </p>
               )}
@@ -168,6 +166,11 @@ export default function MidnightVault() {
                       autoPlay
                       loop
                       playsInline
+                      onPlay={() => {
+                        if (typeof window !== "undefined") {
+                          window.dispatchEvent(new CustomEvent("harleen:pause-music"));
+                        }
+                      }}
                       poster="/media/vid-videocall-whisper-poster.jpg"
                       src="/media/vid-videocall-whisper.mp4"
                       className="w-full h-full object-cover"

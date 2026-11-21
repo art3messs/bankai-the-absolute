@@ -24,12 +24,22 @@ const raleway = Raleway({
 });
 
 export const metadata: Metadata = {
-  title: "Harleen • The 16th Birthday Archive 🌸",
-  description: "An intimate luxury editorial celebration created for Harleen • February 16",
+  title: "Harleen • The 16th Birthday Archive",
+  description: "An intimate luxury celebration created for Harleen • February 16",
   metadataBase: new URL("https://harleen-birthday.vercel.app"),
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+    googleBot: {
+      index: false,
+      follow: false,
+      noimageindex: true,
+    },
+  },
   openGraph: {
-    title: "Happy 16th Birthday, Harleen 🌸",
-    description: "An intimate celebration created for Harleen • February 16",
+    title: "Harleen • The 16th Birthday Archive",
+    description: "An intimate luxury celebration created for Harleen • February 16",
     url: "/",
     siteName: "Harleen 16th Birthday Archive",
     images: [
@@ -37,7 +47,7 @@ export const metadata: Metadata = {
         url: "/media/harleen-red-feather-dress.jpg",
         width: 1200,
         height: 630,
-        alt: "Harleen's 16th Birthday Celebration",
+        alt: "Celebration",
       },
     ],
     locale: "en_US",
@@ -45,8 +55,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Happy 16th Birthday, Harleen 🌸",
-    description: "An intimate celebration created for Harleen • February 16",
+    title: "Harleen • The 16th Birthday Archive",
+    description: "An intimate luxury celebration created for Harleen • February 16",
     images: ["/media/harleen-red-feather-dress.jpg"],
   },
   icons: {

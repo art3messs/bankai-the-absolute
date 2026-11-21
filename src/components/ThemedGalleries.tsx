@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Film,
   Play,
@@ -9,24 +9,19 @@ import {
   Heart,
   Crown,
   Camera,
-  Award,
-  Maximize2,
-  Smile,
-  Baby,
-  Eye,
-  Volume2,
-  Gem,
   LayoutGrid,
   Columns,
+  Gem,
+  Baby,
+  Smile,
+  Maximize2,
 } from "lucide-react";
 import { MEDIA_CATALOG, MediaItem } from "@/data/mediaCatalog";
 import PhotoLightbox from "./PhotoLightbox";
 
 type ViewMode = "thematic" | "contact-sheet";
-type SectionKey = "harleen 4 life" | "sick in ethnic" | "little pogo" | "popaaa moments" | "aesthick nails";
 
 export default function ThemedGalleries() {
-  const [activeSection, setActiveSection] = useState<SectionKey | "all">("all");
   const [viewMode, setViewMode] = useState<ViewMode>("thematic");
   const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null);
   const [activeItemIndex, setActiveItemIndex] = useState<number>(0);
@@ -180,10 +175,10 @@ export default function ThemedGalleries() {
 
               <div className="flex items-center gap-2 text-xs font-mono text-rose-200/70">
                 <span className="px-3 py-1 rounded-full bg-white/10 border border-white/15">
-                  11 ARCHIVE ITEMS
+                  {harleenItems.length} ARCHIVE ITEMS
                 </span>
                 <span className="px-3 py-1 rounded-full bg-amber-400/20 border border-amber-400/40 text-amber-300">
-                  2 MOTION FILMS
+                  {harleenItems.filter((i) => i.type === "video").length} MOTION FILMS
                 </span>
               </div>
             </div>
@@ -196,7 +191,7 @@ export default function ThemedGalleries() {
                   whileHover={{ y: -8, scale: 1.03, rotateX: 3, rotateY: -2 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   onClick={() => openLightbox(item, harleenItems)}
-                  className="group relative cursor-pointer select-none rounded-2xl overflow-hidden bg-white/5 border border-rose-500/25 hover:border-rose-400/60 shadow-lg hover:shadow-2xl backdrop-blur-md flex flex-col perspective-1000 transform-3d"
+                  className="group relative cursor-pointer select-none rounded-2xl overflow-hidden bg-[#220d1a] border border-rose-500/25 hover:border-rose-400/60 shadow-lg hover:shadow-2xl flex flex-col perspective-1000 transform-3d"
                 >
                   {/* Media Viewport */}
                   <div className="relative w-full aspect-[4/5] bg-black/60 overflow-hidden">
@@ -296,10 +291,10 @@ export default function ThemedGalleries() {
 
               <div className="flex items-center gap-2 text-xs font-mono text-amber-200/70">
                 <span className="px-3 py-1 rounded-full bg-emerald-950/80 border border-amber-400/30 text-amber-300">
-                  6 ROYAL ATTIRES
+                  {ethnicItems.length} ROYAL ATTIRES
                 </span>
                 <span className="px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-200">
-                  5 MOTION TWIRLS
+                  {ethnicItems.filter((i) => i.type === "video").length} MOTION TWIRLS
                 </span>
               </div>
             </div>
@@ -312,7 +307,7 @@ export default function ThemedGalleries() {
                   whileHover={{ y: -8, scale: 1.03, rotateX: 3, rotateY: 2 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   onClick={() => openLightbox(item, ethnicItems)}
-                  className="group relative cursor-pointer select-none rounded-2xl overflow-hidden bg-[#0c221a]/80 border border-amber-400/30 hover:border-amber-400/80 shadow-lg hover:shadow-2xl backdrop-blur-md flex flex-col perspective-1000 transform-3d"
+                  className="group relative cursor-pointer select-none rounded-2xl overflow-hidden bg-[#0c221a] border border-amber-400/30 hover:border-amber-400/80 shadow-lg hover:shadow-2xl flex flex-col perspective-1000 transform-3d"
                 >
                   <div className="relative w-full aspect-[4/5] bg-black/60 overflow-hidden">
                     {item.type === "video" ? (
@@ -418,11 +413,11 @@ export default function ThemedGalleries() {
                 return (
                   <motion.div
                     key={item.id}
+                    initial={{ rotate: tilt }}
                     whileHover={{ y: -10, scale: 1.04, rotate: 0, rotateX: 4 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                     onClick={() => openLightbox(item, pogoItems)}
                     className="group relative cursor-pointer select-none bg-white p-4 pt-5 pb-6 rounded-2xl border border-pink-200 shadow-md hover:shadow-2xl transition-all perspective-1000 transform-3d"
-                    style={{ transform: `rotate(${tilt}deg)` }}
                   >
                     {/* Realistic Washi Tape Graphic */}
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 bg-amber-200/80 backdrop-blur-xs border-y border-amber-300/60 rotate-1 shadow-xs pointer-events-none z-20" />
