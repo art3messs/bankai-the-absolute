@@ -34,7 +34,7 @@ export default function SecretVault() {
         colors: ["#ff758f", "#ffb3c1", "#ff4d6d", "#ffe3a8", "#ffffff"],
       });
     } else {
-      setErrorMsg("Incorrect secret word! Hint: the sweetest little word... 🥺");
+      setErrorMsg("Incorrect secret word! Hint: used to say before going to bed... 🥺");
     }
   };
 

@@ -3,230 +3,149 @@
 import React, { useEffect, useState, useRef } from "react";
 import { motion, useSpring, useMotionValue } from "framer-motion";
 
-interface Particle {
-  id: string;
+interface TrailItem {
+  id: number;
   x: number;
   y: number;
+  char: string;
   size: number;
   color: string;
-  char?: string;
-  vx?: number;
-  vy?: number;
 }
 
-let globalParticleCounter = 0;
+let counter = 0;
 
 export default function CustomCursor() {
   const [isHovered, setIsHovered] = useState(false);
-  const [isMouseDown, setIsMouseDown] = useState(false);
-  const [particles, setParticles] = useState<Particle[]>([]);
-  const [bursts, setBursts] = useState<Particle[]>([]);
+  const [isClicking, setIsClicking] = useState(false);
+  const [trails, setTrails] = useState<TrailItem[]>([]);
   const [isVisible, setIsVisible] = useState(false);
 
   const mouseX = useMotionValue(-100);
   const mouseY = useMotionValue(-100);
-  const lastSpawnTime = useRef(0);
-  const lastPos = useRef({ x: -100, y: -100 });
+  const lastSpawn = useRef(0);
+  const lastCoord = useRef({ x: -100, y: -100 });
 
-  // Spring physics for smooth outer halo
-  const springConfig = { damping: 26, stiffness: 380, mass: 0.45 };
+  // Spring physics for smooth ambient halo
+  const springConfig = { damping: 24, stiffness: 350, mass: 0.4 };
   const smoothX = useSpring(mouseX, springConfig);
   const smoothY = useSpring(mouseY, springConfig);
 
   useEffect(() => {
-    const celestialColors = [
-      "#d4af37", // Champagne Gold
-      "#e5c07b", // Soft Gold
-      "#d97d93", // Soft Blush Rose
-      "#c95874", // Deep Petal
-      "#ffffff", // Starlight White
-    ];
-    const sparkleGlyphs = ["✦", "✧", "•", "✨", "♥"];
+    // Only show on desktop / pointer devices
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+
+    const sparkleChars = ["♥", "✦", "✨", "✧", "🤍"];
+    const colors = ["#d4af37", "#f43f5e", "#ff758f", "#fbbf24", "#ffffff"];
 
     const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      mouseX.set(clientX);
-      mouseY.set(clientY);
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
       if (!isVisible) setIsVisible(true);
 
       const now = performance.now();
-      const dist = Math.hypot(clientX - lastPos.current.x, clientY - lastPos.current.y);
+      const dist = Math.hypot(e.clientX - lastCoord.current.x, e.clientY - lastCoord.current.y);
 
-      // Throttled particle trail: spawns every 45ms if moved > 8px
-      if (now - lastSpawnTime.current > 45 && dist > 8) {
-        lastSpawnTime.current = now;
-        lastPos.current = { x: clientX, y: clientY };
+      // Spawn ethereal stardust trail
+      if (now - lastSpawn.current > 40 && dist > 10) {
+        lastSpawn.current = now;
+        lastCoord.current = { x: e.clientX, y: e.clientY };
 
-        globalParticleCounter++;
-        const isStar = Math.random() > 0.45;
-        const newParticle: Particle = {
-          id: `trail-${now.toFixed(0)}-${globalParticleCounter}`,
-          x: clientX + (Math.random() * 12 - 6),
-          y: clientY + (Math.random() * 12 - 6),
-          size: isStar ? 12 : Math.random() * 3 + 2,
-          color: celestialColors[Math.floor(Math.random() * celestialColors.length)],
-          char: isStar ? sparkleGlyphs[Math.floor(Math.random() * sparkleGlyphs.length)] : undefined,
+        counter++;
+        const newTrail: TrailItem = {
+          id: counter,
+          x: e.clientX + (Math.random() * 8 - 4),
+          y: e.clientY + (Math.random() * 8 - 4),
+          char: sparkleChars[Math.floor(Math.random() * sparkleChars.length)],
+          size: Math.floor(Math.random() * 6) + 11,
+          color: colors[Math.floor(Math.random() * colors.length)],
         };
 
-        setParticles((prev) => {
-          const updated = prev.length > 16 ? prev.slice(-16) : prev;
-          return [...updated, newParticle];
-        });
+        setTrails((prev) => [...prev.slice(-14), newTrail]);
       }
+    };
 
-      // Detect hover on clickables without forcing getComputedStyle
+    const handleMouseDown = () => setIsClicking(true);
+    const handleMouseUp = () => setIsClicking(false);
+
+    // Track clickable / interactive hover elements
+    const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
-      if (target) {
-        const isClickable = !!target.closest(
-          "button, a, input, textarea, select, [role='button'], .cursor-pointer, [data-clickable]"
-        );
-        setIsHovered(isClickable);
-      }
+      if (!target) return;
+      const isInteractive = !!target.closest(
+        'button, a, input, [role="button"], video, img, .cursor-pointer'
+      );
+      setIsHovered(isInteractive);
     };
-
-    const handleMouseDown = (e: MouseEvent) => {
-      setIsMouseDown(true);
-      const { clientX, clientY } = e;
-
-      // Burst of sparkling stars upon clicking
-      const clickBursts: Particle[] = Array.from({ length: 8 }).map((_, i) => {
-        const angle = (i / 8) * Math.PI * 2 + (Math.random() * 0.4 - 0.2);
-        const speed = Math.random() * 35 + 20;
-        globalParticleCounter++;
-        return {
-          id: `burst-${Date.now()}-${globalParticleCounter}`,
-          x: clientX,
-          y: clientY,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          size: Math.random() > 0.5 ? 13 : 9,
-          color: celestialColors[Math.floor(Math.random() * celestialColors.length)],
-          char: sparkleGlyphs[Math.floor(Math.random() * sparkleGlyphs.length)],
-        };
-      });
-
-      setBursts((prev) => [...prev, ...clickBursts]);
-      setTimeout(() => {
-        setBursts((prev) => prev.filter((p) => !clickBursts.includes(p)));
-      }, 700);
-    };
-
-    const handleMouseUp = () => setIsMouseDown(false);
-    const handleMouseLeave = () => setIsVisible(false);
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    window.addEventListener("mousedown", handleMouseDown, { passive: true });
-    window.addEventListener("mouseup", handleMouseUp, { passive: true });
-    document.addEventListener("mouseleave", handleMouseLeave);
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("mouseover", handleMouseOver, { passive: true });
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
-      document.removeEventListener("mouseleave", handleMouseLeave);
+      window.removeEventListener("mouseover", handleMouseOver);
     };
-  }, [mouseX, mouseY, isVisible]);
+  }, [isVisible, mouseX, mouseY]);
 
-  // Clean up older particles gently
+  // Clean old trail items
   useEffect(() => {
-    if (particles.length === 0) return;
-    const timer = setInterval(() => {
-      setParticles((prev) => {
-        if (prev.length <= 1) return [];
-        return prev.slice(1);
-      });
-    }, 180);
-
-    return () => clearInterval(timer);
-  }, [particles.length > 0]);
+    if (trails.length === 0) return;
+    const timer = setTimeout(() => {
+      setTrails((prev) => prev.slice(1));
+    }, 450);
+    return () => clearTimeout(timer);
+  }, [trails]);
 
   if (!isVisible) return null;
 
   return (
-    <div className="hidden md:block pointer-events-none fixed inset-0 z-[9999] overflow-hidden select-none">
-      {/* Click Burst Particles */}
-      {bursts.map((b) => (
+    <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden select-none">
+      {/* Floating Fairy Dust Trails */}
+      {trails.map((t) => (
         <motion.div
-          key={b.id}
-          initial={{ opacity: 1, scale: 1, x: b.x, y: b.y }}
-          animate={{
-            opacity: 0,
-            scale: 0.2,
-            x: b.x + (b.vx || 0),
-            y: b.y + (b.vy || 0),
-          }}
-          transition={{ duration: 0.65, ease: "easeOut" }}
-          className="absolute -translate-x-1/2 -translate-y-1/2 font-bold pointer-events-none drop-shadow-md select-none"
+          key={t.id}
+          initial={{ opacity: 0.9, scale: 1, y: 0 }}
+          animate={{ opacity: 0, scale: 0.2, y: 18 }}
+          transition={{ duration: 0.45, ease: "easeOut" }}
+          className="absolute -translate-x-1/2 -translate-y-1/2 font-bold pointer-events-none drop-shadow-sm select-none"
           style={{
-            fontSize: `${b.size}px`,
-            color: b.color,
+            left: `${t.x}px`,
+            top: `${t.y}px`,
+            fontSize: `${t.size}px`,
+            color: t.color,
           }}
         >
-          {b.char || "✦"}
+          {t.char}
         </motion.div>
       ))}
 
-      {/* Fairy Dust Trailing Particles */}
-      {particles.map((p) =>
-        p.char ? (
-          <motion.div
-            key={p.id}
-            initial={{ opacity: 0.95, scale: 1 }}
-            animate={{ opacity: 0, scale: 0.3, y: p.y + 16, rotate: 20 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="absolute -translate-x-1/2 -translate-y-1/2 font-normal pointer-events-none select-none drop-shadow-xs"
-            style={{
-              left: `${p.x}px`,
-              top: `${p.y}px`,
-              fontSize: `${p.size}px`,
-              color: p.color,
-            }}
-          >
-            {p.char}
-          </motion.div>
-        ) : (
-          <motion.div
-            key={p.id}
-            initial={{ opacity: 0.9, scale: 1 }}
-            animate={{ opacity: 0, scale: 0.2, y: p.y + 16 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            className="absolute rounded-full pointer-events-none blur-[0.4px]"
-            style={{
-              left: `${p.x}px`,
-              top: `${p.y}px`,
-              width: `${p.size}px`,
-              height: `${p.size}px`,
-              backgroundColor: p.color,
-              boxShadow: `0 0 6px ${p.color}`,
-            }}
-          />
-        )
-      )}
-
-      {/* Outer Magnetic Glowing Halo */}
+      {/* Outer Magnetic Ambient Halo */}
       <motion.div
-        className="fixed top-0 left-0 rounded-full pointer-events-none flex items-center justify-center transition-all duration-200"
+        className="fixed top-0 left-0 rounded-full pointer-events-none flex items-center justify-center transition-all duration-150"
         style={{
           x: smoothX,
           y: smoothY,
           translateX: "-50%",
           translateY: "-50%",
-          width: isHovered ? 52 : isMouseDown ? 22 : 32,
-          height: isHovered ? 52 : isMouseDown ? 22 : 32,
+          width: isHovered ? 48 : isClicking ? 20 : 32,
+          height: isHovered ? 48 : isClicking ? 20 : 32,
           backgroundColor: isHovered
-            ? "rgba(212, 175, 55, 0.12)"
-            : "rgba(217, 125, 147, 0.08)",
+            ? "rgba(212, 175, 55, 0.15)"
+            : "rgba(244, 63, 94, 0.08)",
           borderColor: isHovered
-            ? "rgba(212, 175, 55, 0.75)"
-            : "rgba(217, 125, 147, 0.45)",
-          borderWidth: "1.5px",
+            ? "rgba(212, 175, 55, 0.85)"
+            : "rgba(217, 125, 147, 0.5)",
+          borderWidth: isHovered ? "1.5px" : "1px",
           boxShadow: isHovered
-            ? "0 0 20px rgba(212, 175, 55, 0.35)"
-            : "0 0 12px rgba(217, 125, 147, 0.2)",
+            ? "0 0 20px rgba(212, 175, 55, 0.4)"
+            : "0 0 10px rgba(217, 125, 147, 0.25)",
         }}
       />
 
-      {/* Center Sparkle Pin / Core */}
+      {/* Main Cursor Core: Glowing Rose Heart / Pin */}
       <motion.div
         className="fixed top-0 left-0 pointer-events-none flex items-center justify-center"
         style={{
@@ -236,15 +155,22 @@ export default function CustomCursor() {
           translateY: "-50%",
         }}
       >
-        <div
-          className={`rounded-full transition-all duration-150 ${
-            isHovered
-              ? "w-2.5 h-2.5 bg-[#d4af37] shadow-[0_0_12px_#d4af37] scale-125"
-              : isMouseDown
-              ? "w-1.5 h-1.5 bg-[#c95874] scale-90"
-              : "w-2 h-2 bg-[#d97d93] shadow-[0_0_8px_#d97d93]"
-          }`}
-        />
+        <motion.div
+          animate={{
+            scale: isClicking ? 0.75 : isHovered ? 1.3 : 1,
+            rotate: isHovered ? 12 : 0,
+          }}
+          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+          className="relative flex items-center justify-center"
+        >
+          {isHovered ? (
+            <span className="text-sm drop-shadow-[0_0_8px_rgba(212,175,55,0.8)]">
+              ✨
+            </span>
+          ) : (
+            <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-tr from-[#c95874] via-[#f43f5e] to-[#d4af37] shadow-[0_0_10px_#f43f5e]" />
+          )}
+        </motion.div>
       </motion.div>
     </div>
   );

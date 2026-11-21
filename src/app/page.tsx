@@ -13,6 +13,7 @@ import ThemedGalleries from "@/components/ThemedGalleries";
 import ArchivalLetter from "@/components/ArchivalLetter";
 import MidnightVault from "@/components/MidnightVault";
 import GuestbookWall from "@/components/GuestbookWall";
+import WebsiteReview from "@/components/WebsiteReview";
 import SpotifyMixtape from "@/components/SpotifyMixtape";
 import SixteenReasons from "@/components/SixteenReasons";
 import {
@@ -252,6 +253,11 @@ export default function HomePage() {
         </div>
         <GuestbookWall />
       </section>
+
+      <div className="max-w-2xl mx-auto editorial-rule" />
+
+      {/* CHAPTER X: HER REVIEW & REACTION */}
+      <WebsiteReview />
 
       {/* THE COLOPHON / EDITORIAL FOOTER */}
       <footer className="relative z-10 py-24 text-center border-t border-[#d97d93]/20 bg-[#ffffff]">

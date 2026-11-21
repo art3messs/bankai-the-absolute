@@ -2,42 +2,31 @@ import { NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
 
-export interface Wish {
+export interface WishItem {
   id: string;
+  type: "wish" | "review";
   name: string;
   message: string;
-  stamp: string;
+  reaction?: string;
+  stamp?: string;
   createdAt: string;
 }
 
 const WISHES_FILE = path.join(process.cwd(), "src", "data", "wishes.json");
 
-// In-memory fallback if filesystem write is restricted (e.g. read-only serverless edge)
-let memoryWishes: Wish[] = [
+// Default starter items
+let memoryWishes: WishItem[] = [
   {
-    id: "1",
-    name: "A Close Friend",
-    message: "Happy Birthday Harleen!! 🌸 Hope your 16th of Feb is filled with lots of pink cakes, laughs, and unforgettable memories! Keep shining always ✨",
-    stamp: "🌸",
-    createdAt: "2026-02-16T00:01:00Z",
-  },
-  {
-    id: "2",
-    name: "Secret Admirer",
-    message: "To the prettiest girl with the sweetest vibe 💖 Happy Birthday Harleen! Never stop smiling!",
-    stamp: "💖",
-    createdAt: "2026-02-16T00:05:00Z",
-  },
-  {
-    id: "3",
-    name: "Bestie",
-    message: "Queen of pink!! 🎀 You deserve the absolute best year ahead. So lucky to have you in our lives!",
-    stamp: "🎀",
-    createdAt: "2026-02-16T00:10:00Z",
+    id: "wish-001",
+    type: "wish",
+    name: "Harleen",
+    message: "To always have peace, laughter, and endless happiness together ✨",
+    stamp: "🕯️",
+    createdAt: "2026-02-16T00:00:00Z",
   },
 ];
 
-async function loadWishes(): Promise<Wish[]> {
+async function loadWishes(): Promise<WishItem[]> {
   try {
     const data = await fs.readFile(WISHES_FILE, "utf-8");
     return JSON.parse(data);
@@ -46,12 +35,30 @@ async function loadWishes(): Promise<Wish[]> {
   }
 }
 
-async function saveWishes(wishes: Wish[]): Promise<void> {
+async function saveWishes(wishes: WishItem[]): Promise<void> {
   memoryWishes = wishes;
   try {
     await fs.writeFile(WISHES_FILE, JSON.stringify(wishes, null, 2), "utf-8");
+  } catch (err) {
+    console.error("Failed to persist wishes to disk:", err);
+  }
+}
+
+// Send instant push notification to user's phone / laptop via ntfy.sh
+async function sendInstantNotification(title: string, message: string, tags: string[] = ["sparkles", "heart"]) {
+  try {
+    const topic = "harleen-birthday-pucchi-alert";
+    await fetch(`https://ntfy.sh/${topic}`, {
+      method: "POST",
+      headers: {
+        Title: title,
+        Priority: "urgent",
+        Tags: tags.join(","),
+      },
+      body: message,
+    });
   } catch {
-    // Falls back to memoryWishes if file system is read-only
+    // Network or offline gracefully ignored
   }
 }
 
@@ -62,35 +69,47 @@ export async function GET() {
 }
 
 // POST /api/wishes
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
-    const body = await request.json();
-    const { name, message, stamp } = body;
+    const body = await req.json();
+    const { name, message, type = "wish", reaction, stamp = "🤍" } = body;
 
-    if (!name || !message) {
-      return NextResponse.json(
-        { error: "Name and message are required" },
-        { status: 400 }
-      );
+    if (!message || typeof message !== "string" || !message.trim()) {
+      return NextResponse.json({ error: "Message is required." }, { status: 400 });
     }
 
-    const newWish: Wish = {
-      id: Date.now().toString(),
-      name: String(name).slice(0, 50),
-      message: String(message).slice(0, 500),
-      stamp: String(stamp || "🌸").slice(0, 4),
+    const currentWishes = await loadWishes();
+    const newEntry: WishItem = {
+      id: `${type}-${Date.now()}`,
+      type: type === "review" ? "review" : "wish",
+      name: (name && String(name).trim()) || "Harleen",
+      message: message.trim(),
+      reaction: reaction || undefined,
+      stamp: stamp || "🤍",
       createdAt: new Date().toISOString(),
     };
 
-    const wishes = await loadWishes();
-    const updated = [newWish, ...wishes];
+    const updated = [newEntry, ...currentWishes];
     await saveWishes(updated);
 
-    return NextResponse.json(newWish, { status: 201 });
-  } catch {
-    return NextResponse.json(
-      { error: "Failed to process wish" },
-      { status: 500 }
-    );
+    // Trigger instant notification
+    if (newEntry.type === "wish") {
+      await sendInstantNotification(
+        "🎂 Harleen Just Made A Birthday Wish!",
+        `Harleen blew the candle and wished: "${newEntry.message}"`,
+        ["birthday", "star2", "candle"]
+      );
+    } else {
+      await sendInstantNotification(
+        "💌 New Reaction From Harleen!",
+        `Reaction: ${newEntry.reaction || "Loved it"} | Note: "${newEntry.message}"`,
+        ["heart", "love_letter", "sparkling_heart"]
+      );
+    }
+
+    return NextResponse.json({ success: true, item: newEntry });
+  } catch (err) {
+    console.error("POST /api/wishes error:", err);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

@@ -6,6 +6,16 @@ export interface PhotoMemory {
   date?: string;
 }
 
+export interface SongTrack {
+  id: string;
+  title: string;
+  artist: string;
+  src: string;
+  cover: string;
+  quote: string;
+  duration: string;
+}
+
 export const BIRTHDAY_CONFIG = {
   recipientName: "Harleen",
   nickname: "Pucchi",
@@ -15,9 +25,9 @@ export const BIRTHDAY_CONFIG = {
     monthIndex: 1, // 0-indexed (Feb = 1)
   },
   theme: {
-    baseColor: "cream-pearl",       // 60% Silk Cream & Pearl Milk (#fbf7f8)
-    secondaryColor: "rose-strawberry", // 30% Strawberry Rose Pink (#ff758f / #ff4d6d)
-    accentColor: "champagne-gold",  // 10% Sparkling Champagne Gold (#f59e0b / #fde047)
+    baseColor: "cream-pearl",
+    secondaryColor: "rose-strawberry",
+    accentColor: "champagne-gold",
     vibe: "dreamy-editorial",
   },
   spotifyPlaylistUrl: "https://open.spotify.com/playlist/06Aj93NfdzlxVX8Sw1dlXK?si=ae1e54085bc14b13&pt=434eda748460ab71160e13914df66af0",
@@ -25,7 +35,55 @@ export const BIRTHDAY_CONFIG = {
     title: "K.",
     artist: "Cigarettes After Sex",
     src: "/music/track.mp3",
+    cover: "/media/harleen-red-feather-dress.jpg",
   },
+  playlist: [
+    {
+      id: "track-1",
+      title: "K.",
+      artist: "Cigarettes After Sex",
+      src: "/music/track.mp3",
+      cover: "/media/harleen-red-feather-dress.jpg",
+      quote: "Remember when I started crying to you... Harleen 4 Life.",
+      duration: "5:17",
+    },
+    {
+      id: "track-2",
+      title: "Apocalypse",
+      artist: "Cigarettes After Sex",
+      src: "/music/track.mp3",
+      cover: "/media/ethnic-dragonfly-tiara.jpg",
+      quote: "Got the music in you baby, tell me why...",
+      duration: "4:50",
+    },
+    {
+      id: "track-3",
+      title: "Sunsetz",
+      artist: "Cigarettes After Sex",
+      src: "/music/track.mp3",
+      cover: "/media/harleen-polka-rhinestones.jpg",
+      quote: "When you go away, I still see you with the sun in your eyes.",
+      duration: "3:35",
+    },
+    {
+      id: "track-4",
+      title: "Sweet",
+      artist: "Cigarettes After Sex",
+      src: "/music/track.mp3",
+      cover: "/media/harleen-warm-hug.jpg",
+      quote: "Watching the video that you sent me... My sweetest Pucchi.",
+      duration: "4:52",
+    },
+    {
+      id: "track-5",
+      title: "Heavenly",
+      artist: "Cigarettes After Sex",
+      src: "/music/track.mp3",
+      cover: "/media/harleen-teddy-crown.jpg",
+      quote: "Giving you all my love, across every galaxy and lifetime.",
+      duration: "4:46",
+    },
+  ] as SongTrack[],
   letter: {
     title: "To Harleen, My Entire Universe & My Sweetest Pucchi 🌙",
     subtitle: "February 16 • A Love Letter Written From The Depths of My Heart",
@@ -48,7 +106,7 @@ Happy Birthday, my beautiful girl. ✨🤍`,
   },
   secretVault: {
     question: "What is that one secret code word that belongs only to you and me?",
-    hint: "The cutest, softest little word... starts with 'p' 💋",
+    hint: "used to say before going to bed, kinda like mwahhh or so",
     answerHash: "pucchi",
     secretMessage: "You unlocked my secret vault! 🔐 'Pucchi' forever and always. You are genuinely the most precious, gorgeous, and adored person in this entire world, Harleen. My universe begins and ends with you. Happy Birthday, my love 🤍✨",
   },

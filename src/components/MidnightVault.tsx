@@ -35,7 +35,7 @@ export default function MidnightVault() {
         colors: ["#d97d93", "#c95874", "#d4af37", "#f3e5ab", "#ffffff"],
       });
     } else {
-      setErrorMsg("Incorrect secret code! Remember the sweetest little word between us... 🥺");
+      setErrorMsg("Incorrect secret code! Hint: used to say before going to bed... 🥺");
     }
   };
 
