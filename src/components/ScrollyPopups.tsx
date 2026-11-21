@@ -66,7 +66,7 @@ const SCROLL_POPUPS: MemoryPopup[] = [
     id: "harleen-popup",
     badge: "👑 HARLEEN 4 LIFE",
     title: "Polka Dots & Rhinestone Sparkle",
-    subtitle: "The only person I adore • Forever & always 💖",
+    subtitle: "My entire universe • Forever & always 💖",
     image: "/media/harleen-polka-rhinestones.jpg",
     side: "left",
     rotate: -2.5,

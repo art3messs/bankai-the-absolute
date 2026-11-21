@@ -27,11 +27,11 @@ export const BIRTHDAY_CONFIG = {
     src: "/music/track.mp3",
   },
   letter: {
-    title: "For Harleen, The Only Person I Adore 🌙",
+    title: "For Harleen, My Entire Universe 🌙",
     subtitle: "February 16 • Written straight from my heart",
     body: `Hey Harleen, Happy Birthday. 🤍
 
-I didn't want to make anything ordinary for you today, because to me, you are the most extraordinary person in this world. You are genuinely the only person I adore like this.
+I didn't want to make anything ordinary for you today, because to me, you are the most extraordinary person in this world. You are genuinely the center of my entire universe.
 
 More than anything in life, I just want to see you happy. Every smile of yours, every little laugh, the way you speak, and the effortless peace you bring into my world—it means more to me than words could ever explain.
 
@@ -48,7 +48,7 @@ Happy Birthday, my favorite person in the entire universe. ✨`,
     question: "What is that one secret inside joke or memory that belongs only to you and me?",
     hint: "Think about the sweetest thing between us...",
     answerHash: "pink",
-    secretMessage: "You unlocked my secret vault. You are the only person I adore this much, and seeing you happy will always be my favorite thing in the universe 🤍✨",
+    secretMessage: "You unlocked my secret vault. You are my entire universe, and seeing you happy will always be my favorite thing in the world 🤍✨",
   },
   samplePhotos: [
     {
@@ -89,7 +89,7 @@ Happy Birthday, my favorite person in the entire universe. ✨`,
     {
       id: "6",
       url: "/photos/sample6.jpg",
-      caption: "Harleen 4 Life • The only person I adore forever 🤍",
+      caption: "Harleen 4 Life • My entire universe forever 🤍",
       category: "aesthetic",
       date: "Forever",
     },

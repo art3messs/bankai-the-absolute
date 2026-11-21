@@ -106,7 +106,7 @@ const REASONS: Reason[] = [
   {
     number: 16,
     title: "Simply Because You Are Harleen",
-    note: "Because you are rare, irreplaceable, and genuinely the only person in this whole world I adore.",
+    note: "Because you are rare, irreplaceable, and genuinely the center of my whole universe.",
     icon: "🌹",
   },
 ];

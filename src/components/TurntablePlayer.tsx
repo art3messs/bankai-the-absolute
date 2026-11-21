@@ -108,7 +108,7 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
                 harleen 4 life
               </span>
               <span className="text-[9px] text-[#7d7265] font-signature mt-0.5">
-                the only one I adore
+                my entire universe ✨
               </span>
               <div className="w-2.5 h-2.5 rounded-full bg-[#241e16] border border-[#d4af37] mt-1" />
             </div>

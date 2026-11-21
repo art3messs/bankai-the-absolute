@@ -7,7 +7,8 @@ import SparklesBackground from "@/components/SparklesBackground";
 import StartGate from "@/components/StartGate";
 import TurntablePlayer from "@/components/TurntablePlayer";
 import MidnightRitual from "@/components/MidnightRitual";
-import FilmContactSheet from "@/components/FilmContactSheet";
+import Hero3D from "@/components/Hero3D";
+import ThemedGalleries from "@/components/ThemedGalleries";
 import ArchivalLetter from "@/components/ArchivalLetter";
 import MidnightVault from "@/components/MidnightVault";
 import GuestbookWall from "@/components/GuestbookWall";
@@ -75,123 +76,8 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* CHAPTER I: THE GENESIS / THE HORIZON */}
-      <section className="relative z-10 max-w-6xl mx-auto px-4 pt-16 sm:pt-24 pb-16 flex flex-col items-center text-center">
-        {/* Chapter Indicator */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#d97d93]/30 shadow-xs text-[#c95874] text-[10px] sm:text-[11px] font-raleway font-bold tracking-[0.3em] uppercase mb-6"
-        >
-          <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
-          <span>CHAPTER I • THE GENESIS</span>
-          <Heart className="w-3.5 h-3.5 text-[#c95874] fill-[#c95874]" />
-        </motion.div>
-
-        {/* Grand Signature Calligraphy */}
-        <motion.span
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.1 }}
-          className="font-signature text-6xl sm:text-8xl md:text-9xl text-[#c95874] leading-none drop-shadow-sm select-none"
-        >
-          Harleen
-        </motion.span>
-
-        {/* Antique Roman Serif Headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="font-forum text-4xl sm:text-6xl md:text-7xl uppercase tracking-[0.08em] text-[#241e16] font-normal mt-4 leading-tight"
-        >
-          The Only One I Adore
-        </motion.h1>
-
-        {/* Delicate Poetic Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="font-signature text-2xl sm:text-4xl text-[#7d7265] max-w-2xl mt-4 leading-relaxed"
-        >
-          &ldquo;In all of space and time, seeing you happy is my favorite thing in life.&rdquo;
-        </motion.p>
-
-        {/* Editorial Dividing Rule */}
-        <div className="w-48 editorial-rule my-10" />
-
-        {/* Table of Contents / Chapter Index Navigation */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.4 }}
-          className="flex flex-wrap items-center justify-center gap-3 max-w-3xl"
-        >
-          <a
-            href="#sound"
-            className="flex items-center gap-2 px-4 py-2 rounded-full glass-pearl hover:bg-white border border-[#d97d93]/30 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.18em] transition-all hover:scale-105 active:scale-95 shadow-xs"
-          >
-            <Disc3 className="w-3 h-3 text-[#d4af37]" />
-            <span>01. The Sound</span>
-          </a>
-
-          <a
-            href="#reasons"
-            className="flex items-center gap-2 px-4 py-2 rounded-full glass-pearl hover:bg-white border border-[#d97d93]/30 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.18em] transition-all hover:scale-105 active:scale-95 shadow-xs"
-          >
-            <Award className="w-3 h-3 text-[#d4af37]" />
-            <span>02. 16 Reasons</span>
-          </a>
-
-          <a
-            href="#ritual"
-            className="flex items-center gap-2 px-4 py-2 rounded-full glass-pearl hover:bg-white border border-[#d97d93]/30 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.18em] transition-all hover:scale-105 active:scale-95 shadow-xs"
-          >
-            <Sparkles className="w-3 h-3 text-[#d4af37]" />
-            <span>03. The Ritual</span>
-          </a>
-
-          <a
-            href="#memories"
-            className="flex items-center gap-2 px-4 py-2 rounded-full glass-pearl hover:bg-white border border-[#d97d93]/30 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.18em] transition-all hover:scale-105 active:scale-95 shadow-xs"
-          >
-            <Film className="w-3 h-3 text-[#d4af37]" />
-            <span>04. 35mm Archives (35)</span>
-          </a>
-
-          <a
-            href="#letter"
-            className="flex items-center gap-2 px-4 py-2 rounded-full glass-pearl hover:bg-white border border-[#d97d93]/30 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.18em] transition-all hover:scale-105 active:scale-95 shadow-xs"
-          >
-            <Mail className="w-3 h-3 text-[#d4af37]" />
-            <span>05. Sealed Letter</span>
-          </a>
-
-          <a
-            href="#vault"
-            className="flex items-center gap-2 px-4 py-2 rounded-full glass-pearl hover:bg-white border border-[#d97d93]/30 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.18em] transition-all hover:scale-105 active:scale-95 shadow-xs"
-          >
-            <Lock className="w-3 h-3 text-[#d4af37]" />
-            <span>06. Secret Vault</span>
-          </a>
-
-          <a
-            href="#guestbook"
-            className="flex items-center gap-2 px-4 py-2 rounded-full glass-pearl hover:bg-white border border-[#d97d93]/30 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.18em] transition-all hover:scale-105 active:scale-95 shadow-xs"
-          >
-            <MessageSquare className="w-3 h-3 text-[#d4af37]" />
-            <span>07. Notes Wall</span>
-          </a>
-        </motion.div>
-
-        {/* Gentle Scroll Prompt */}
-        <div className="flex flex-col items-center gap-1.5 mt-16 text-[#7d7265]/70 text-[10px] font-raleway tracking-[0.25em] uppercase">
-          <span>Scroll to uncover every memory</span>
-          <ArrowDown className="w-3.5 h-3.5 animate-bounce text-[#c95874]" />
-        </div>
-      </section>
+      {/* CHAPTER I: 3D INTERACTIVE HERO STAGE */}
+      <Hero3D />
 
       {/* POPPING SCROLL CAPSULE #1: LITTLE POGO */}
       <ScrollyCard
@@ -305,14 +191,9 @@ export default function HomePage() {
 
       <div className="max-w-2xl mx-auto editorial-rule" />
 
-      {/* CHAPTER V: THE ARCHIVES (35MM CONTACT SHEET WITH ALL 35 MEDIA ASSETS) */}
+      {/* CHAPTER V: THE ARCHIVES (5 CURATED THEMED WORLDS WITH ALL 35 MEDIA ASSETS) */}
       <section id="memories" className="relative z-10 max-w-6xl mx-auto px-4 py-16">
-        <div className="text-center mb-4">
-          <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
-            CHAPTER V • THE ARCHIVES
-          </span>
-        </div>
-        <FilmContactSheet />
+        <ThemedGalleries />
       </section>
 
       {/* POPPING SCROLL CAPSULE #5: HARLEEN 4 LIFE */}
@@ -321,7 +202,7 @@ export default function HomePage() {
           id: "harleen-popup",
           badge: "👑 HARLEEN 4 LIFE",
           title: "Polka Dots & Rhinestone Sparkle",
-          subtitle: "The only person I adore • Forever & always 💖",
+          subtitle: "My entire universe • Forever & always 💖",
           image: "/media/harleen-polka-rhinestones.jpg",
           side: "left",
           rotate: -2.5,
@@ -377,7 +258,7 @@ export default function HomePage() {
           </p>
           <div className="w-16 editorial-rule my-4" />
           <p className="font-signature text-2xl text-[#7d7265]">
-            &ldquo;You are the only person I adore. Always and forever.&rdquo;
+            &ldquo;You are my entire universe. Today, tomorrow, and across every lifetime.&rdquo;
           </p>
           <div className="flex items-center gap-2 text-[10px] font-raleway tracking-[0.3em] uppercase text-[#7d7265] mt-6">
             <span>SOUNDTRACK: CAS &ldquo;K.&rdquo;</span>
