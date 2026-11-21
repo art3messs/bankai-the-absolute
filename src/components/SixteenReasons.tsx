@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Heart, Award, CheckCircle2 } from "lucide-react";
+import { motion } from "framer-motion";
+import { Sparkles, Heart, Award } from "lucide-react";
 import confetti from "canvas-confetti";
 
 interface Reason {
@@ -124,7 +124,7 @@ export default function SixteenReasons() {
           particleCount: 120,
           spread: 100,
           origin: { y: 0.6 },
-          colors: ["#ff758f", "#ff4d6d", "#fbbf24", "#fde047", "#ffffff"],
+          colors: ["#d97d93", "#c95874", "#d4af37", "#f3e5ab", "#ffffff"],
         });
       }
       return next;
@@ -139,31 +139,26 @@ export default function SixteenReasons() {
         particleCount: 120,
         spread: 100,
         origin: { y: 0.6 },
-        colors: ["#ff758f", "#ff4d6d", "#fbbf24", "#fde047", "#ffffff"],
+        colors: ["#d97d93", "#c95874", "#d4af37", "#f3e5ab", "#ffffff"],
       });
     }
   };
 
   return (
-    <section id="reasons" className="relative z-10 max-w-6xl mx-auto px-4 py-20">
-      {/* Header */}
-      <div className="text-center mb-10 max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pink-100 border border-pink-200 text-rose-700 text-xs font-semibold tracking-wider uppercase mb-3 shadow-xs">
-          <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-          <span>February 16th Special Edition</span>
-        </div>
-
-        <h2 className="font-serif text-3xl sm:text-5xl font-black text-[#2e1322] drop-shadow-xs">
-          16 Reasons Why I Adore You 🌸
+    <div className="w-full">
+      {/* Editorial Header */}
+      <div className="text-center mb-10 max-w-2xl mx-auto">
+        <h2 className="font-forum text-3xl sm:text-5xl text-[#241e16] uppercase tracking-[0.06em]">
+          16 Reasons Why I Adore You
         </h2>
-        <p className="font-hand text-2xl text-rose-600/90 mt-2">
-          One for every year & date of your 16th of February. Tap any card to flip & reveal!
+        <p className="font-signature text-2xl sm:text-3xl text-[#7d7265] mt-2 leading-relaxed">
+          &ldquo;One for every year &amp; date of your 16th of February. Tap any card to flip &amp; reveal.&rdquo;
         </p>
 
         {/* Progress Tracker & Quick Reveal */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
-          <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-pink-200 text-xs font-mono font-bold text-rose-800 shadow-xs">
-            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
+          <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#d97d93]/30 text-xs font-mono font-bold text-[#c95874] shadow-xs">
+            <Heart className="w-3.5 h-3.5 text-[#c95874] fill-[#c95874]" />
             <span>
               Revealed: {flippedCards.length} / {REASONS.length}
             </span>
@@ -172,7 +167,7 @@ export default function SixteenReasons() {
           {flippedCards.length < REASONS.length && (
             <button
               onClick={revealAll}
-              className="text-xs text-amber-700 hover:text-amber-800 font-bold underline decoration-amber-300 underline-offset-4 transition-colors"
+              className="text-xs text-[#d4af37] hover:text-amber-600 font-bold underline decoration-[#d4af37]/60 underline-offset-4 transition-colors font-raleway tracking-wider uppercase"
             >
               Flip All 16 Cards ✨
             </button>
@@ -191,96 +186,57 @@ export default function SixteenReasons() {
               whileHover={{ y: -4, scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => toggleCard(item.number)}
-              className="h-64 cursor-pointer select-none perspective-[1000px]"
+              className="h-64 cursor-pointer select-none [perspective:1000px]"
             >
               <div
-                className={`w-full h-full relative transition-all duration-500 transform-style-3d ${
-                  isFlipped ? "rotate-y-180" : ""
+                className={`w-full h-full relative transition-all duration-500 [transform-style:preserve-3d] ${
+                  isFlipped ? "[transform:rotateY(180deg)]" : ""
                 }`}
-                style={{
-                  transformStyle: "preserve-3d",
-                  transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
-                }}
               >
-                {/* FRONT FACE (Foil Card Cover) */}
-                <div
-                  className="absolute inset-0 rounded-2xl glass-pearl p-6 flex flex-col items-center justify-between text-center border-2 border-pink-200/90 shadow-md backface-hidden"
-                  style={{ backfaceVisibility: "hidden" }}
-                >
-                  <div className="w-full flex justify-between items-center text-xs font-mono font-bold text-amber-600">
-                    <span>N° {String(item.number).padStart(2, "0")}</span>
-                    <span>16TH FEB</span>
-                  </div>
-
-                  <div className="flex flex-col items-center">
-                    <span className="text-4xl mb-2">{item.icon}</span>
-                    <span className="font-serif font-black text-rose-950 text-base">
-                      {item.title}
+                {/* FRONT (Linen Alabaster with Bronze Foil Border) */}
+                <div className="absolute inset-0 [backface-visibility:hidden] editorial-card rounded-2xl p-5 flex flex-col justify-between border border-[#d97d93]/30 shadow-xs hover:border-[#d4af37] transition-all">
+                  <div className="flex justify-between items-start">
+                    <span className="font-forum text-2xl text-[#d4af37] font-bold">
+                      #{item.number < 10 ? `0${item.number}` : item.number}
                     </span>
+                    <span className="text-xl select-none">{item.icon}</span>
                   </div>
 
-                  <div className="w-full pt-2 border-t border-pink-200/60 flex items-center justify-center gap-1.5 text-[11px] font-sans font-bold text-rose-500">
-                    <Sparkles className="w-3 h-3 text-amber-500" />
-                    <span>Tap to reveal reason</span>
+                  <div className="my-auto text-center px-1">
+                    <h3 className="font-forum text-lg sm:text-xl text-[#241e16] font-normal leading-snug">
+                      {item.title}
+                    </h3>
+                  </div>
+
+                  <div className="text-center pt-2 border-t border-[#d97d93]/15">
+                    <span className="text-[10px] font-raleway font-semibold text-[#7d7265] tracking-[0.2em] uppercase">
+                      Tap to reveal ✦
+                    </span>
                   </div>
                 </div>
 
-                {/* BACK FACE (Unveiled Note) */}
-                <div
-                  className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#fff7f9] via-white to-[#fff0f3] p-6 flex flex-col justify-between text-center border-2 border-amber-300 shadow-xl backface-hidden rotate-y-180"
-                  style={{
-                    backfaceVisibility: "hidden",
-                    transform: "rotateY(180deg)",
-                  }}
-                >
-                  <div className="w-full flex justify-between items-center text-xs font-mono font-bold text-rose-700">
-                    <span className="px-2 py-0.5 rounded-full bg-pink-100">
-                      REASON N° {item.number}
-                    </span>
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                {/* BACK (Rose Silk Inset) */}
+                <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)] rounded-2xl p-5 flex flex-col justify-between bg-white border border-[#d97d93]/40 shadow-md">
+                  <div className="flex justify-between items-center text-xs text-[#c95874] font-forum font-bold">
+                    <span>REASON #{item.number}</span>
+                    <Heart className="w-3.5 h-3.5 fill-[#c95874]" />
                   </div>
 
-                  <p className="font-hand text-xl text-rose-900 leading-snug my-auto px-1">
+                  <p className="font-raleway text-xs sm:text-[13px] text-[#241e16] leading-relaxed my-auto text-center px-1 font-medium">
                     &ldquo;{item.note}&rdquo;
                   </p>
 
-                  <span className="text-[10px] uppercase font-mono font-bold text-amber-700 tracking-wider">
-                    Harleen 4 Life 🌸
-                  </span>
+                  <div className="text-center pt-2 border-t border-[#d97d93]/15">
+                    <span className="text-[9px] font-signature text-xl text-[#c95874]">
+                      harleen 4 life
+                    </span>
+                  </div>
                 </div>
               </div>
             </motion.div>
           );
         })}
       </div>
-
-      {/* COMPLETION CERTIFICATE (Unlocked when all 16 are opened) */}
-      <AnimatePresence>
-        {flippedCards.length === REASONS.length && (
-          <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0 }}
-            className="mt-12 p-8 rounded-3xl bg-gradient-to-r from-amber-50 via-pink-50 to-amber-50 border-2 border-amber-300 shadow-xl text-center max-w-2xl mx-auto"
-          >
-            <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-300 p-0.5 mx-auto mb-4 shadow-lg flex items-center justify-center">
-              <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
-                <Award className="w-8 h-8 text-amber-500" />
-              </div>
-            </div>
-
-            <span className="text-xs font-mono font-bold tracking-widest text-amber-800 uppercase">
-              Official Birthday Decree • February 16
-            </span>
-            <h3 className="font-serif text-2xl sm:text-3xl font-black text-[#2e1322] mt-1">
-              You Have Unlocked All 16 Reasons 🤍
-            </h3>
-            <p className="font-hand text-2xl text-rose-700 mt-2">
-              &ldquo;Truth is, there are a million more reasons. You are the only person I adore.&rdquo;
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </section>
+    </div>
   );
 }

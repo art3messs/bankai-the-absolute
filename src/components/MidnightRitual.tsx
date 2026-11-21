@@ -52,12 +52,11 @@ export default function MidnightRitual({ recipientName }: MidnightRitualProps) {
     }));
     setSmokePuffs(puffs);
 
-    // Pearl, strawberry pink, and champagne gold confetti
     confetti({
       particleCount: 90,
       spread: 90,
       origin: { y: 0.6 },
-      colors: ["#ff758f", "#ff4d6d", "#fbbf24", "#fde047", "#ffffff"],
+      colors: ["#d97d93", "#c95874", "#d4af37", "#f3e5ab", "#ffffff"],
     });
 
     stopMic();
@@ -134,15 +133,15 @@ export default function MidnightRitual({ recipientName }: MidnightRitualProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl mx-auto items-stretch select-none">
       {/* 1. LUXURY GLASS CANDLE */}
-      <div className="glass-pearl p-6 sm:p-8 rounded-3xl flex flex-col items-center justify-between text-center border border-pink-200/80 shadow-xl relative overflow-hidden">
+      <div className="editorial-card p-6 sm:p-8 rounded-3xl flex flex-col items-center justify-between text-center border border-[#d97d93]/30 shadow-xs relative overflow-hidden">
         {/* Glow */}
         {!candleBlown && (
-          <div className="absolute top-1/4 w-44 h-44 bg-amber-300/25 rounded-full blur-[65px] animate-pulse pointer-events-none" />
+          <div className="absolute top-1/4 w-44 h-44 bg-amber-300/20 rounded-full blur-[65px] animate-pulse pointer-events-none" />
         )}
 
         {/* Top Tag */}
-        <div className="flex items-center gap-2 px-3.5 py-1 rounded-full bg-pink-50 border border-pink-200 text-xs font-semibold text-rose-700 tracking-wider">
-          <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+        <div className="flex items-center gap-2 px-3.5 py-1 rounded-full bg-white border border-[#d97d93]/30 text-[10px] font-raleway font-bold text-[#c95874] tracking-widest uppercase">
+          <Sparkles className="w-3 h-3 text-[#d4af37]" />
           <span>The Birthday Candle Ritual</span>
         </div>
 
@@ -187,25 +186,24 @@ export default function MidnightRitual({ recipientName }: MidnightRitualProps) {
               ))}
           </AnimatePresence>
 
-          {/* Glass Candle (Frosted Ribbed Glass with Gold Rim) */}
-          <div className="w-36 h-44 rounded-2xl bg-gradient-to-b from-white via-pink-50/60 to-pink-100/80 border-t-2 border-amber-400 border-x border-b border-pink-200 shadow-xl p-3 flex flex-col items-center justify-between relative group-hover:scale-102 transition-transform">
-            {/* Wax pool */}
-            <div className="w-full h-4 bg-gradient-to-b from-pink-200/40 to-transparent rounded-full" />
+          {/* Glass Candle */}
+          <div className="w-36 h-44 rounded-2xl bg-gradient-to-b from-white via-[#fdfaf5] to-[#f7eedf] border-t-2 border-[#d4af37] border-x border-b border-[#d97d93]/30 shadow-md p-3 flex flex-col items-center justify-between relative group-hover:scale-102 transition-transform">
+            <div className="w-full h-4 bg-gradient-to-b from-[#d97d93]/20 to-transparent rounded-full" />
 
             {/* Label */}
-            <div className="w-full p-2.5 rounded-xl bg-white shadow-md border border-pink-200/80 text-center">
-              <span className="text-[9px] uppercase tracking-[0.25em] text-amber-600 font-extrabold block">
-                N° 16 • STRAWBERRY ROSE
+            <div className="w-full p-2.5 rounded-xl bg-white shadow-xs border border-[#d97d93]/20 text-center">
+              <span className="text-[8px] uppercase tracking-[0.25em] text-[#7d7265] font-bold block">
+                N° 16 • ROSE ALABASTER
               </span>
-              <span className="font-serif font-black text-rose-600 text-sm tracking-wider block mt-0.5">
+              <span className="font-forum text-sm font-normal text-[#c95874] tracking-wider block mt-0.5 uppercase">
                 {recipientName}
               </span>
-              <span className="text-[8px] text-gray-500 tracking-widest uppercase block mt-0.5 font-bold">
-                February 16 • Wish Ritual
+              <span className="text-[8px] text-[#7d7265] tracking-widest uppercase block mt-0.5 font-bold">
+                February 16 • Wish
               </span>
             </div>
 
-            <div className="w-full h-2 bg-pink-200/50 rounded-full" />
+            <div className="w-full h-2 bg-[#d97d93]/20 rounded-full" />
           </div>
         </div>
 
@@ -217,15 +215,15 @@ export default function MidnightRitual({ recipientName }: MidnightRitualProps) {
               animate={{ opacity: 1, scale: 1 }}
               className="flex flex-col items-center"
             >
-              <span className="font-serif text-xl font-bold bg-gradient-to-r from-rose-600 to-amber-500 bg-clip-text text-transparent drop-shadow">
-                ✨ Make your birthday wish, Harleen! ✨
+              <span className="font-forum text-lg sm:text-xl text-[#c95874] uppercase tracking-wider">
+                ✨ Make your wish, Harleen ✨
               </span>
-              <span className="text-xs text-rose-600 mt-0.5 font-hand text-base">
-                I would love to see you happy all of the time. Tap glass to relight 🕯️
+              <span className="text-xs text-[#7d7265] mt-0.5 font-signature text-xl">
+                seeing you happy is my favorite thing in life 🕯️
               </span>
             </motion.div>
           ) : (
-            <p className="text-sm text-[#3b1a2d] font-serif font-medium">
+            <p className="text-xs sm:text-sm text-[#7d7265] font-raleway font-medium">
               Blow into your mic or tap the candle to extinguish the flame.
             </p>
           )}
@@ -235,60 +233,60 @@ export default function MidnightRitual({ recipientName }: MidnightRitualProps) {
         {!candleBlown && (
           <button
             onClick={micActive ? stopMic : startMic}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold transition-all mt-2 shadow-sm ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold transition-all mt-2 shadow-xs ${
               micActive
-                ? "bg-amber-400 text-black shadow-[0_0_20px_rgba(251,191,36,0.6)] animate-pulse font-bold"
-                : "bg-pink-100 hover:bg-pink-200 text-rose-800 border border-pink-300/60"
+                ? "bg-[#d4af37] text-black shadow-md animate-pulse font-bold"
+                : "bg-white hover:bg-neutral-50 text-[#c95874] border border-[#d97d93]/30"
             }`}
           >
             <Mic className="w-3.5 h-3.5" />
-            <span>{micActive ? "Listening for your breath... Blow!" : "Enable Mic Breath 🎙️"}</span>
+            <span className="font-raleway text-[11px] uppercase tracking-wider">
+              {micActive ? "Listening for your breath... Blow!" : "Enable Mic Breath 🎙️"}
+            </span>
           </button>
         )}
 
-        {micError && <p className="text-xs text-rose-600 mt-1">{micError}</p>}
+        {micError && <p className="text-xs text-[#c95874] mt-1">{micError}</p>}
       </div>
 
       {/* 2. CELESTIAL MOON & ORBIT CARD */}
-      <div className="glass-pearl p-6 sm:p-8 rounded-3xl flex flex-col items-center justify-between text-center border border-amber-300/40 shadow-xl relative overflow-hidden">
+      <div className="editorial-card p-6 sm:p-8 rounded-3xl flex flex-col items-center justify-between text-center border border-[#d97d93]/30 shadow-xs relative overflow-hidden">
         {/* Top Tag */}
-        <div className="flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-50 border border-amber-200 text-xs font-semibold text-amber-800 tracking-wider">
-          <Compass className="w-3.5 h-3.5 text-amber-500" />
+        <div className="flex items-center gap-2 px-3.5 py-1 rounded-full bg-white border border-[#d4af37]/40 text-[10px] font-raleway font-bold text-[#241e16] tracking-widest uppercase">
+          <Compass className="w-3 h-3 text-[#d4af37]" />
           <span>Celestial Alignment • 16th Feb</span>
         </div>
 
         {/* MOON PHASE DIAL */}
         <div className="my-6 relative flex items-center justify-center">
-          <div className="absolute w-48 h-48 rounded-full border border-dashed border-amber-300/50 animate-spin" style={{ animationDuration: "35s" }} />
-          <div className="absolute w-40 h-40 rounded-full border border-pink-200" />
+          <div className="absolute w-44 h-44 rounded-full border border-dashed border-[#d4af37]/40 animate-spin" style={{ animationDuration: "40s" }} />
+          <div className="absolute w-36 h-36 rounded-full border border-[#d97d93]/20" />
 
           {/* Glowing Pearl Moon */}
-          <div className="w-28 h-28 rounded-full bg-gradient-to-tr from-[#ffe4e6] via-[#fef3c7] to-[#ffffff] shadow-[0_0_35px_rgba(251,191,36,0.35)] border-2 border-amber-200 relative flex items-center justify-center overflow-hidden">
-            <div className="absolute top-4 left-6 w-5 h-5 rounded-full bg-pink-300/20 blur-[1px]" />
-            <div className="absolute bottom-6 right-8 w-7 h-7 rounded-full bg-pink-300/20 blur-[1px]" />
-            <Moon className="w-10 h-10 text-amber-400" />
+          <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-[#fdfaf5] via-white to-[#f7eedf] shadow-[0_0_35px_rgba(212,175,55,0.25)] border-2 border-[#d4af37]/60 relative flex items-center justify-center overflow-hidden">
+            <Moon className="w-9 h-9 text-[#d4af37]" />
           </div>
         </div>
 
         {/* Orbit Data */}
-        <div className="w-full space-y-2 pt-2 border-t border-pink-100">
-          <div className="flex justify-between items-center text-xs text-rose-800 font-mono px-2">
+        <div className="w-full space-y-2 pt-2 border-t border-[#d97d93]/20">
+          <div className="flex justify-between items-center text-[10px] text-[#7d7265] font-mono px-2">
             <span>DATE: FEB 16</span>
-            <span className="text-amber-600 font-bold">LUNAR ORBIT</span>
-            <span>DAY OF HARLEEN</span>
+            <span className="text-[#d4af37] font-bold">LUNAR ORBIT</span>
+            <span>HARLEEN</span>
           </div>
 
-          <p className="font-serif text-lg font-bold text-[#2e1322]">
-            The Day The Stars Aligned For You.
+          <p className="font-forum text-lg text-[#241e16] uppercase tracking-wider">
+            The Day The Stars Aligned For You
           </p>
-          <p className="font-hand text-xl text-rose-600">
-            &ldquo;In all of space and time, you are the only person I adore.&rdquo;
+          <p className="font-signature text-xl text-[#7d7265]">
+            &ldquo;In all of space and time, seeing you happy is my whole world.&rdquo;
           </p>
         </div>
 
         {/* Milestone Badge */}
-        <div className="mt-3 px-4 py-1.5 rounded-full bg-amber-100/80 border border-amber-300/60 text-amber-900 text-xs font-bold">
-          ✨ Another Golden Orbit Completed
+        <div className="mt-3 px-4 py-1.5 rounded-full bg-white border border-[#d4af37]/40 text-[#241e16] text-[10px] font-raleway font-bold tracking-wider uppercase">
+          ✦ Another Golden Orbit Completed ✦
         </div>
       </div>
     </div>
