@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 import { BIRTHDAY_CONFIG } from "@/data/config";
 import SparklesBackground from "@/components/SparklesBackground";
 import StartGate from "@/components/StartGate";
@@ -12,14 +13,37 @@ import MidnightVault from "@/components/MidnightVault";
 import GuestbookWall from "@/components/GuestbookWall";
 import SpotifyMixtape from "@/components/SpotifyMixtape";
 import SixteenReasons from "@/components/SixteenReasons";
-import { Sparkles, Film, Mail, Lock, MessageSquare, Disc3, Heart, Award, ArrowDown } from "lucide-react";
+import {
+  ScrollProgressBar,
+  ScrollyCard,
+  ScrollyStickers,
+} from "@/components/ScrollyPopups";
+import {
+  Sparkles,
+  Film,
+  Mail,
+  Lock,
+  MessageSquare,
+  Disc3,
+  Heart,
+  Award,
+  ArrowDown,
+  Camera,
+  Star,
+} from "lucide-react";
 
 export default function HomePage() {
   const [hasStarted, setHasStarted] = useState(false);
 
   return (
     <main className="relative min-h-screen bg-[#fdfaf5] text-[#241e16] overflow-x-hidden selection:bg-rose-200 selection:text-rose-950 font-raleway">
-      {/* Luminous Dreamy Atmosphere & Particle Confetti */}
+      {/* Scroll-driven Reading Progress Bar */}
+      <ScrollProgressBar />
+
+      {/* Floating Ambient Interactive Stickers */}
+      <ScrollyStickers />
+
+      {/* Luminous Dreamy Atmosphere & Confetti Sparkles */}
       <SparklesBackground />
 
       {/* Cinematic Start Gate ("K." by Cigarettes After Sex) */}
@@ -52,34 +76,59 @@ export default function HomePage() {
       </header>
 
       {/* CHAPTER I: THE GENESIS / THE HORIZON */}
-      <section className="relative z-10 max-w-6xl mx-auto px-4 pt-16 sm:pt-24 pb-20 flex flex-col items-center text-center">
+      <section className="relative z-10 max-w-6xl mx-auto px-4 pt-16 sm:pt-24 pb-16 flex flex-col items-center text-center">
         {/* Chapter Indicator */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#d97d93]/30 shadow-xs text-[#c95874] text-[10px] sm:text-[11px] font-raleway font-bold tracking-[0.3em] uppercase mb-6">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#d97d93]/30 shadow-xs text-[#c95874] text-[10px] sm:text-[11px] font-raleway font-bold tracking-[0.3em] uppercase mb-6"
+        >
           <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
           <span>CHAPTER I • THE GENESIS</span>
           <Heart className="w-3.5 h-3.5 text-[#c95874] fill-[#c95874]" />
-        </div>
+        </motion.div>
 
         {/* Grand Signature Calligraphy */}
-        <span className="font-signature text-6xl sm:text-8xl md:text-9xl text-[#c95874] leading-none drop-shadow-sm select-none">
+        <motion.span
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.1 }}
+          className="font-signature text-6xl sm:text-8xl md:text-9xl text-[#c95874] leading-none drop-shadow-sm select-none"
+        >
           Harleen
-        </span>
+        </motion.span>
 
         {/* Antique Roman Serif Headline */}
-        <h1 className="font-forum text-4xl sm:text-6xl md:text-7xl uppercase tracking-[0.08em] text-[#241e16] font-normal mt-4 leading-tight">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="font-forum text-4xl sm:text-6xl md:text-7xl uppercase tracking-[0.08em] text-[#241e16] font-normal mt-4 leading-tight"
+        >
           The Only One I Adore
-        </h1>
+        </motion.h1>
 
         {/* Delicate Poetic Subtitle */}
-        <p className="font-signature text-2xl sm:text-4xl text-[#7d7265] max-w-2xl mt-4 leading-relaxed">
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.3 }}
+          className="font-signature text-2xl sm:text-4xl text-[#7d7265] max-w-2xl mt-4 leading-relaxed"
+        >
           &ldquo;In all of space and time, seeing you happy is my favorite thing in life.&rdquo;
-        </p>
+        </motion.p>
 
         {/* Editorial Dividing Rule */}
         <div className="w-48 editorial-rule my-10" />
 
         {/* Table of Contents / Chapter Index Navigation */}
-        <div className="flex flex-wrap items-center justify-center gap-3 max-w-3xl">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.4 }}
+          className="flex flex-wrap items-center justify-center gap-3 max-w-3xl"
+        >
           <a
             href="#sound"
             className="flex items-center gap-2 px-4 py-2 rounded-full glass-pearl hover:bg-white border border-[#d97d93]/30 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.18em] transition-all hover:scale-105 active:scale-95 shadow-xs"
@@ -109,7 +158,7 @@ export default function HomePage() {
             className="flex items-center gap-2 px-4 py-2 rounded-full glass-pearl hover:bg-white border border-[#d97d93]/30 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.18em] transition-all hover:scale-105 active:scale-95 shadow-xs"
           >
             <Film className="w-3 h-3 text-[#d4af37]" />
-            <span>04. 35mm Archives</span>
+            <span>04. 35mm Archives (35)</span>
           </a>
 
           <a
@@ -135,17 +184,32 @@ export default function HomePage() {
             <MessageSquare className="w-3 h-3 text-[#d4af37]" />
             <span>07. Notes Wall</span>
           </a>
-        </div>
+        </motion.div>
 
         {/* Gentle Scroll Prompt */}
         <div className="flex flex-col items-center gap-1.5 mt-16 text-[#7d7265]/70 text-[10px] font-raleway tracking-[0.25em] uppercase">
-          <span>Scroll to begin story</span>
+          <span>Scroll to uncover every memory</span>
           <ArrowDown className="w-3.5 h-3.5 animate-bounce text-[#c95874]" />
         </div>
       </section>
 
+      {/* POPPING SCROLL CAPSULE #1: LITTLE POGO */}
+      <ScrollyCard
+        popup={{
+          id: "pogo-popup",
+          badge: "👶 LITTLE POGO DETECTED",
+          title: "Baby Fur Collar Throwback",
+          subtitle: "The cutest, sweetest little human in the universe 🍼",
+          image: "/media/pogo-baby-fur-smile.jpg",
+          side: "left",
+          rotate: -3.5,
+          category: "little pogo",
+          tagColor: "bg-pink-100 text-pink-700 border-pink-300",
+        }}
+      />
+
       {/* CHAPTER II: THE SOUND (TURNTABLE & MIXTAPE) */}
-      <section id="sound" className="relative z-10 max-w-5xl mx-auto px-4 py-20 flex flex-col items-center">
+      <section id="sound" className="relative z-10 max-w-5xl mx-auto px-4 py-16 flex flex-col items-center">
         <div className="text-center mb-10">
           <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
             CHAPTER II • THE VINYL CHAMBER
@@ -164,10 +228,25 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* POPPING SCROLL CAPSULE #2: AESTHICK NAILS */}
+      <ScrollyCard
+        popup={{
+          id: "nails-popup",
+          badge: "💅 AESTHICK NAILS CHECK",
+          title: "Almond Shimmer & Rings",
+          subtitle: "Nail art on point • 1000/10 hands down ✨",
+          image: "/media/nails-almond-rings.jpg",
+          side: "right",
+          rotate: 3,
+          category: "aesthick nails",
+          tagColor: "bg-emerald-50 text-emerald-700 border-emerald-300",
+        }}
+      />
+
       <div className="max-w-2xl mx-auto editorial-rule" />
 
       {/* CHAPTER III: THE 16 REASONS (FEB 16 SPECIAL) */}
-      <section id="reasons" className="relative z-10 max-w-6xl mx-auto px-4 py-20">
+      <section id="reasons" className="relative z-10 max-w-6xl mx-auto px-4 py-16">
         <div className="text-center mb-4">
           <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
             CHAPTER III • THE CHRONICLES
@@ -176,10 +255,25 @@ export default function HomePage() {
         <SixteenReasons />
       </section>
 
+      {/* POPPING SCROLL CAPSULE #3: POPAAA MOMENTS */}
+      <ScrollyCard
+        popup={{
+          id: "popaaa-popup",
+          badge: "😂 POPAAA MOMENT UNLOCKED",
+          title: "Squishy Cheeks & Goofy Grin",
+          subtitle: "Zero filters, 100% pure joy & silly laughs 😂",
+          image: "/media/popaaa-cheek-pinch.jpg",
+          side: "left",
+          rotate: -2.8,
+          category: "popaaa moments",
+          tagColor: "bg-amber-50 text-amber-700 border-amber-300",
+        }}
+      />
+
       <div className="max-w-2xl mx-auto editorial-rule" />
 
       {/* CHAPTER IV: THE MIDNIGHT RITUAL (CANDLE & MOON) */}
-      <section id="ritual" className="relative z-10 max-w-5xl mx-auto px-4 py-20">
+      <section id="ritual" className="relative z-10 max-w-5xl mx-auto px-4 py-16">
         <div className="text-center mb-10">
           <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
             CHAPTER IV • THE MIDNIGHT RITUAL
@@ -194,10 +288,25 @@ export default function HomePage() {
         <MidnightRitual recipientName={BIRTHDAY_CONFIG.recipientName} />
       </section>
 
+      {/* POPPING SCROLL CAPSULE #4: SICK IN ETHNIC */}
+      <ScrollyCard
+        popup={{
+          id: "ethnic-popup",
+          badge: "💃 SICK IN ETHNIC",
+          title: "Royal Emerald Tiara & Silk",
+          subtitle: "Straight out of a royal fairytale • Timeless elegance 👑",
+          image: "/media/ethnic-dragonfly-tiara.jpg",
+          side: "right",
+          rotate: 3.2,
+          category: "sick in ethnic",
+          tagColor: "bg-purple-50 text-purple-700 border-purple-300",
+        }}
+      />
+
       <div className="max-w-2xl mx-auto editorial-rule" />
 
-      {/* CHAPTER V: THE ARCHIVES (35MM CONTACT SHEET) */}
-      <section id="memories" className="relative z-10 max-w-6xl mx-auto px-4 py-20">
+      {/* CHAPTER V: THE ARCHIVES (35MM CONTACT SHEET WITH ALL 35 MEDIA ASSETS) */}
+      <section id="memories" className="relative z-10 max-w-6xl mx-auto px-4 py-16">
         <div className="text-center mb-4">
           <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
             CHAPTER V • THE ARCHIVES
@@ -206,10 +315,25 @@ export default function HomePage() {
         <FilmContactSheet />
       </section>
 
+      {/* POPPING SCROLL CAPSULE #5: HARLEEN 4 LIFE */}
+      <ScrollyCard
+        popup={{
+          id: "harleen-popup",
+          badge: "👑 HARLEEN 4 LIFE",
+          title: "Polka Dots & Rhinestone Sparkle",
+          subtitle: "The only person I adore • Forever & always 💖",
+          image: "/media/harleen-polka-rhinestones.jpg",
+          side: "left",
+          rotate: -2.5,
+          category: "harleen 4 life",
+          tagColor: "bg-rose-50 text-rose-700 border-rose-300",
+        }}
+      />
+
       <div className="max-w-2xl mx-auto editorial-rule" />
 
       {/* CHAPTER VI: THE LOVE LETTER */}
-      <section id="letter" className="relative z-10 max-w-4xl mx-auto px-4 py-20">
+      <section id="letter" className="relative z-10 max-w-4xl mx-auto px-4 py-16">
         <div className="text-center mb-4">
           <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
             CHAPTER VI • INTIMATE EPISTLE
@@ -221,7 +345,7 @@ export default function HomePage() {
       <div className="max-w-2xl mx-auto editorial-rule" />
 
       {/* CHAPTER VII: THE SECRET VAULT */}
-      <section id="vault" className="relative z-10 max-w-3xl mx-auto px-4 py-20">
+      <section id="vault" className="relative z-10 max-w-3xl mx-auto px-4 py-16">
         <div className="text-center mb-4">
           <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
             CHAPTER VII • CONFIDENTIAL ARCHIVE
@@ -233,7 +357,7 @@ export default function HomePage() {
       <div className="max-w-2xl mx-auto editorial-rule" />
 
       {/* CHAPTER VIII: THE NOTES WALL */}
-      <section id="guestbook" className="relative z-10 max-w-6xl mx-auto px-4 py-20">
+      <section id="guestbook" className="relative z-10 max-w-6xl mx-auto px-4 py-16">
         <div className="text-center mb-4">
           <span className="text-[10px] sm:text-[11px] font-raleway tracking-[0.3em] uppercase text-[#c95874] font-bold block mb-2">
             CHAPTER VIII • REMINDERS FOR YOUR HEART
@@ -257,6 +381,8 @@ export default function HomePage() {
           </p>
           <div className="flex items-center gap-2 text-[10px] font-raleway tracking-[0.3em] uppercase text-[#7d7265] mt-6">
             <span>SOUNDTRACK: CAS &ldquo;K.&rdquo;</span>
+            <span>•</span>
+            <span>35 ARCHIVE ASSETS</span>
             <span>•</span>
             <span>COLLECTION 2026</span>
           </div>
