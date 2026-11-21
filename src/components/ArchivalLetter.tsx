@@ -12,10 +12,10 @@ export default function ArchivalLetter() {
     <div className="w-full flex flex-col items-center">
       {/* Editorial Header */}
       <div className="text-center mb-8 max-w-2xl mx-auto">
-        <h2 className="font-forum text-3xl sm:text-5xl text-[#241e16] uppercase tracking-[0.06em]">
+        <h2 className="font-forum text-3xl sm:text-5xl text-[#831843] uppercase tracking-[0.06em]">
           An Intimate Birthday Epistle
         </h2>
-        <p className="font-signature text-2xl sm:text-3xl text-[#7d7265] mt-2 leading-relaxed">
+        <p className="font-signature text-2xl sm:text-3xl text-[#9d174d] mt-2 leading-relaxed">
           &ldquo;Written straight from my heart. Tap the golden wax seal to unseal.&rdquo;
         </p>
       </div>
@@ -27,10 +27,10 @@ export default function ArchivalLetter() {
           whileTap={{ scale: 0.98 }}
           transition={{ type: "spring", stiffness: 260, damping: 20 }}
           onClick={() => setIsOpen(true)}
-          className="relative w-full max-w-md h-72 sm:h-80 cursor-pointer select-none filter drop-shadow-[0_30px_60px_rgba(74,4,78,0.18)] group transform-3d"
+          className="relative w-full max-w-md h-72 sm:h-80 cursor-pointer select-none filter drop-shadow-[0_30px_60px_rgba(236,72,153,0.22)] group transform-3d"
         >
           {/* Main Envelope Body */}
-          <div className="absolute inset-0 rounded-3xl bg-[#fdfaf5] p-1 shadow-2xl border-2 border-[#d97d93]/40 overflow-hidden">
+          <div className="absolute inset-0 rounded-3xl bg-white p-1 shadow-2xl border-3 border-[#f472b6]/50 overflow-hidden">
             {/* Air Mail Vintage Border Accents */}
             <div className="absolute inset-3 rounded-2xl border border-dashed border-[#d4af37]/40 pointer-events-none" />
           </div>

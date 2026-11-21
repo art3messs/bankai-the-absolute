@@ -1,129 +1,95 @@
 "use client";
 
-import React, { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { Sparkles, ArrowDown, Heart, Eye, Crown, Film } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { motion } from "framer-motion";
+import { Sparkles, Heart, Eye, ArrowLeftRight, Crown } from "lucide-react";
 
 export default function PhotoScrollReveal() {
+  const [sliderPos, setSliderPos] = useState(50); // percentage 0 to 100
+  const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Scroll tracking across the container
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
-
-  // Smooth transforms based on scroll
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.94, 0.88]);
-  const clipProgress = useTransform(scrollYProgress, [0.1, 0.75], ["inset(0% 0% 0% 0%)", "inset(0% 0% 100% 0%)"]);
-  const overlayOpacity = useTransform(scrollYProgress, [0, 0.4, 0.7], [0.35, 0.1, 0]);
-  const textY = useTransform(scrollYProgress, [0, 0.5], [0, -60]);
-  const textOpacity = useTransform(scrollYProgress, [0, 0.35], [1, 0]);
-  const revealScale = useTransform(scrollYProgress, [0.3, 0.85], [0.92, 1]);
-  const revealOpacity = useTransform(scrollYProgress, [0.25, 0.6], [0, 1]);
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+    const pct = (x / rect.width) * 100;
+    setSliderPos(pct);
+  };
 
   return (
-    <section
-      ref={containerRef}
-      className="relative z-20 w-full min-h-[220vh] bg-[#fdfaf5] py-10"
-    >
-      {/* Sticky Stage */}
-      <div className="sticky top-16 h-[calc(100vh-4rem)] max-w-5xl mx-auto px-4 flex flex-col items-center justify-center">
-        {/* Section Header Eyebrow */}
-        <div className="text-center mb-6">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#d97d93]/35 shadow-xs text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.25em] text-[#c95874] mb-2">
-            <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
-            <span>INTERACTIVE SCROLL-TO-REVEAL STAGE</span>
-            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
+    <section className="relative z-10 max-w-4xl mx-auto px-4 py-8 flex flex-col items-center text-center">
+      {/* Eyebrow Tag */}
+      <div className="girly-tag mb-3">
+        <Sparkles className="w-3.5 h-3.5 text-[#fbbf24]" />
+        <span>INTERACTIVE DUAL-LAYER REVEAL</span>
+        <Heart className="w-3.5 h-3.5 text-[#ec4899] fill-[#ec4899]" />
+      </div>
+
+      <h2 className="font-forum text-3xl sm:text-4xl text-[#831843] uppercase tracking-[0.06em]">
+        Slide To Unveil Her World 🤍
+      </h2>
+      <p className="font-signature text-2xl text-[#9d174d] mt-1">
+        &ldquo;Drag the golden handle across to switch between her royal elegance &amp; sweetest embrace.&rdquo;
+      </p>
+
+      {/* Interactive Photo Comparison Card */}
+      <div
+        ref={containerRef}
+        onPointerMove={handlePointerMove}
+        onPointerDown={() => setIsDragging(true)}
+        onPointerUp={() => setIsDragging(false)}
+        className="relative w-full max-w-2xl aspect-[4/5] sm:aspect-[16/11] mt-6 rounded-3xl overflow-hidden border-3 border-[#f472b6]/40 shadow-[0_20px_50px_rgba(236,72,153,0.18)] cursor-ew-resize select-none bg-stone-950 group"
+      >
+        {/* UNDER LAYER: Warm Hug & Pucchi Smile */}
+        <div className="absolute inset-0 w-full h-full">
+          <img
+            src="/media/harleen-warm-hug.jpg"
+            alt="Harleen Warm Hug"
+            className="w-full h-full object-cover object-center filter brightness-[1.02]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#4a044e]/70 via-transparent to-black/20" />
+
+          {/* Under Label */}
+          <div className="absolute bottom-5 right-5 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-[#f472b6]/40 shadow-md text-xs font-bold text-[#831843] flex items-center gap-1.5">
+            <Heart className="w-3 h-3 text-[#ec4899] fill-[#ec4899]" />
+            <span>Warm Embrace • Safe &amp; Cherished</span>
           </div>
-          <h2 className="font-forum text-2xl sm:text-4xl text-[#241e16] uppercase tracking-[0.06em]">
-            Scroll Down On Her Portrait
-          </h2>
-          <p className="font-signature text-xl sm:text-2xl text-[#7d7265] mt-1">
-            &ldquo;As you scroll, the layers of her world unveil before your eyes.&rdquo;
-          </p>
         </div>
 
-        {/* The Interactive Scroll-Driven Dual-Layer Photo Container */}
-        <div className="relative w-full max-w-2xl aspect-[4/5] sm:aspect-[16/11] rounded-3xl overflow-hidden border-2 border-[#d97d93]/40 shadow-[0_25px_70px_rgba(36,30,22,0.14)] bg-stone-900 select-none">
-          {/* LAYER 2 (Revealed Underneath on Scroll): The Warm Hug & Pucchi Smile */}
-          <motion.div
-            style={{ scale: revealScale, opacity: revealOpacity }}
-            className="absolute inset-0 w-full h-full"
-          >
-            <img
-              src="/media/harleen-warm-hug.jpg"
-              alt="Harleen Warm Hug"
-              className="w-full h-full object-cover object-center filter brightness-[1.03]"
-            />
-            {/* Romantic Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        {/* TOP LAYER: Royal Tiara (Clipped by slider position) */}
+        <div
+          className="absolute inset-0 w-full h-full overflow-hidden"
+          style={{ clipPath: `polygon(0 0, ${sliderPos}% 0, ${sliderPos}% 100%, 0 100%)` }}
+        >
+          <img
+            src="/media/ethnic-dragonfly-tiara.jpg"
+            alt="Harleen Royal Tiara"
+            className="w-full h-full object-cover object-center filter brightness-[1.02]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#4a044e]/70 via-transparent to-black/20" />
 
-            <div className="absolute bottom-6 inset-x-6 sm:inset-x-10 text-white flex flex-col items-center text-center">
-              <span className="text-[10px] sm:text-xs font-raleway font-bold tracking-[0.3em] uppercase text-amber-200 mb-1">
-                ✦ UNVEILED: PURE PEACE & WARMTH ✦
-              </span>
-              <h3 className="font-signature text-3xl sm:text-5xl text-rose-200">
-                Where My Heart Resides
-              </h3>
-              <p className="font-raleway text-xs sm:text-sm text-stone-200 mt-2 max-w-md leading-relaxed">
-                The sweetest soul, my safest haven, and the girl who makes every day worth living. Harleen 4 Life.
-              </p>
-              <div className="mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-500/80 backdrop-blur-md text-white text-[11px] font-bold tracking-wider uppercase">
-                <Heart className="w-3.5 h-3.5 fill-white" />
-                <span>Keep Scrolling To Explore Her Themed Archives</span>
-                <ArrowDown className="w-3.5 h-3.5 animate-bounce" />
-              </div>
-            </div>
-          </motion.div>
+          {/* Top Label */}
+          <div className="absolute bottom-5 left-5 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-amber-300 shadow-md text-xs font-bold text-[#831843] flex items-center gap-1.5">
+            <Crown className="w-3 h-3 text-[#fbbf24]" />
+            <span>Royal Emerald Grace • Desi Queen</span>
+          </div>
+        </div>
 
-          {/* LAYER 1 (Top Cover: Royal Tiara & Polka Glam): Wipes away on scroll */}
-          <motion.div
-            style={{
-              clipPath: clipProgress,
-              scale,
-            }}
-            className="absolute inset-0 w-full h-full z-10"
-          >
-            <img
-              src="/media/ethnic-dragonfly-tiara.jpg"
-              alt="Harleen Royal Tiara"
-              className="w-full h-full object-cover object-center filter brightness-[1.02]"
-            />
+        {/* SLIDER DIVIDER BAR */}
+        <div
+          className="absolute top-0 bottom-0 w-1 bg-gradient-to-b from-white via-[#fbbf24] to-white shadow-[0_0_15px_rgba(251,191,36,0.9)] pointer-events-none"
+          style={{ left: `${sliderPos}%` }}
+        >
+          {/* Central Circular Drag Handle */}
+          <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-white shadow-xl border-2 border-[#f472b6] flex items-center justify-center text-[#db2777]">
+            <ArrowLeftRight className="w-4 h-4" />
+          </div>
+        </div>
 
-            {/* Ambient Darkening */}
-            <motion.div
-              style={{ opacity: overlayOpacity }}
-              className="absolute inset-0 bg-black"
-            />
-
-            {/* Top Badge */}
-            <div className="absolute top-4 left-4 sm:top-6 sm:left-6 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white text-[10px] sm:text-xs font-raleway uppercase tracking-widest font-semibold">
-              <Crown className="w-3.5 h-3.5 text-amber-300" />
-              <span>CHAPTER TRANSITION • SCROLL TO UNVEIL</span>
-            </div>
-
-            {/* Center / Bottom Scroll Prompt */}
-            <motion.div
-              style={{ y: textY, opacity: textOpacity }}
-              className="absolute bottom-6 inset-x-6 sm:inset-x-10 text-white flex flex-col items-center text-center"
-            >
-              <span className="font-signature text-4xl sm:text-6xl text-rose-200 drop-shadow-md">
-                Royal Elegance
-              </span>
-              <p className="font-forum text-sm sm:text-lg uppercase tracking-[0.16em] text-white/90 mt-1">
-                Scroll down to peel back the curtain
-              </p>
-
-              {/* Glowing Downward Scroll Indicator */}
-              <div className="mt-4 flex flex-col items-center gap-1">
-                <div className="px-5 py-2.5 rounded-full bg-white/25 hover:bg-white/35 backdrop-blur-md border border-white/40 shadow-xl flex items-center gap-2 text-white text-xs font-raleway font-bold tracking-[0.2em] uppercase">
-                  <span>Scroll Down Directly On Photo</span>
-                  <ArrowDown className="w-4 h-4 text-amber-200 animate-bounce" />
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
+        {/* Tap/Slide Prompt Overlay on Initial Load */}
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/30 text-white text-[10px] font-mono tracking-widest uppercase pointer-events-none shadow-md">
+          ← Drag or move mouse to wipe →
         </div>
       </div>
     </section>

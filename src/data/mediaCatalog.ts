@@ -293,8 +293,8 @@ export const MEDIA_CATALOG: MediaItem[] = [
     src: "/media/pogo-baby-fur-smile.jpg",
     type: "image",
     category: "little pogo",
-    title: "Baby Harleen in White Fur",
-    caption: "The fluffiest, sweetest baby smile on earth 🕊️",
+    title: "Little Pogo",
+    caption: "The fluffiest, sweetest baby smile on earth 🕊️ • Little Pogo",
     aspectRatio: "landscape",
   },
   {

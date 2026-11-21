@@ -72,12 +72,12 @@ export default function GuestbookWall() {
   return (
     <div className="w-full">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10 pb-6 border-b border-[#d97d93]/20">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10 pb-6 border-b-2 border-[#f472b6]/30">
         <div>
-          <h3 className="font-forum text-3xl sm:text-4xl text-[#241e16] uppercase tracking-[0.06em]">
+          <h3 className="font-forum text-3xl sm:text-4xl text-[#831843] uppercase tracking-[0.06em]">
             Reminders For Your Heart
           </h3>
-          <p className="font-signature text-2xl text-[#7d7265] mt-1">
+          <p className="font-signature text-2xl text-[#9d174d] mt-1">
             &ldquo;Every little reason why you are my whole universe, sealed with endless fondness &amp; pucchi.&rdquo;
           </p>
         </div>
@@ -85,7 +85,7 @@ export default function GuestbookWall() {
         {/* Add Note Button */}
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-[#d97d93] to-[#c95874] hover:opacity-95 text-white font-raleway font-bold text-xs uppercase tracking-[0.18em] shadow-md hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
+          className="flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-[#ec4899] via-[#db2777] to-[#fbbf24] hover:opacity-95 text-white font-raleway font-bold text-xs uppercase tracking-[0.18em] shadow-md hover:scale-105 active:scale-95 transition-all whitespace-nowrap cursor-pointer"
         >
           <Plus className="w-4 h-4 stroke-[2.5]" />
           <span>Leave A Reminder</span>

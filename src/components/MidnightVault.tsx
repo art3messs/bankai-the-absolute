@@ -40,24 +40,24 @@ export default function MidnightVault() {
   };
 
   return (
-    <div className="w-full">
-      <div className="editorial-card p-6 sm:p-12 rounded-3xl border border-[#d97d93]/35 shadow-xs relative overflow-hidden">
+    <div className="w-full" style={{ perspective: 1000 }}>
+      <div className="girly-card p-6 sm:p-12 rounded-3xl border-3 border-[#f472b6]/50 shadow-[0_25px_60px_rgba(236,72,153,0.18)] relative overflow-hidden transform-3d">
         {/* Header */}
-        <div className="flex flex-col items-center text-center mb-8">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#d97d93] via-[#f2ccd6] to-[#d4af37] p-0.5 shadow-md mb-4 flex items-center justify-center">
-            <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+        <div className="flex flex-col items-center text-center mb-8" style={{ transform: "translateZ(30px)" }}>
+          <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#ec4899] via-[#f472b6] to-[#fbbf24] p-0.5 shadow-xl mb-4 flex items-center justify-center hover:scale-110 transition-transform">
+            <div className="w-full h-full rounded-full bg-white flex items-center justify-center shadow-inner">
               {isUnlocked ? (
-                <Unlock className="w-7 h-7 text-[#d4af37]" />
+                <Unlock className="w-7 h-7 text-[#fbbf24]" />
               ) : (
-                <Lock className="w-7 h-7 text-[#c95874]" />
+                <Lock className="w-7 h-7 text-[#ec4899]" />
               )}
             </div>
           </div>
 
-          <h2 className="font-forum text-3xl sm:text-4xl text-[#241e16] uppercase tracking-[0.06em]">
+          <h2 className="font-forum text-3xl sm:text-4xl text-[#831843] uppercase tracking-[0.06em]">
             The Secret Archive
           </h2>
-          <p className="font-signature text-2xl text-[#7d7265] mt-2">
+          <p className="font-signature text-2xl text-[#9d174d] mt-2">
             &ldquo;Protected by the secret code that belongs only to the two of us.&rdquo;
           </p>
         </div>

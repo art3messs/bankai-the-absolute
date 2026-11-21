@@ -191,24 +191,25 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
   }, []);
 
   return (
-    <section id="cake" className="relative z-10 max-w-4xl mx-auto px-4 py-14 flex flex-col items-center text-center">
+    <section id="cake" className="relative z-10 max-w-4xl mx-auto px-4 py-10 flex flex-col items-center text-center">
       {/* Chapter Tag */}
-      <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-[#db2777]/30 text-[10px] sm:text-xs font-mono uppercase tracking-[0.25em] text-[#db2777] font-bold shadow-xs mb-3">
+      <div className="girly-tag mb-3">
         <Cake className="w-3.5 h-3.5 text-[#fbbf24]" />
         <span>CHAPTER II • THE BIRTHDAY CAKE &amp; WISH CEREMONY</span>
+        <Sparkles className="w-3.5 h-3.5 text-[#ec4899]" />
       </div>
 
-      <h2 className="font-forum text-3xl sm:text-5xl text-[#4a044e] uppercase tracking-[0.06em]">
+      <h2 className="font-forum text-3xl sm:text-5xl text-[#831843] uppercase tracking-[0.06em]">
         Blow Out The Candles, Harleen 🎂
       </h2>
-      <p className="font-signature text-2xl sm:text-3xl text-[#701a75] mt-2 leading-relaxed">
+      <p className="font-signature text-2xl sm:text-3xl text-[#9d174d] mt-2 leading-relaxed">
         &ldquo;Tilt the 3D stage with your mouse. Blow into your mic or tap the flames to make your 16th February wish.&rdquo;
       </p>
 
       {/* THE 3D INTERACTIVE CAKE STAGE (PERSPECTIVE + GYRO/MOUSE TILT) */}
       <div
         style={{ perspective: 1200 }}
-        className="w-full max-w-2xl mt-8 flex justify-center select-none"
+        className="w-full max-w-2xl mt-6 flex justify-center select-none"
       >
         <motion.div
           ref={stageRef}
@@ -219,7 +220,7 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
             rotateY,
             transformStyle: "preserve-3d",
           }}
-          className="relative w-full p-6 sm:p-10 rounded-3xl bg-gradient-to-b from-white/95 via-[#fdf2f8]/95 to-[#fce7f3]/95 border-2 border-[#db2777]/30 shadow-[0_30px_70px_rgba(74,4,78,0.14)] flex flex-col items-center overflow-hidden cursor-pointer group"
+          className="relative w-full p-6 sm:p-10 rounded-3xl bg-gradient-to-b from-white via-[#fdf2f8] to-[#fce7f3] border-3 border-[#f472b6]/50 shadow-[0_30px_70px_rgba(236,72,153,0.22)] flex flex-col items-center overflow-hidden cursor-pointer group"
           onClick={candlesOut ? relightCandles : blowOutCandles}
           title={candlesOut ? "Tap cake to relight candles!" : "Tap cake or blow into mic to extinguish!"}
         >
@@ -230,6 +231,20 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
               background: `radial-gradient(circle at ${glareX} ${glareY}, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0) 60%)`,
             }}
           />
+
+          {/* Floating Cute Emojis & Stickers */}
+          <div className="absolute top-4 left-6 text-2xl animate-bounce pointer-events-none" style={{ animationDuration: "3s" }}>
+            🍓
+          </div>
+          <div className="absolute top-6 right-6 text-2xl animate-bounce pointer-events-none" style={{ animationDuration: "3.5s" }}>
+            ✨
+          </div>
+          <div className="absolute bottom-6 left-8 text-xl animate-pulse pointer-events-none">
+            💖
+          </div>
+          <div className="absolute bottom-8 right-8 text-xl animate-pulse pointer-events-none">
+            🌸
+          </div>
 
           {/* Ambient 3D Depth Nebula in Background */}
           <div
@@ -415,19 +430,19 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ type: "spring", stiffness: 220, damping: 20 }}
-            className="w-full max-w-2xl mt-8 p-6 sm:p-8 rounded-3xl bg-white border-2 border-[#fbbf24] shadow-[0_20px_50px_rgba(74,4,78,0.12)] text-center relative select-none"
+            className="w-full max-w-2xl mt-8 p-6 sm:p-8 rounded-3xl bg-white/95 border-3 border-[#f472b6]/60 shadow-[0_20px_50px_rgba(236,72,153,0.2)] text-center relative select-none"
           >
             {!wishSent ? (
               <form onSubmit={handleSendWish} className="flex flex-col items-center">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#fce7f3] border border-[#db2777]/30 text-[#831843] text-[10px] font-mono font-bold uppercase tracking-widest mb-3">
+                <div className="girly-tag mb-3">
                   <Star className="w-3.5 h-3.5 text-[#fbbf24] fill-[#fbbf24]" />
                   <span>FEBRUARY 16 BIRTHDAY WISH</span>
                 </div>
 
-                <h3 className="font-forum text-2xl sm:text-3xl uppercase tracking-wider text-[#4a044e]">
+                <h3 className="font-forum text-2xl sm:text-3xl uppercase tracking-wider text-[#831843]">
                   What Is Your Heart&apos;s Wish, Harleen? ✨
                 </h3>
-                <p className="font-signature text-2xl text-[#701a75] mt-1 max-w-md">
+                <p className="font-signature text-2xl text-[#9d174d] mt-1 max-w-md">
                   &ldquo;Write whatever you wish for—it will be delivered straight to my phone instantly.&rdquo;
                 </p>
 
@@ -437,14 +452,14 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
                     value={wishText}
                     onChange={(e) => setWishText(e.target.value)}
                     placeholder="Type your secret birthday wish here (anything you want in this world)..."
-                    className="w-full p-4 rounded-2xl bg-[#fdf2f8] border border-[#db2777]/30 focus:border-[#fbbf24] focus:ring-2 focus:ring-[#fbbf24]/20 outline-none font-raleway text-sm text-[#4a044e] placeholder-[#831843]/50 transition-all shadow-inner resize-none"
+                    className="w-full p-4 rounded-2xl bg-[#fdf2f8] border-2 border-[#f472b6]/40 focus:border-[#ec4899] focus:ring-2 focus:ring-[#ec4899]/20 outline-none font-raleway text-sm text-[#4a044e] placeholder-[#831843]/50 transition-all shadow-inner resize-none"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={!wishText.trim() || isSubmitting}
-                  className="mt-4 px-8 py-3.5 rounded-full bg-gradient-to-r from-[#db2777] via-[#ec4899] to-[#fbbf24] text-white font-raleway font-bold text-xs uppercase tracking-[0.2em] shadow-md hover:scale-105 active:scale-95 disabled:opacity-50 transition-all flex items-center gap-2.5 cursor-pointer"
+                  className="mt-4 px-8 py-3.5 rounded-full bg-gradient-to-r from-[#ec4899] via-[#db2777] to-[#fbbf24] text-white font-raleway font-bold text-xs uppercase tracking-[0.2em] shadow-md hover:scale-105 active:scale-95 disabled:opacity-50 transition-all flex items-center gap-2.5 cursor-pointer"
                 >
                   <Send className="w-3.5 h-3.5 fill-white" />
                   <span>{isSubmitting ? "Delivering To His Phone..." : "Send Wish To His Phone 💌"}</span>

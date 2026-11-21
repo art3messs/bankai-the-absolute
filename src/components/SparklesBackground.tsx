@@ -46,7 +46,7 @@ export default function SparklesBackground() {
     const newPetals: Petal[] = Array.from({ length: 22 }, (_, i) => ({
       id: i,
       left: Math.random() * 96,
-      size: 13 + (i % 4) * 4,
+      size: 14 + (i % 4) * 4,
       duration: 11 + ((i * 1.7) % 8),
       delay: ((i * 1.1) % 9),
       rotate: Math.random() * 360,
@@ -70,12 +70,12 @@ export default function SparklesBackground() {
       const x = e.clientX / window.innerWidth;
       const y = e.clientY / window.innerHeight;
 
-      // Color theory: Velvet Berry, Deep Rose, Champagne Gold & Cream
+      // Dreamy Girly Pop colors: Strawberry Pink, Soft Peach, Champagne Gold & Cream
       confetti({
         particleCount: 22,
         spread: 75,
         origin: { x, y },
-        colors: ["#db2777", "#ec4899", "#f472b6", "#fbbf24", "#fef08a", "#ffffff"],
+        colors: ["#db2777", "#ec4899", "#f472b6", "#fbbf24", "#fed7aa", "#ffffff"],
         ticks: 220,
         gravity: 0.7,
         scalar: 0.95,
@@ -89,15 +89,19 @@ export default function SparklesBackground() {
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      {/* Editorial Luxury Ambient Nebulas */}
-      <div className="absolute -top-36 -left-36 w-[38rem] h-[38rem] bg-[#fce7f3]/50 rounded-full blur-[140px] animate-dreamy" />
+      {/* Dreamy Girly Pop Ambient Sparkle Orbs (from Importance_of_Cinema_in_Indian_Culture) */}
+      <div className="absolute -top-28 -left-28 w-[36rem] h-[36rem] bg-[#f472b6]/25 rounded-full blur-[100px] animate-dreamy" />
       <div
-        className="absolute top-1/3 -right-32 w-[34rem] h-[34rem] bg-[#fdf2f8]/70 rounded-full blur-[130px] animate-dreamy"
+        className="absolute top-1/4 -right-24 w-[34rem] h-[34rem] bg-[#fed7aa]/35 rounded-full blur-[110px] animate-dreamy"
         style={{ animationDelay: "2.5s" }}
       />
       <div
-        className="absolute -bottom-36 left-1/4 w-[40rem] h-[40rem] bg-[#fff1f2]/60 rounded-full blur-[150px] animate-dreamy"
+        className="absolute top-2/3 left-1/4 w-[38rem] h-[38rem] bg-[#e9d5ff]/30 rounded-full blur-[120px] animate-dreamy"
         style={{ animationDelay: "4.5s" }}
+      />
+      <div
+        className="absolute -bottom-24 right-1/3 w-[32rem] h-[32rem] bg-[#fbcfe8]/35 rounded-full blur-[90px] animate-dreamy"
+        style={{ animationDelay: "1.5s" }}
       />
 
       {/* Golden Fairy Dust Stars */}
@@ -121,7 +125,7 @@ export default function SparklesBackground() {
       {petals.map((petal) => (
         <div
           key={petal.id}
-          className="absolute select-none pointer-events-none text-rose-300/35"
+          className="absolute select-none pointer-events-none text-rose-400/40"
           style={{
             left: `${petal.left}%`,
             fontSize: `${petal.size}px`,

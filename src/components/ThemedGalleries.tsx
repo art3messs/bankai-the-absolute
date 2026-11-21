@@ -64,22 +64,22 @@ export default function ThemedGalleries() {
 
       {/* Main Section Header */}
       <div className="text-center mb-10 max-w-3xl mx-auto px-4">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#d97d93]/35 shadow-xs text-xs font-raleway font-bold uppercase tracking-[0.25em] text-[#c95874] mb-4">
-          <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
+        <div className="girly-tag mb-4">
+          <Sparkles className="w-3.5 h-3.5 text-[#fbbf24]" />
           <span>CURATED VISUAL CHRONICLES</span>
-          <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
+          <Heart className="w-3.5 h-3.5 text-[#ec4899] fill-[#ec4899]" />
         </div>
 
-        <h2 className="font-forum text-3xl sm:text-5xl md:text-6xl text-[#241e16] uppercase tracking-[0.06em] leading-tight">
+        <h2 className="font-forum text-3xl sm:text-5xl md:text-6xl text-[#831843] uppercase tracking-[0.06em] leading-tight">
           The Five Themed Chapters
         </h2>
-        <p className="font-signature text-2xl sm:text-3xl text-[#7d7265] mt-3 leading-relaxed">
+        <p className="font-signature text-2xl sm:text-3xl text-[#9d174d] mt-3 leading-relaxed">
           &ldquo;35 hand-picked memories, grouped by every mood of you — from royal elegance to unfiltered giggles.&rdquo;
         </p>
 
         {/* View Mode Toggle Bar & Jump Anchors */}
         <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-          <div className="inline-flex items-center p-1 rounded-full bg-white border border-[#d97d93]/30 shadow-xs">
+          <div className="inline-flex items-center p-1 rounded-full bg-white border-2 border-[#f472b6]/40 shadow-xs">
             <button
               onClick={() => setViewMode("thematic")}
               className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-raleway font-bold uppercase tracking-wider transition-all cursor-pointer ${
@@ -193,10 +193,10 @@ export default function ThemedGalleries() {
               {harleenItems.map((item, idx) => (
                 <motion.div
                   key={item.id}
-                  whileHover={{ y: -6, scale: 1.02 }}
+                  whileHover={{ y: -8, scale: 1.03, rotateX: 3, rotateY: -2 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   onClick={() => openLightbox(item, harleenItems)}
-                  className="group relative cursor-pointer select-none rounded-2xl overflow-hidden bg-white/5 border border-rose-500/25 hover:border-rose-400/60 shadow-lg backdrop-blur-md flex flex-col"
+                  className="group relative cursor-pointer select-none rounded-2xl overflow-hidden bg-white/5 border border-rose-500/25 hover:border-rose-400/60 shadow-lg hover:shadow-2xl backdrop-blur-md flex flex-col perspective-1000 transform-3d"
                 >
                   {/* Media Viewport */}
                   <div className="relative w-full aspect-[4/5] bg-black/60 overflow-hidden">
@@ -309,10 +309,10 @@ export default function ThemedGalleries() {
               {ethnicItems.map((item, idx) => (
                 <motion.div
                   key={item.id}
-                  whileHover={{ y: -6, scale: 1.02 }}
+                  whileHover={{ y: -8, scale: 1.03, rotateX: 3, rotateY: 2 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   onClick={() => openLightbox(item, ethnicItems)}
-                  className="group relative cursor-pointer select-none rounded-2xl overflow-hidden bg-[#0c221a]/80 border border-amber-400/30 hover:border-amber-400/80 shadow-lg backdrop-blur-md flex flex-col"
+                  className="group relative cursor-pointer select-none rounded-2xl overflow-hidden bg-[#0c221a]/80 border border-amber-400/30 hover:border-amber-400/80 shadow-lg hover:shadow-2xl backdrop-blur-md flex flex-col perspective-1000 transform-3d"
                 >
                   <div className="relative w-full aspect-[4/5] bg-black/60 overflow-hidden">
                     {item.type === "video" ? (
@@ -418,10 +418,10 @@ export default function ThemedGalleries() {
                 return (
                   <motion.div
                     key={item.id}
-                    whileHover={{ y: -8, scale: 1.03, rotate: 0 }}
+                    whileHover={{ y: -10, scale: 1.04, rotate: 0, rotateX: 4 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                     onClick={() => openLightbox(item, pogoItems)}
-                    className="group relative cursor-pointer select-none bg-white p-4 pt-5 pb-6 rounded-2xl border border-pink-200 shadow-md hover:shadow-2xl transition-all"
+                    className="group relative cursor-pointer select-none bg-white p-4 pt-5 pb-6 rounded-2xl border border-pink-200 shadow-md hover:shadow-2xl transition-all perspective-1000 transform-3d"
                     style={{ transform: `rotate(${tilt}deg)` }}
                   >
                     {/* Realistic Washi Tape Graphic */}
@@ -489,10 +489,10 @@ export default function ThemedGalleries() {
               {popaaaItems.map((item, idx) => (
                 <motion.div
                   key={item.id}
-                  whileHover={{ y: -6, scale: 1.03, rotate: (idx % 2 === 0 ? 1 : -1) }}
+                  whileHover={{ y: -8, scale: 1.04, rotate: (idx % 2 === 0 ? 2 : -2), rotateX: 3 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   onClick={() => openLightbox(item, popaaaItems)}
-                  className="group relative cursor-pointer select-none bg-white p-3.5 rounded-2xl border border-amber-200/80 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between"
+                  className="group relative cursor-pointer select-none bg-white p-3.5 rounded-2xl border border-amber-200/80 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between perspective-1000 transform-3d"
                 >
                   <div className="relative w-full aspect-square bg-amber-50 rounded-xl overflow-hidden border border-amber-100">
                     {item.type === "video" ? (
@@ -582,10 +582,10 @@ export default function ThemedGalleries() {
               {nailsItems.map((item, idx) => (
                 <motion.div
                   key={item.id}
-                  whileHover={{ y: -8, scale: 1.03 }}
+                  whileHover={{ y: -8, scale: 1.03, rotateX: 3, rotateY: -1.5 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   onClick={() => openLightbox(item, nailsItems)}
-                  className="group relative cursor-pointer select-none bg-white p-4 rounded-2xl border border-purple-200/80 shadow-md hover:shadow-2xl transition-all"
+                  className="group relative cursor-pointer select-none bg-white p-4 rounded-2xl border border-purple-200/80 shadow-md hover:shadow-2xl transition-all perspective-1000 transform-3d"
                 >
                   <div className="relative w-full aspect-[4/5] bg-purple-50 rounded-xl overflow-hidden border border-purple-100">
                     <img
@@ -632,9 +632,9 @@ export default function ThemedGalleries() {
             {MEDIA_CATALOG.map((item, idx) => (
               <motion.div
                 key={item.id}
-                whileHover={{ y: -6, scale: 1.02 }}
+                whileHover={{ y: -6, scale: 1.03, rotateX: 2, rotateY: -2 }}
                 onClick={() => openLightbox(item, MEDIA_CATALOG)}
-                className="group cursor-pointer select-none bg-[#fdfaf5] p-3 rounded-2xl border border-[#d97d93]/20 hover:border-[#d97d93]/60 shadow-xs hover:shadow-lg transition-all"
+                className="group cursor-pointer select-none bg-[#fdfaf5] p-3 rounded-2xl border border-[#d97d93]/20 hover:border-[#d97d93]/60 shadow-xs hover:shadow-lg transition-all perspective-1000 transform-3d"
               >
                 <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-black/10">
                   {item.type === "video" ? (

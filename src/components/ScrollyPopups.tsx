@@ -21,7 +21,7 @@ const SCROLL_POPUPS: MemoryPopup[] = [
   {
     id: "pogo-popup",
     badge: "👶 LITTLE POGO DETECTED",
-    title: "Baby Fur Collar Throwback",
+    title: "Little Pogo 🍼",
     subtitle: "The cutest, sweetest little human in the universe 🍼",
     image: "/media/pogo-baby-fur-smile.jpg",
     side: "left",

@@ -15,7 +15,7 @@ export default function SpotifyMixtape() {
         whileHover={{ scale: 1.02, y: -2 }}
         whileTap={{ scale: 0.98 }}
         onClick={() => setIsOpen(true)}
-        className="cursor-pointer max-w-xl w-full mx-auto p-4 rounded-3xl bg-white border border-[#d97d93]/35 shadow-sm hover:shadow-md transition-all flex items-center justify-between gap-4 group select-none"
+        className="cursor-pointer max-w-xl w-full mx-auto p-4 rounded-3xl bg-white/95 border-2 border-[#f472b6]/45 shadow-[0_12px_35px_rgba(236,72,153,0.12)] hover:shadow-[0_20px_45px_rgba(236,72,153,0.2)] transition-all flex items-center justify-between gap-4 group select-none"
       >
         <div className="flex items-center gap-3.5">
           <div className="w-12 h-12 rounded-2xl bg-[#1DB954]/10 p-0.5 border border-[#1DB954]/30 flex items-center justify-center shrink-0">
@@ -26,15 +26,15 @@ export default function SpotifyMixtape() {
               <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#1DB954] bg-[#1DB954]/10 px-2.5 py-0.5 rounded-full">
                 Spotify Player Live
               </span>
-              <span className="text-xs text-[#d97d93]">✦</span>
-              <span className="text-[11px] font-mono text-[#c95874] font-semibold">
+              <span className="text-xs text-[#f472b6]">✦</span>
+              <span className="text-[11px] font-mono text-[#db2777] font-semibold">
                 Harleen &amp; Me
               </span>
             </div>
-            <h4 className="font-forum uppercase tracking-wider text-base text-[#241e16] mt-0.5 group-hover:text-[#c95874] transition-colors">
+            <h4 className="font-forum uppercase tracking-wider text-base text-[#831843] mt-0.5 group-hover:text-[#db2777] transition-colors">
               Interactive Spotify Mixtape 🎧
             </h4>
-            <p className="text-xs font-signature text-[#7d7265] text-lg">
+            <p className="text-xs font-signature text-[#9d174d] text-lg">
               Open to browse, change songs, and stream our full playlist.
             </p>
           </div>

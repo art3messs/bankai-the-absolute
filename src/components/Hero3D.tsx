@@ -261,11 +261,11 @@ export default function Hero3D() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2 }}
-              className="font-forum text-2xl sm:text-4xl md:text-5xl uppercase tracking-[0.06em] text-[#241e16] font-normal leading-[1.15] max-w-2xl"
+              className="font-forum text-2xl sm:text-4xl md:text-5xl uppercase tracking-[0.06em] text-[#4a044e] font-normal leading-[1.15] max-w-2xl"
             >
               My Whole Entire{" "}
               <span className="relative inline-block font-medium">
-                <span className="bg-gradient-to-r from-[#c95874] via-[#e11d48] to-[#d4af37] bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-[#db2777] via-[#ec4899] to-[#fbbf24] bg-clip-text text-transparent">
                   Universe &amp; Peace
                 </span>
                 <span className="absolute left-0 bottom-1 w-full h-[2.5px] bg-gradient-to-r from-rose-400 via-amber-300 to-violet-400 rounded-full" />
@@ -276,7 +276,7 @@ export default function Hero3D() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.4 }}
-              className="font-signature text-2xl sm:text-3xl text-[#6b5e51] max-w-xl mt-3 leading-relaxed"
+              className="font-signature text-2xl sm:text-3xl text-[#831843] max-w-xl mt-3 leading-relaxed"
             >
               &ldquo;Across every galaxy, in every timeline and through all of life, you will always be my favorite human and safest haven.&rdquo;
             </motion.p>
@@ -284,19 +284,19 @@ export default function Hero3D() {
 
           {/* Shimmering Feature Highlights */}
           <div
-            className="flex flex-wrap items-center justify-center gap-3 mt-6 pt-5 border-t border-[#d97d93]/20"
+            className="flex flex-wrap items-center justify-center gap-3 mt-6 pt-5 border-t border-[#f472b6]/25"
             style={{ transform: "translateZ(60px)" }}
           >
-            <div className="flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/85 border border-[#d4af37]/40 shadow-xs text-xs font-raleway text-[#241e16]">
-              <Sparkles className="w-3 h-3 text-[#d4af37]" />
+            <div className="flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/95 border border-[#fbbf24]/50 shadow-xs text-xs font-raleway text-[#4a044e]">
+              <Sparkles className="w-3 h-3 text-[#fbbf24]" />
               <span className="font-semibold">35 Curated Archives</span>
             </div>
-            <div className="flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/85 border border-rose-300/40 shadow-xs text-xs font-raleway text-[#241e16]">
-              <Heart className="w-3 h-3 text-[#f43f5e] fill-[#f43f5e]" />
+            <div className="flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/95 border border-rose-300/60 shadow-xs text-xs font-raleway text-[#4a044e]">
+              <Heart className="w-3 h-3 text-[#db2777] fill-[#db2777]" />
               <span className="font-semibold">16 Reasons Why</span>
             </div>
-            <div className="flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/85 border border-purple-300/40 shadow-xs text-xs font-raleway text-[#241e16]">
-              <Disc3 className="w-3 h-3 text-[#8b5cf6]" />
+            <div className="flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/95 border border-pink-300/60 shadow-xs text-xs font-raleway text-[#4a044e]">
+              <Disc3 className="w-3 h-3 text-[#db2777]" />
               <span className="font-semibold">CAS &ldquo;K.&rdquo; Mixtape</span>
             </div>
           </div>
@@ -325,57 +325,57 @@ export default function Hero3D() {
 
           <a
             href="#scroll-reveal"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-[#fff9f8] border border-[#d97d93]/35 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-pink-50/80 border-2 border-[#f472b6]/40 text-[#4a044e] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer"
           >
-            <Camera className="w-3.5 h-3.5 text-rose-500" />
-            <span>02. Scroll Photo Reveal</span>
+            <Camera className="w-3.5 h-3.5 text-[#ec4899]" />
+            <span>02. Photo Reveal</span>
           </a>
 
           <a
             href="#sound"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-[#fff9f8] border border-[#d97d93]/35 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-pink-50/80 border-2 border-[#f472b6]/40 text-[#4a044e] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer"
           >
-            <Disc3 className="w-3.5 h-3.5 text-[#d4af37]" />
+            <Disc3 className="w-3.5 h-3.5 text-[#db2777]" />
             <span>03. CAS Vinyl Chamber</span>
           </a>
 
           <a
             href="#reasons"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-[#fff9f8] border border-[#d97d93]/35 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-pink-50/80 border-2 border-[#f472b6]/40 text-[#4a044e] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer"
           >
-            <Award className="w-3.5 h-3.5 text-[#d4af37]" />
+            <Award className="w-3.5 h-3.5 text-[#fbbf24]" />
             <span>04. 16 Reasons</span>
           </a>
 
           <a
             href="#memories"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-[#fff9f8] border border-[#d97d93]/35 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-pink-50/80 border-2 border-[#f472b6]/40 text-[#4a044e] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer"
           >
-            <Film className="w-3.5 h-3.5 text-rose-500" />
+            <Film className="w-3.5 h-3.5 text-[#ec4899]" />
             <span>05. Themed Archives</span>
           </a>
 
           <a
             href="#letter"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-[#fff9f8] border border-[#d97d93]/35 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-pink-50/80 border-2 border-[#f472b6]/40 text-[#4a044e] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer"
           >
-            <Mail className="w-3.5 h-3.5 text-[#d97d93]" />
+            <Mail className="w-3.5 h-3.5 text-[#db2777]" />
             <span>06. Sealed Epistle</span>
           </a>
 
           <a
             href="#vault"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-[#fff9f8] border border-[#d97d93]/35 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-pink-50/80 border-2 border-[#f472b6]/40 text-[#4a044e] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer"
           >
-            <Lock className="w-3.5 h-3.5 text-[#8b5cf6]" />
+            <Lock className="w-3.5 h-3.5 text-[#ec4899]" />
             <span>07. Secret Vault (&ldquo;pucchi&rdquo;)</span>
           </a>
 
           <a
             href="#review"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-[#fff9f8] border border-[#d97d93]/35 text-[#241e16] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-pink-50/80 border-2 border-[#f472b6]/40 text-[#4a044e] text-[10px] sm:text-xs font-raleway font-bold uppercase tracking-[0.16em] transition-all hover:scale-105 active:scale-95 shadow-xs cursor-pointer"
           >
-            <Heart className="w-3.5 h-3.5 text-[#ec4899]" />
+            <Heart className="w-3.5 h-3.5 text-[#ec4899] fill-[#ec4899]" />
             <span>08. Your Reaction</span>
           </a>
         </div>

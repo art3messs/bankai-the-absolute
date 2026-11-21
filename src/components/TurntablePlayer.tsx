@@ -113,7 +113,7 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
   };
 
   return (
-    <div className="editorial-card p-6 sm:p-8 rounded-3xl max-w-lg w-full flex flex-col items-center select-none shadow-sm border border-[#d97d93]/35 relative overflow-hidden bg-white/95 backdrop-blur-md">
+    <div className="girly-card p-6 sm:p-8 rounded-3xl max-w-lg w-full flex flex-col items-center select-none shadow-[0_20px_50px_rgba(236,72,153,0.15)] border-3 border-[#f472b6]/45 relative overflow-hidden bg-white/95 backdrop-blur-md">
       {/* Audio Element */}
       <audio
         ref={audioRef}
@@ -124,13 +124,13 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
 
       {/* Top Track Pill */}
       <div className="flex items-center justify-between w-full mb-4 px-2">
-        <div className="flex items-center gap-2 text-[10px] font-mono tracking-widest uppercase text-[#c95874] font-bold">
-          <Disc3 className="w-3.5 h-3.5 animate-spin text-[#d4af37]" style={{ animationDuration: "10s" }} />
+        <div className="flex items-center gap-2 text-[10px] font-mono tracking-widest uppercase text-[#db2777] font-bold">
+          <Disc3 className="w-3.5 h-3.5 animate-spin text-[#fbbf24]" style={{ animationDuration: "10s" }} />
           <span>HARLEEN VINYL • 33 RPM</span>
         </div>
         <button
           onClick={() => setShowPlaylist(!showPlaylist)}
-          className="text-[10px] font-raleway tracking-wider uppercase text-[#7d7265] hover:text-[#241e16] font-bold bg-[#fdfaf5] px-2.5 py-1 rounded-full border border-[#d97d93]/30 transition-all cursor-pointer"
+          className="text-[10px] font-raleway tracking-wider uppercase text-[#831843] hover:text-[#4a044e] font-bold bg-[#fce7f3] px-3 py-1 rounded-full border border-[#f472b6]/40 transition-all cursor-pointer shadow-xs"
         >
           {showPlaylist ? "Hide Tracks" : `Playlist (${tracks.length})`}
         </button>

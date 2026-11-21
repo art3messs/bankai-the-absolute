@@ -38,7 +38,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${forum.variable} ${parisienne.variable} ${raleway.variable} scroll-smooth`}>
-      <body className="font-raleway antialiased bg-[#fdfaf5] text-[#241e16] min-h-screen selection:bg-rose-200 selection:text-rose-950">
+      <body className="font-raleway antialiased bg-[#fdf2f8] text-[#4a044e] min-h-screen selection:bg-pink-200 selection:text-[#4a044e]">
         <CustomCursor />
         {children}
       </body>

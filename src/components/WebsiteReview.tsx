@@ -53,21 +53,21 @@ export default function WebsiteReview() {
 
   return (
     <section id="review" className="relative z-10 max-w-3xl mx-auto px-4 py-16" style={{ perspective: 1000 }}>
-      <div className="editorial-card p-6 sm:p-12 rounded-3xl border-2 border-[#d97d93]/35 shadow-[0_25px_60px_rgba(74,4,78,0.08)] relative overflow-hidden bg-white/95 text-center transform-3d">
+      <div className="girly-card p-6 sm:p-12 rounded-3xl border-3 border-[#f472b6]/50 shadow-[0_25px_60px_rgba(236,72,153,0.18)] relative overflow-hidden bg-white/95 text-center transform-3d">
         {/* Top Tag */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#fdfaf5] border border-[#d97d93]/30 text-[10px] font-raleway font-bold text-[#c95874] tracking-widest uppercase mb-4">
+        <div className="girly-tag mb-4">
           <MessageSquareHeart className="w-3.5 h-3.5" />
           <span>AN INTIMATE QUESTION FOR YOU</span>
         </div>
 
-        <h2 className="font-forum text-3xl sm:text-4xl text-[#241e16] uppercase tracking-[0.06em]">
+        <h2 className="font-forum text-3xl sm:text-4xl text-[#831843] uppercase tracking-[0.06em]">
           Did You Like What I Made For You? 🤍
         </h2>
-        <p className="font-signature text-2xl text-[#7d7265] mt-2">
+        <p className="font-signature text-2xl text-[#9d174d] mt-2">
           &ldquo;Every photo, every word, and every line of code was created just to see you smile.&rdquo;
         </p>
 
-        <div className="w-16 editorial-rule my-6 mx-auto" />
+        <div className="w-20 editorial-rule my-6 mx-auto" />
 
         <AnimatePresence mode="wait">
           {!isSubmitted ? (

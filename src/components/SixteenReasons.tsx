@@ -148,19 +148,19 @@ export default function SixteenReasons() {
     <div className="w-full">
       {/* Editorial Header */}
       <div className="text-center mb-10 max-w-2xl mx-auto">
-        <h2 className="font-forum text-3xl sm:text-5xl text-[#241e16] uppercase tracking-[0.06em]">
+        <h2 className="font-forum text-3xl sm:text-5xl text-[#831843] uppercase tracking-[0.06em]">
           16 Reasons Why You Are My World
         </h2>
-        <p className="font-signature text-2xl sm:text-3xl text-[#7d7265] mt-2 leading-relaxed">
+        <p className="font-signature text-2xl sm:text-3xl text-[#9d174d] mt-2 leading-relaxed">
           &ldquo;Tap each archival card to flip and reveal an intimate truth.&rdquo;
         </p>
 
         <div className="mt-4 flex items-center justify-center gap-3">
           <button
             onClick={revealAll}
-            className="px-5 py-2 rounded-full bg-white hover:bg-neutral-50 border border-[#d97d93]/35 text-[#c95874] text-xs font-raleway font-bold uppercase tracking-wider shadow-xs hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
+            className="px-5 py-2 rounded-full bg-white hover:bg-pink-50/80 border-2 border-[#f472b6]/40 text-[#db2777] text-xs font-raleway font-bold uppercase tracking-wider shadow-xs hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
           >
-            <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
+            <Sparkles className="w-3.5 h-3.5 text-[#fbbf24]" />
             <span>Unveil All 16 Cards</span>
           </button>
         </div>
