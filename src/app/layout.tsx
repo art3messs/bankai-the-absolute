@@ -28,14 +28,8 @@ export const metadata: Metadata = {
   description: "An intimate luxury celebration created for Harleen • February 16",
   metadataBase: new URL("https://harleen-birthday.vercel.app"),
   robots: {
-    index: false,
-    follow: false,
-    nocache: true,
-    googleBot: {
-      index: false,
-      follow: false,
-      noimageindex: true,
-    },
+    index: true,
+    follow: true,
   },
   openGraph: {
     title: "Harleen • The 16th Birthday Archive",
