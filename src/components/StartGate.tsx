@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { Sparkles, Disc3, Heart, Headphones, ArrowDown, Star } from "lucide-react";
+import { Sparkles, Disc3, Headphones, ArrowDown, Star } from "lucide-react";
 import confetti from "canvas-confetti";
 
 interface StartGateProps {
@@ -13,6 +13,8 @@ interface StartGateProps {
 
 export default function StartGate({ onStart, isOpen, recipientName }: StartGateProps) {
   const [isUnveiling, setIsUnveiling] = useState(false);
+  // Atomic ref latch to prevent double activations from touch + synthetic clicks
+  const hasTriggeredRef = useRef(false);
 
   // 3D Tilt physics for the portrait
   const cardRef = useRef<HTMLDivElement>(null);
@@ -47,8 +49,13 @@ export default function StartGate({ onStart, isOpen, recipientName }: StartGateP
     size: 14 + ((i * 3) % 12),
   }));
 
-  const handleTriggerStart = () => {
-    if (isUnveiling) return;
+  // Idempotent start handler: guarded by atomic ref latch
+  const handleTriggerStart = useCallback((e?: React.SyntheticEvent | Event) => {
+    if (e && "cancelable" in e && e.cancelable && e.type === "touchend") {
+      e.preventDefault();
+    }
+    if (hasTriggeredRef.current) return;
+    hasTriggeredRef.current = true;
     setIsUnveiling(true);
 
     // Synchronously unlock and trigger audio playback on user gesture (bypasses mobile Safari audio blocks)
@@ -65,22 +72,17 @@ export default function StartGate({ onStart, isOpen, recipientName }: StartGateP
     setTimeout(() => {
       onStart();
     }, 650);
-  };
+  }, [onStart]);
 
-  // Lock body scroll while StartGate is open
-  useEffect(() => {
-    if (isOpen) {
-      const originalOverflow = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
-      return () => {
-        document.body.style.overflow = originalOverflow;
-      };
-    }
-  }, [isOpen]);
-
-  // Scroll or swipe down anywhere on screen to unveil
+  // Scroll, wheel, swipe down, or keyboard navigation to unveil
   useEffect(() => {
     if (!isOpen) return;
+
+    const handleScroll = () => {
+      if (window.scrollY > 15) {
+        handleTriggerStart();
+      }
+    };
 
     const handleWheel = (e: WheelEvent) => {
       if (e.deltaY > 15) {
@@ -90,24 +92,37 @@ export default function StartGate({ onStart, isOpen, recipientName }: StartGateP
 
     let startY = 0;
     const handleTouchStart = (e: TouchEvent) => {
-      startY = e.touches[0].clientY;
+      if (e.touches.length > 0) {
+        startY = e.touches[0].clientY;
+      }
     };
+
     const handleTouchMove = (e: TouchEvent) => {
-      if (startY - e.touches[0].clientY > 25) {
+      if (e.touches.length > 0 && startY - e.touches[0].clientY > 25) {
         handleTriggerStart();
       }
     };
 
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
+        handleTriggerStart();
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("wheel", handleWheel, { passive: true });
     window.addEventListener("touchstart", handleTouchStart, { passive: true });
     window.addEventListener("touchmove", handleTouchMove, { passive: true });
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
+      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("wheel", handleWheel);
       window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen, isUnveiling]);
+  }, [isOpen, handleTriggerStart]);
 
   return (
     <AnimatePresence>
@@ -127,6 +142,17 @@ export default function StartGate({ onStart, isOpen, recipientName }: StartGateP
             background: "radial-gradient(circle at 50% 35%, #4a044e 0%, #2b0630 45%, #140217 100%)",
           }}
         >
+          {/* Quick Enter Button in Top-Right Corner */}
+          <button
+            type="button"
+            onClick={handleTriggerStart}
+            aria-label="Enter site"
+            className="absolute top-4 right-4 z-50 flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md text-white text-xs font-mono font-bold uppercase tracking-wider border border-white/30 shadow-lg cursor-pointer transition-all active:scale-95"
+          >
+            <span>Enter Site</span>
+            <ArrowDown className="w-3.5 h-3.5 text-amber-300" />
+          </button>
+
           {/* ROMANTIC DRIFTING ROSE PETALS */}
           {petals.map((p) => (
             <motion.div
@@ -176,15 +202,24 @@ export default function StartGate({ onStart, isOpen, recipientName }: StartGateP
             {/* GRAND ARCHED LUXURY 3D PORTRAIT WITH MOUSE TILT */}
             <motion.div
               ref={cardRef}
+              role="button"
+              tabIndex={0}
+              aria-label="Portrait of Harleen. Click or press Enter to enter site"
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
               onClick={handleTriggerStart}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleTriggerStart();
+                }
+              }}
               style={{
                 rotateX,
                 rotateY,
                 transformStyle: "preserve-3d",
               }}
-              className="relative w-full aspect-[3/4] max-w-[320px] rounded-[2.5rem] p-2 bg-gradient-to-b from-[#fbbf24]/50 via-[#ec4899]/30 to-[#4a044e]/60 border border-[#fbbf24]/40 shadow-[0_30px_70px_rgba(74,4,78,0.7)] cursor-pointer group transition-all"
+              className="relative w-full aspect-[3/4] max-w-[320px] rounded-[2.5rem] p-2 bg-gradient-to-b from-[#fbbf24]/50 via-[#ec4899]/30 to-[#4a044e]/60 border border-[#fbbf24]/40 shadow-[0_30px_70px_rgba(74,4,78,0.7)] cursor-pointer group transition-all outline-none focus:ring-2 focus:ring-amber-300/50"
             >
               <div
                 className="relative w-full h-full rounded-[2.2rem] overflow-hidden bg-black/60 shadow-inner"
@@ -244,7 +279,9 @@ export default function StartGate({ onStart, isOpen, recipientName }: StartGateP
 
             {/* Tap To Enter Button Alternative */}
             <button
+              type="button"
               onClick={handleTriggerStart}
+              aria-label="Step Into Your Universe"
               className="mt-6 px-8 py-3.5 min-h-[44px] rounded-full bg-gradient-to-r from-[#db2777] via-[#ec4899] to-[#fbbf24] text-white font-raleway font-bold text-xs uppercase tracking-[0.22em] shadow-[0_10px_35px_rgba(219,39,119,0.4)] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2.5 cursor-pointer z-10"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-200" />

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useSyncExternalStore } from "react";
 import confetti from "canvas-confetti";
 
 interface Star {
@@ -54,7 +54,11 @@ const PETALS: Petal[] = Array.from({ length: 22 }, (_, i) => ({
   symbol: PETAL_SYMBOLS[i % PETAL_SYMBOLS.length],
 }));
 
+const emptySubscribe = () => () => {};
+
 export default function SparklesBackground() {
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
+
   useEffect(() => {
     let lastClickTime = 0;
 
@@ -99,6 +103,8 @@ export default function SparklesBackground() {
     window.addEventListener("click", handleGlobalClick);
     return () => window.removeEventListener("click", handleGlobalClick);
   }, []);
+
+  if (!mounted) return null;
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">

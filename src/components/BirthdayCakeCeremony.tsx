@@ -10,26 +10,33 @@ interface BirthdayCakeCeremonyProps {
 }
 
 export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCeremonyProps) {
-  const [candlesOut, setCandlesOut] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("harleen_wish_sent") === "true";
-    }
-    return false;
-  });
+  const [candlesOut, setCandlesOut] = useState(false);
   const [micActive, setMicActive] = useState(false);
   const [micError, setMicError] = useState<string | null>(null);
   const [puffParticles, setPuffParticles] = useState<{ id: number; left: number }[]>([]);
 
   // Wish form state
   const [wishText, setWishText] = useState("");
-  const [wishSent, setWishSent] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("harleen_wish_sent") === "true";
-    }
-    return false;
-  });
+  const [wishSent, setWishSent] = useState(false);
   const [wishError, setWishError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Hydrate stored state post-mount to avoid SSR markup mismatch
+  useEffect(() => {
+    try {
+      if (typeof window !== "undefined") {
+        const storedWishSent = localStorage.getItem("harleen_wish_sent") === "true";
+        if (storedWishSent) {
+          setTimeout(() => {
+            setCandlesOut(true);
+            setWishSent(true);
+          }, 0);
+        }
+      }
+    } catch (err) {
+      console.warn("Storage access unavailable:", err);
+    }
+  }, []);
 
   // 3D physics tilt
   const stageRef = useRef<HTMLDivElement>(null);
@@ -137,8 +144,12 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
       }
 
       setWishSent(true);
-      if (typeof window !== "undefined") {
-        localStorage.setItem("harleen_wish_sent", "true");
+      try {
+        if (typeof window !== "undefined") {
+          localStorage.setItem("harleen_wish_sent", "true");
+        }
+      } catch (err) {
+        console.warn("Could not save wish state to localStorage:", err);
       }
       confetti({
         particleCount: 100,

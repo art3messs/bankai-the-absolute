@@ -2,7 +2,11 @@ import { NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
 import crypto from "crypto";
-
+import {
+  isRequestSessionValid,
+  getTrustedClientIp,
+} from "@/lib/session";
+import { parseJsonBodyWithByteLimit, checkSharedRateLimit } from "@/lib/stream";
 
 export type ItemType = "note" | "wish" | "review";
 export type ItemVisibility = "public" | "private";
@@ -19,9 +23,10 @@ export interface WishItem {
 }
 
 const WISHES_FILE = path.join(process.cwd(), "src", "data", "wishes.json");
+const MAX_BODY_BYTES = 64 * 1024; // 64 KB strict byte limit
 
-// Allowed reactions and stamps for validation
-const ALLOWED_STAMPS = new Set(["🌸", "💖", "✨", "💌", "🎀", "🤍", "🎂", "🕯️", "👑", "🌹"]);
+// Allowed stamps and reactions
+const ALLOWED_STAMPS = new Set(["🌸", "💖", "✨", "💌", "🎀", "🤍", "🎂", "🕯️", "👑", "🌹", "🧸"]);
 const ALLOWED_REACTIONS = new Set([
   "🥹 Adored every second",
   "😭 In happy tears",
@@ -30,7 +35,7 @@ const ALLOWED_REACTIONS = new Set([
   "👑 1000/10 Queen feel",
 ]);
 
-// Starter notes for the public guestbook
+// Initial fallback seed
 const INITIAL_NOTES: WishItem[] = [
   {
     id: "note-intro-01",
@@ -39,121 +44,232 @@ const INITIAL_NOTES: WishItem[] = [
     name: "Harleen 4 Life",
     message: "A gentle corner to leave sweet reminders and memories for Harleen. 🌸",
     stamp: "🌸",
-    createdAt: "2027-02-16T00:00:00Z",
+    createdAt: "2026-02-16T00:00:00Z",
   },
 ];
 
-// Simple in-memory rate limiting (max 10 requests per minute per IP)
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+/**
+ * Validates admin authentication using constant-time comparison.
+ * Never accepts credentials from query parameters.
+ */
+function verifyAdminAuth(req: Request): boolean {
+  const adminToken = process.env.ADMIN_TOKEN;
+  if (!adminToken || !adminToken.trim()) return false;
 
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(ip);
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + 60_000 });
-    return false;
-  }
-  if (entry.count >= 10) return true;
-  entry.count++;
-  return false;
-}
+  const authHeader = req.headers.get("authorization");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) return false;
 
-// Upstash / Vercel KV REST helpers (zero dependencies)
-async function getRedisData(): Promise<WishItem[] | null> {
-  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
-  if (!url || !token) return null;
-
+  const token = authHeader.slice(7).trim();
   try {
-    const res = await fetch(`${url}/get/harleen_birthday_wishes`, {
-      headers: { Authorization: `Bearer ${token}` },
-      cache: "no-store",
-      signal: AbortSignal.timeout(3000),
-    });
-    if (!res.ok) return null;
-    const json = await res.json();
-    if (!json.result) return [];
-    return typeof json.result === "string" ? JSON.parse(json.result) : json.result;
-  } catch (err) {
-    console.error("Upstash Redis GET failed:", err);
-    return null;
-  }
-}
-
-async function setRedisData(data: WishItem[]): Promise<boolean> {
-  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
-  if (!url || !token) return false;
-
-  try {
-    const res = await fetch(`${url}/set/harleen_birthday_wishes`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(JSON.stringify(data)),
-      signal: AbortSignal.timeout(3000),
-    });
-    return res.ok;
-  } catch (err) {
-    console.error("Upstash Redis SET failed:", err);
+    const a = Buffer.from(token);
+    const b = Buffer.from(adminToken.trim());
+    if (a.length !== b.length) return false;
+    return crypto.timingSafeEqual(a, b);
+  } catch {
     return false;
   }
 }
 
-// Safe file load/save fallback
+/**
+ * Validates recipient authorization for private wish and review submissions.
+ * Checks for:
+ * 1. Admin Bearer token, or
+ * 2. Cryptographically signed, unexpired session cookie.
+ */
+function isCallerAuthorizedForPrivateSubmissions(req: Request): boolean {
+  if (verifyAdminAuth(req)) return true;
+  return isRequestSessionValid(req);
+}
+
+// Check if Redis is configured
+const isRedisConfigured = Boolean(
+  (process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL) &&
+  (process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN)
+);
+
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+
+type StorageResult<T> =
+  | { success: true; data: T }
+  | { success: false; error: string; status: number };
+
 let inMemoryWishes: WishItem[] = [...INITIAL_NOTES];
 
-async function loadWishes(): Promise<WishItem[]> {
-  const redisData = await getRedisData();
-  if (redisData !== null) return redisData;
+/**
+ * Loads wishes from storage.
+ * CRITICAL PERSISTENCE RULE:
+ * If Redis is configured and fails, return an error immediately (503).
+ * NEVER fall back to local disk or stale repo JSON, which would lead to
+ * subsequent writes overwriting Redis with stale data!
+ */
+async function loadWishes(): Promise<StorageResult<WishItem[]>> {
+  if (isRedisConfigured) {
+    try {
+      const res = await fetch(`${redisUrl}/get/harleen_birthday_wishes`, {
+        headers: { Authorization: `Bearer ${redisToken}` },
+        cache: "no-store",
+        signal: AbortSignal.timeout(3000),
+      });
+
+      if (!res.ok) {
+        console.error(`Redis GET returned HTTP ${res.status}`);
+        return {
+          success: false,
+          error: "Database service unavailable. Please try again later.",
+          status: 503,
+        };
+      }
+
+      const json = await res.json();
+      if (!json.result) return { success: true, data: [] };
+      const parsed = typeof json.result === "string" ? JSON.parse(json.result) : json.result;
+      return { success: true, data: Array.isArray(parsed) ? parsed : [] };
+    } catch (err) {
+      console.error("Redis GET failed:", err);
+      return {
+        success: false,
+        error: "Database service unavailable. Please try again later.",
+        status: 503,
+      };
+    }
+  }
+
+  // When Redis is NOT configured:
+  const allowFileStorage = process.env.ALLOW_FILE_STORAGE === "true" || process.env.NODE_ENV !== "production";
+  if (!allowFileStorage) {
+    return {
+      success: false,
+      error: "Storage service is not configured.",
+      status: 503,
+    };
+  }
 
   try {
     const data = await fs.readFile(WISHES_FILE, "utf-8");
     const parsed = JSON.parse(data);
-    if (Array.isArray(parsed) && parsed.length > 0) {
+    if (Array.isArray(parsed)) {
       inMemoryWishes = parsed;
-      return parsed;
+      return { success: true, data: parsed };
     }
   } catch {
-    // File doesn't exist yet or unreadable
+    // File not readable
   }
-  return inMemoryWishes;
+
+  return { success: true, data: inMemoryWishes };
 }
 
-async function saveWishes(wishes: WishItem[]): Promise<void> {
-  inMemoryWishes = wishes;
+/**
+ * Saves wishes to storage.
+ * In production: Redis must be used, unless ALLOW_FILE_STORAGE=true is explicitly set.
+ */
+async function saveWishes(wishes: WishItem[]): Promise<StorageResult<void>> {
+  if (isRedisConfigured) {
+    try {
+      const res = await fetch(`${redisUrl}/set/harleen_birthday_wishes`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${redisToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(JSON.stringify(wishes)),
+        signal: AbortSignal.timeout(3000),
+      });
 
-  const savedToRedis = await setRedisData(wishes);
-  if (savedToRedis) return;
+      if (!res.ok) {
+        console.error(`Redis SET returned HTTP ${res.status}`);
+        return {
+          success: false,
+          error: "Database storage failed. Please try again.",
+          status: 503,
+        };
+      }
 
-  // Atomic file write on local disk
+      inMemoryWishes = wishes;
+      return { success: true, data: undefined };
+    } catch (err) {
+      console.error("Redis SET failed:", err);
+      return {
+        success: false,
+        error: "Database storage failed. Please try again.",
+        status: 503,
+      };
+    }
+  }
+
+  const allowFileStorage = process.env.ALLOW_FILE_STORAGE === "true" || process.env.NODE_ENV !== "production";
+  if (!allowFileStorage) {
+    return {
+      success: false,
+      error: "Storage service is not configured. Submissions cannot be saved.",
+      status: 503,
+    };
+  }
+
   try {
     const tempFile = `${WISHES_FILE}.${Date.now()}.tmp`;
     await fs.writeFile(tempFile, JSON.stringify(wishes, null, 2), "utf-8");
     await fs.rename(tempFile, WISHES_FILE);
+    inMemoryWishes = wishes;
+    return { success: true, data: undefined };
   } catch (err) {
-    // In serverless read-only environment, local write may fail gracefully
-    console.warn("Local disk write bypassed (serverless environment):", err);
+    console.error("Local disk write failed:", err);
+    return {
+      success: false,
+      error: "Failed to write to local storage.",
+      status: 500,
+    };
   }
 }
 
-// Instant notification via JSON POST to ntfy.sh (No HTTP header encoding bugs)
-async function sendInstantNotification(title: string, message: string, tags: string[] = ["sparkles", "heart"]): Promise<void> {
-  try {
-    const isConfiguredTopic = Boolean(process.env.NTFY_TOPIC);
-    const topic = process.env.NTFY_TOPIC || "harleen-birthday-pucchi-alert-priv-9f7a";
-    // Only send raw text if a private custom NTFY_TOPIC is configured in environment
-    const safeMessage = isConfiguredTopic ? message : "New entry submitted. Open the private dashboard to view.";
+/**
+ * Sends notifications with strict privacy and abuse controls:
+ * 1. Only sends if NTFY_TOPIC is configured in environment.
+ * 2. Only includes private wish/review text if NTFY_ALLOW_PRIVATE_CONTENT=true.
+ * 3. Does not send public guestbook notifications unless NOTIFY_PUBLIC_NOTES=true.
+ */
+async function dispatchNotification(entry: WishItem): Promise<void> {
+  const topic = process.env.NTFY_TOPIC;
+  if (!topic || !topic.trim()) return;
 
+  const allowPrivateContent = process.env.NTFY_ALLOW_PRIVATE_CONTENT === "true";
+  let title = "";
+  let message = "";
+  let tags: string[] = [];
+
+  if (entry.type === "wish") {
+    title = "Harleen Made A Birthday Wish";
+    tags = ["birthday", "star2", "candle"];
+    message = allowPrivateContent
+      ? `Harleen blew the candle and wished:\n"${entry.message}"`
+      : "Harleen made a private birthday wish. Log in to the admin dashboard to read it.";
+  } else if (entry.type === "review") {
+    title = "New Review From Harleen";
+    tags = ["heart", "envelope", "sparkling_heart"];
+    message = allowPrivateContent
+      ? `Reaction: ${entry.reaction || "Adored it"}\nNote: "${entry.message}"`
+      : "A private review was submitted. Log in to the admin dashboard to read it.";
+  } else {
+    // Public guestbook note policy: disabled by default to prevent notification spam
+    if (process.env.NOTIFY_PUBLIC_NOTES !== "true") return;
+
+    // Rate-limit public note notifications to max 2 per 5 minutes
+    const limitCheck = await checkSharedRateLimit("notify:public_notes", 2, 300);
+    if (!limitCheck.allowed) return;
+
+    title = "New Note On Guestbook Wall";
+    tags = ["memo", "pencil", "blossom"];
+    message = `Note from ${entry.name}:\n"${entry.message}"`;
+  }
+
+  try {
     const res = await fetch("https://ntfy.sh", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        topic,
+        topic: topic.trim(),
         title,
-        message: safeMessage,
+        message,
         tags,
         priority: 4,
       }),
@@ -164,23 +280,24 @@ async function sendInstantNotification(title: string, message: string, tags: str
       console.error(`ntfy.sh returned HTTP ${res.status}: ${await res.text()}`);
     }
   } catch (err) {
-    console.error("Failed to send push notification:", err);
+    console.error("Notification dispatch failed:", err);
   }
 }
 
 // GET /api/wishes
 export async function GET(req: Request) {
   try {
-    const { searchParams } = new URL(req.url);
-    const token = searchParams.get("token") || req.headers.get("authorization")?.replace("Bearer ", "");
-    const adminToken = process.env.ADMIN_TOKEN;
-    const isAdmin = Boolean(adminToken && token === adminToken);
+    const isAdmin = verifyAdminAuth(req);
+    const result = await loadWishes();
 
-    const allWishes = await loadWishes();
+    if (!result.success) {
+      return NextResponse.json({ error: result.error }, { status: result.status });
+    }
 
+    // Public visitors strictly receive public notes; private entries are hidden
     const items = isAdmin
-      ? allWishes
-      : allWishes.filter(
+      ? result.data
+      : result.data.filter(
           (item) => item.type === "note" && item.visibility === "public"
         );
 
@@ -199,55 +316,82 @@ export async function GET(req: Request) {
 // POST /api/wishes
 export async function POST(req: Request) {
   try {
-    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0] || "unknown";
-    if (isRateLimited(clientIp)) {
-      return NextResponse.json({ error: "Too many requests. Please wait a moment." }, { status: 429 });
+    const clientIp = getTrustedClientIp(req);
+    // Rate limit: max 12 requests per minute per trusted client IP
+    const rateKey = `wishes_post:${clientIp || "untrusted"}`;
+    const rateCheck = await checkSharedRateLimit(rateKey, 12, 60);
+
+    if (!rateCheck.allowed) {
+      return NextResponse.json(
+        { error: "Too many requests. Please wait a moment." },
+        { status: 429 }
+      );
     }
 
-    let body: Record<string, unknown>;
-    try {
-      body = (await req.json()) as Record<string, unknown>;
-    } catch {
-      return NextResponse.json({ error: "Invalid JSON format." }, { status: 400 });
-    }
+    // Stream-level byte measurement & limit enforcement (413 if > 64 KB)
+    const { data: body, errorResponse } = await parseJsonBodyWithByteLimit<Record<string, unknown>>(
+      req,
+      MAX_BODY_BYTES
+    );
+    if (errorResponse) return errorResponse;
 
-    // Honeypot check (bot prevention)
-    if (body.hp || body.website) {
+    // Honeypot check
+    if (body?.hp || body?.website) {
       return NextResponse.json({ success: true, item: { id: "ok" } });
     }
 
-    const rawMessage = body.message;
-    const rawType = body.type;
-    const rawName = body.name;
-    const rawReaction = body.reaction;
-    const rawStamp = body.stamp;
+    const rawMessage = body?.message;
+    const rawType = body?.type;
+    const rawName = body?.name;
+    const rawReaction = body?.reaction;
+    const rawStamp = body?.stamp;
 
     if (!rawMessage || typeof rawMessage !== "string" || !rawMessage.trim()) {
       return NextResponse.json({ error: "A message is required." }, { status: 400 });
     }
 
-    const message = rawMessage.trim().slice(0, 500);
+    if (rawMessage.length > 2000) {
+      return NextResponse.json(
+        { error: "Message exceeds maximum allowed length of 2000 characters." },
+        { status: 400 }
+      );
+    }
 
-    // Enforce type and visibility contract strictly
+    const message = rawMessage.trim().slice(0, 1000);
+
     let itemType: ItemType = "note";
     let visibility: ItemVisibility = "public";
     let finalName = "Guest";
 
-    if (rawType === "wish") {
-      itemType = "wish";
-      visibility = "private";
-      finalName = "Harleen";
-    } else if (rawType === "review") {
-      itemType = "review";
-      visibility = "private";
-      finalName = "Harleen";
+    if (rawType === "wish" || rawType === "review") {
+      // Validate recipient session signature and expiration
+      const authorized = isCallerAuthorizedForPrivateSubmissions(req);
+      if (!authorized) {
+        return NextResponse.json(
+          {
+            error: "Private wish and review submissions are reserved for Harleen. Please leave a public note on the guestbook wall instead.",
+          },
+          { status: 403 }
+        );
+      }
+
+      if (rawType === "wish") {
+        itemType = "wish";
+        visibility = "private";
+        finalName = "Harleen";
+      } else {
+        itemType = "review";
+        visibility = "private";
+        finalName = "Harleen";
+      }
     } else {
+      // Guestbook note (public)
       itemType = "note";
       visibility = "public";
       if (!rawName || typeof rawName !== "string" || !rawName.trim()) {
         return NextResponse.json({ error: "Name is required for guestbook notes." }, { status: 400 });
       }
-      finalName = rawName.trim().slice(0, 40);
+      finalName = rawName.trim().slice(0, 50);
     }
 
     const stamp = typeof rawStamp === "string" && ALLOWED_STAMPS.has(rawStamp) ? rawStamp : "🌸";
@@ -264,30 +408,21 @@ export async function POST(req: Request) {
       createdAt: new Date().toISOString(),
     };
 
-    const currentWishes = await loadWishes();
-    const updated = [newEntry, ...currentWishes];
-    await saveWishes(updated);
-
-    // Fire-and-forget push notification based on strictly resolved itemType
-    if (newEntry.type === "wish") {
-      void sendInstantNotification(
-        "Harleen Just Made A Birthday Wish",
-        `Harleen blew the candle and wished:\n"${newEntry.message}"`,
-        ["birthday", "star2", "candle"]
-      );
-    } else if (newEntry.type === "review") {
-      void sendInstantNotification(
-        "New Review From Harleen",
-        `Reaction: ${newEntry.reaction || "Adored it"}\nNote: "${newEntry.message}"`,
-        ["heart", "envelope", "sparkling_heart"]
-      );
-    } else {
-      void sendInstantNotification(
-        "New Note On Guestbook Wall",
-        `Note from ${newEntry.name}:\n"${newEntry.message}"`,
-        ["memo", "pencil", "blossom"]
-      );
+    // Load existing items; fail if storage service is unavailable
+    const loadResult = await loadWishes();
+    if (!loadResult.success) {
+      return NextResponse.json({ error: loadResult.error }, { status: loadResult.status });
     }
+
+    const updated = [newEntry, ...loadResult.data];
+    const saveResult = await saveWishes(updated);
+
+    if (!saveResult.success) {
+      return NextResponse.json({ error: saveResult.error }, { status: saveResult.status });
+    }
+
+    // Dispatch notification only after guaranteed persistence
+    void dispatchNotification(newEntry);
 
     return NextResponse.json({ success: true, item: newEntry });
   } catch (err) {
@@ -299,22 +434,28 @@ export async function POST(req: Request) {
 // DELETE /api/wishes (Admin moderation endpoint)
 export async function DELETE(req: Request) {
   try {
-    const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
-    const token = searchParams.get("token") || req.headers.get("authorization")?.replace("Bearer ", "");
-    const adminToken = process.env.ADMIN_TOKEN;
-
-    if (!adminToken || token !== adminToken) {
+    if (!verifyAdminAuth(req)) {
       return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
     }
+
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
 
     if (!id) {
       return NextResponse.json({ error: "Item ID is required." }, { status: 400 });
     }
 
-    const currentWishes = await loadWishes();
-    const filtered = currentWishes.filter((w) => w.id !== id);
-    await saveWishes(filtered);
+    const loadResult = await loadWishes();
+    if (!loadResult.success) {
+      return NextResponse.json({ error: loadResult.error }, { status: loadResult.status });
+    }
+
+    const filtered = loadResult.data.filter((w) => w.id !== id);
+    const saveResult = await saveWishes(filtered);
+
+    if (!saveResult.success) {
+      return NextResponse.json({ error: saveResult.error }, { status: saveResult.status });
+    }
 
     return NextResponse.json({ success: true, deleted: id });
   } catch (err) {

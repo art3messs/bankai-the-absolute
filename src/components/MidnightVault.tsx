@@ -1,6 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+/**
+ * MidnightVault Component - Interactive Keepsake Reveal
+ *
+ * NOTE ON SECURITY ARCHITECTURE:
+ * This component is an interactive, playful keepsake reveal designed as a romantic
+ * surprise for Harleen. It is an interactive reveal rather than cryptographic secure storage.
+ * The accepted answers and media asset (/media/vid-videocall-whisper.mp4) are delivered
+ * client-side for instantaneous, seamless playback.
+ */
+
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lock, Unlock, Key, Sparkles, HelpCircle, Video } from "lucide-react";
 import confetti from "canvas-confetti";
@@ -11,13 +21,45 @@ export default function MidnightVault() {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleUnlock = (e: React.FormEvent) => {
+  // Check existing session status on mount
+  useEffect(() => {
+    fetch("/api/auth/recipient")
+      .then((res) => (res.ok ? res.json() : { authenticated: false }))
+      .then((data) => {
+        if (data.authenticated) {
+          setIsUnlocked(true);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleUnlock = async (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanInput = inputAnswer.trim().toLowerCase().replace(/[^a-z]/g, "");
-    const accepted = BIRTHDAY_CONFIG.secretVault.acceptedAnswers || ["pucchi", "puchhi", "puchi", "pucchii"];
+    const cleanInput = inputAnswer.trim();
+    if (!cleanInput || isSubmitting) return;
 
-    if (accepted.some((ans) => ans.toLowerCase().replace(/[^a-z]/g, "") === cleanInput)) {
+    setIsSubmitting(true);
+    setErrorMsg("");
+
+    try {
+      const res = await fetch("/api/auth/recipient", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: cleanInput }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        if (res.status === 429) {
+          throw new Error("Too many attempts. Please wait a few moments.");
+        }
+        throw new Error(
+          data.error || "That's not the special word... 🥺 Tap the hint below if you need a reminder!"
+        );
+      }
+
       setIsUnlocked(true);
       setErrorMsg("");
 
@@ -27,8 +69,14 @@ export default function MidnightVault() {
         origin: { y: 0.6 },
         colors: ["#d97d93", "#c95874", "#d4af37", "#f3e5ab", "#ffffff"],
       });
-    } else {
-      setErrorMsg("That's not the secret code word... 🥺 Tap the hint below if you need a reminder!");
+    } catch (err) {
+      setErrorMsg(
+        err instanceof Error
+          ? err.message
+          : "Verification could not be completed. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -48,10 +96,10 @@ export default function MidnightVault() {
           </div>
 
           <h2 className="font-forum text-3xl sm:text-4xl text-[#831843] uppercase tracking-[0.06em]">
-            The Secret Archive
+            The Secret Keepsake
           </h2>
           <p className="font-signature text-2xl text-[#9d174d] mt-2">
-            &ldquo;Protected by the secret code that belongs only to the two of us.&rdquo;
+            &ldquo;A sweet little moment for you • Enter our special word to reveal&rdquo;
           </p>
         </div>
 
@@ -69,7 +117,7 @@ export default function MidnightVault() {
               {/* Question */}
               <div className="w-full p-5 rounded-2xl bg-white border border-[#d97d93]/30 shadow-xs mb-6 text-center">
                 <span className="text-[10px] font-raleway tracking-[0.25em] text-[#7d7265] uppercase font-bold block mb-1">
-                  SECURITY QUESTION
+                  A QUESTION FOR YOU
                 </span>
                 <p className="font-forum text-lg text-[#241e16] font-normal leading-relaxed">
                   {BIRTHDAY_CONFIG.secretVault.question}
@@ -85,8 +133,8 @@ export default function MidnightVault() {
                     setInputAnswer(e.target.value);
                     if (errorMsg) setErrorMsg("");
                   }}
-                  placeholder="Enter our secret code..."
-                  aria-label="Secret code word"
+                  placeholder="Enter our special word..."
+                  aria-label="Special word"
                   className="w-full px-5 py-3.5 rounded-full bg-white border border-[#d97d93]/40 focus:border-[#d4af37] focus:ring-2 focus:ring-[#d4af37]/20 outline-none text-center font-raleway text-sm text-[#241e16] placeholder-[#7d7265]/60 transition-all shadow-xs"
                 />
               </div>
@@ -107,7 +155,7 @@ export default function MidnightVault() {
                 className="w-full py-3.5 rounded-full bg-gradient-to-r from-[#d97d93] via-[#c95874] to-[#d4af37] hover:opacity-95 text-white font-raleway font-bold text-xs uppercase tracking-[0.2em] shadow-md hover:scale-102 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Key className="w-4 h-4" />
-                <span>Unlock Secret Archive</span>
+                <span>Reveal Keepsake</span>
               </button>
 
               {/* Hint Accordion */}
@@ -144,7 +192,7 @@ export default function MidnightVault() {
                 <div className="flex items-center justify-center gap-2 mb-3">
                   <Sparkles className="w-4 h-4 text-[#d4af37]" />
                   <span className="text-[11px] font-raleway tracking-[0.25em] text-[#d4af37] uppercase font-bold">
-                    VAULT DECRYPTED WITH &ldquo;PUCCHI&rdquo;
+                    SURPRISE REVEALED • OUR SPECIAL WORD
                   </span>
                   <Sparkles className="w-4 h-4 text-[#d4af37]" />
                 </div>
@@ -153,11 +201,11 @@ export default function MidnightVault() {
                   {BIRTHDAY_CONFIG.secretVault.secretMessage}
                 </p>
 
-                {/* SECRET EXCLUSIVE MEDIA KEEPSAKE */}
+                {/* SPECIAL MEDIA KEEPSAKE */}
                 <div className="mt-6 p-4 rounded-2xl bg-[#fdfaf5] border border-[#d97d93]/30">
                   <div className="flex items-center justify-center gap-2 text-xs font-raleway font-bold uppercase tracking-wider text-[#c95874] mb-3">
                     <Video className="w-4 h-4" />
-                    <span>Exclusive Secret Video Keepsake</span>
+                    <span>Our Special Video Moment</span>
                   </div>
 
                   <div className="relative aspect-video max-w-md mx-auto rounded-xl overflow-hidden shadow-md bg-stone-900">

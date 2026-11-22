@@ -73,7 +73,6 @@ Happy Birthday, Harleen. ✨🤍`,
   secretVault: {
     question: "What is that one secret code word that belongs only to you and me?",
     hint: "Used to say before going to bed, kinda like mwahhh or so... 🌙",
-    acceptedAnswers: ["pucchi", "puchhi", "puchi", "pucchii"],
     secretMessage: "You unlocked my secret vault! 🔐 'Pucchi' forever and always. You are genuinely the most precious, gorgeous, and adored person in this entire universe, Harleen. Seeing you happy is my whole world. Happy Birthday! 🤍✨",
   },
   samplePhotos: [

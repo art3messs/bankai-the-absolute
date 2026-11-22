@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { Heart, Send, MessageSquareHeart } from "lucide-react";
@@ -14,21 +14,33 @@ const REACTIONS = [
 ];
 
 export default function WebsiteReview() {
-  const [selectedReaction, setSelectedReaction] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("harleen_review_reaction") || REACTIONS[0].label;
-    }
-    return REACTIONS[0].label;
-  });
+  const [selectedReaction, setSelectedReaction] = useState(REACTIONS[0].label);
   const [reviewMessage, setReviewMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("harleen_review_sent") === "true";
-    }
-    return false;
-  });
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState("");
+
+  // Hydrate stored state post-mount to avoid SSR markup mismatch
+  useEffect(() => {
+    try {
+      if (typeof window !== "undefined") {
+        const storedSubmitted = localStorage.getItem("harleen_review_sent") === "true";
+        const storedReaction = localStorage.getItem("harleen_review_reaction");
+        if (storedSubmitted || storedReaction) {
+          setTimeout(() => {
+            if (storedSubmitted) {
+              setIsSubmitted(true);
+            }
+            if (storedReaction && REACTIONS.some((r) => r.label === storedReaction)) {
+              setSelectedReaction(storedReaction);
+            }
+          }, 0);
+        }
+      }
+    } catch (err) {
+      console.warn("Storage access unavailable:", err);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,13 +62,18 @@ export default function WebsiteReview() {
       });
 
       if (!res.ok) {
-        throw new Error("Your review couldn’t be delivered. Please try again.");
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Your review couldn’t be delivered. Please try again.");
       }
 
       setIsSubmitted(true);
-      if (typeof window !== "undefined") {
-        localStorage.setItem("harleen_review_sent", "true");
-        localStorage.setItem("harleen_review_reaction", selectedReaction);
+      try {
+        if (typeof window !== "undefined") {
+          localStorage.setItem("harleen_review_sent", "true");
+          localStorage.setItem("harleen_review_reaction", selectedReaction);
+        }
+      } catch (err) {
+        console.warn("Could not save review state to localStorage:", err);
       }
 
       confetti({
