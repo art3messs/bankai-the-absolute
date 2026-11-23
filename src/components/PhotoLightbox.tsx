@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useRef, useMemo } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -13,6 +14,7 @@ import {
   Pause,
 } from "lucide-react";
 import { MediaItem } from "@/data/mediaCatalog";
+import { CAPTIONS } from "@/data/captions";
 
 interface PhotoLightboxProps {
   item?: MediaItem | null;
@@ -33,15 +35,20 @@ export default function PhotoLightbox({
 }: PhotoLightboxProps) {
   // Normalize current item with stable memo
   const currentMedia: MediaItem | null = useMemo(() => {
-    return item || (photo ? {
-      id: photo.id || "legacy",
-      src: photo.url || "",
-      type: "image",
-      category: (photo.category as MediaItem["category"]) || "harleen 4 life",
-      title: photo.caption || "Special Moment",
-      caption: photo.caption || "",
-      aspectRatio: "portrait",
-    } : null);
+    return (
+      item ||
+      (photo
+        ? {
+            id: photo.id || "legacy",
+            src: photo.url || "",
+            type: "image",
+            category: (photo.category as MediaItem["category"]) || "harleen 4 life",
+            title: photo.caption || "Special Moment",
+            caption: photo.caption || "",
+            aspectRatio: "portrait",
+          }
+        : null)
+    );
   }, [item, photo]);
 
   const [isPlaying, setIsPlaying] = useState(true);
@@ -76,7 +83,6 @@ export default function PhotoLightbox({
       if (videoRef.current) {
         videoRef.current.currentTime = 0;
         videoRef.current.play().catch(() => {
-          // Autoplay policy might require mute
           if (videoRef.current) {
             videoRef.current.muted = true;
             setIsMuted(true);
@@ -119,22 +125,11 @@ export default function PhotoLightbox({
     }, 1200);
   };
 
-  const getCategoryColor = (cat: string) => {
-    switch (cat) {
-      case "harleen 4 life":
-        return "bg-rose-500/20 text-rose-300 border-rose-400/40";
-      case "popaaa moments":
-        return "bg-amber-500/20 text-amber-300 border-amber-400/40";
-      case "sick in ethnic":
-        return "bg-purple-500/20 text-purple-300 border-purple-400/40";
-      case "little pogo":
-        return "bg-pink-400/20 text-pink-200 border-pink-300/40";
-      case "aesthick nails":
-        return "bg-emerald-500/20 text-emerald-300 border-emerald-400/40";
-      default:
-        return "bg-white/20 text-white border-white/30";
-    }
-  };
+  const captionData = currentMedia ? CAPTIONS[currentMedia.id] : null;
+  const displayCaption =
+    captionData?.line && !captionData.line.startsWith("TODO:")
+      ? captionData.line
+      : currentMedia?.caption;
 
   return (
     <AnimatePresence>
@@ -145,170 +140,186 @@ export default function PhotoLightbox({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 z-50 flex items-start justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-xl overflow-y-auto"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-ink/75 backdrop-blur-md overflow-y-auto"
         >
           <motion.div
-            initial={{ scale: 0.9, opacity: 0, y: 25 }}
+            initial={{ scale: 0.94, opacity: 0, y: 15 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.9, opacity: 0, y: 25 }}
+            exit={{ scale: 0.94, opacity: 0, y: 15 }}
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
             onClick={(e) => e.stopPropagation()}
-            className="relative max-w-4xl w-full m-auto my-auto max-h-[calc(100dvh-2rem)] bg-[#1c1713]/95 text-[#fdfaf5] rounded-3xl p-4 sm:p-7 border border-[#d4af37]/30 shadow-[0_0_80px_rgba(217,125,147,0.25)] flex flex-col items-center overflow-hidden"
+            className="relative max-w-4xl w-full m-auto my-auto max-h-[calc(100dvh-2rem)] bg-paper text-ink rounded-3xl p-4 sm:p-6 border border-mauve/25 shadow-2xl flex flex-col items-center overflow-hidden"
           >
-          {/* Subtle Golden Vignette Glow */}
-          <div className="absolute top-0 right-0 w-72 h-72 bg-gradient-to-bl from-[#c95874]/20 via-[#d4af37]/10 to-transparent rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-72 h-72 bg-gradient-to-tr from-[#d4af37]/15 to-transparent rounded-full blur-3xl pointer-events-none" />
-
-          {/* Top Control Bar */}
-          <div className="relative z-10 w-full flex items-center justify-between pb-3 border-b border-white/10 mb-3 text-xs">
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-[#d4af37] font-semibold uppercase tracking-wider text-[11px]">
-                {currentMedia.type === "video" ? "CINEMATIC MOTION • 35MM" : "KODAK PORTRA • STILL"}
-              </span>
-              {hasMultiple && (
-                <span className="text-[#a89f91] font-mono text-[10px]">
-                  ({currentIndex + 1} / {items.length})
+            {/* Top Control Bar */}
+            <div className="relative z-10 w-full flex items-center justify-between pb-3 border-b border-mauve/15 mb-3 text-xs">
+              <div className="flex items-center gap-2">
+                <span className="font-sans text-strawberry font-semibold uppercase tracking-wider text-[11px]">
+                  {currentMedia.type === "video" ? "Motion Clip" : "Photographic Still"}
                 </span>
+                {hasMultiple && (
+                  <span className="text-mauve font-sans text-xs">
+                    ({currentIndex + 1} of {items.length})
+                  </span>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={onClose}
+                  className="w-9 h-9 rounded-full bg-mauve/10 hover:bg-mauve/20 text-ink flex items-center justify-center transition-all active:scale-95 cursor-pointer"
+                  title="Close (Esc)"
+                  aria-label="Close lightbox"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Main Media Showcase Container */}
+            <div className="relative w-full aspect-[4/5] sm:aspect-[16/10] max-h-[60vh] rounded-2xl overflow-hidden bg-stone-900 border border-mauve/20 flex items-center justify-center group">
+              {currentMedia.type === "video" ? (
+                <div className="relative w-full h-full flex items-center justify-center bg-black">
+                  <video
+                    ref={videoRef}
+                    src={currentMedia.src}
+                    poster={currentMedia.poster || undefined}
+                    playsInline
+                    autoPlay
+                    loop
+                    muted={isMuted}
+                    className="w-full h-full object-contain"
+                    onClick={togglePlay}
+                    onPlay={() => setIsPlaying(true)}
+                    onPause={() => setIsPlaying(false)}
+                  />
+
+                  {/* Video Play/Pause Overlay Indicator */}
+                  {!isPlaying && (
+                    <div
+                      onClick={togglePlay}
+                      className="absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer"
+                    >
+                      <div className="w-14 h-14 rounded-full bg-paper/20 backdrop-blur-md border border-paper/40 flex items-center justify-center shadow-lg transform transition-transform hover:scale-110">
+                        <Play className="w-7 h-7 text-paper fill-paper ml-1" />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Floating Video Controls in Bottom Right */}
+                  <div className="absolute bottom-3 right-3 z-20 flex items-center gap-2">
+                    <button
+                      onClick={toggleMute}
+                      className="px-3 py-1.5 min-h-[36px] rounded-full bg-black/75 hover:bg-black/90 backdrop-blur-md text-white text-xs flex items-center gap-1.5 border border-white/20 shadow-md transition-all active:scale-95 cursor-pointer"
+                      title={isMuted ? "Unmute" : "Mute"}
+                    >
+                      {isMuted ? (
+                        <VolumeX className="w-3.5 h-3.5 text-rose-300" />
+                      ) : (
+                        <Volume2 className="w-3.5 h-3.5 text-green-300" />
+                      )}
+                      <span className="text-[10px] font-sans">
+                        {isMuted ? "MUTED" : "SOUND ON"}
+                      </span>
+                    </button>
+
+                    <button
+                      onClick={togglePlay}
+                      className="w-9 h-9 min-w-[36px] min-h-[36px] rounded-full bg-black/75 hover:bg-black/90 backdrop-blur-md text-white flex items-center justify-center border border-white/20 shadow-md transition-all active:scale-95 cursor-pointer"
+                      title={isPlaying ? "Pause" : "Play"}
+                    >
+                      {isPlaying ? (
+                        <Pause className="w-3.5 h-3.5" />
+                      ) : (
+                        <Play className="w-3.5 h-3.5 ml-0.5 fill-white" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="relative w-full h-full">
+                  <Image
+                    src={currentMedia.src}
+                    alt={currentMedia.title}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 896px"
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+              )}
+
+              {/* Navigation Arrows */}
+              {hasMultiple && (
+                <>
+                  <button
+                    onClick={() =>
+                      onNavigate &&
+                      onNavigate((currentIndex - 1 + items.length) % items.length)
+                    }
+                    className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-paper/85 hover:bg-paper backdrop-blur-md text-ink flex items-center justify-center border border-mauve/20 transition-all hover:scale-105 active:scale-95 shadow-md cursor-pointer"
+                    title="Previous (Left Arrow)"
+                    aria-label="Previous photo"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() =>
+                      onNavigate && onNavigate((currentIndex + 1) % items.length)
+                    }
+                    className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-paper/85 hover:bg-paper backdrop-blur-md text-ink flex items-center justify-center border border-mauve/20 transition-all hover:scale-105 active:scale-95 shadow-md cursor-pointer"
+                    title="Next (Right Arrow)"
+                    aria-label="Next photo"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </>
               )}
             </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={onClose}
-                className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all active:scale-95 border border-white/15 cursor-pointer"
-                title="Close (Esc)"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-
-          {/* Main Media Showcase Container */}
-          <div className="relative w-full aspect-[4/5] sm:aspect-[16/10] max-h-[65vh] rounded-2xl overflow-hidden bg-black/60 border border-white/10 flex items-center justify-center group">
-            {currentMedia.type === "video" ? (
-              <div className="relative w-full h-full flex items-center justify-center bg-black">
-                <video
-                  ref={videoRef}
-                  src={currentMedia.src}
-                  poster={currentMedia.poster || undefined}
-                  playsInline
-                  autoPlay
-                  loop
-                  muted={isMuted}
-                  className="w-full h-full object-contain"
-                  onClick={togglePlay}
-                  onPlay={() => setIsPlaying(true)}
-                  onPause={() => setIsPlaying(false)}
-                />
-
-                {/* Video Play/Pause Overlay Indicator */}
-                {!isPlaying && (
-                  <div
-                    onClick={togglePlay}
-                    className="absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer"
-                  >
-                    <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center shadow-lg transform transition-transform hover:scale-110">
-                      <Play className="w-8 h-8 text-white fill-white ml-1" />
-                    </div>
-                  </div>
-                )}
-
-                {/* Floating Video Controls in Bottom Right */}
-                <div className="absolute bottom-4 right-4 z-20 flex items-center gap-2">
-                  <button
-                    onClick={toggleMute}
-                    className="px-3.5 py-2 min-h-[44px] rounded-full bg-black/75 hover:bg-black/90 backdrop-blur-md text-white text-xs flex items-center gap-1.5 border border-white/20 shadow-md transition-all active:scale-95 cursor-pointer"
-                    title={isMuted ? "Unmute" : "Mute"}
-                  >
-                    {isMuted ? <VolumeX className="w-4 h-4 text-rose-300" /> : <Volume2 className="w-4 h-4 text-green-300" />}
-                    <span className="text-[11px] font-mono">{isMuted ? "MUTED" : "SOUND ON"}</span>
-                  </button>
-
-                  <button
-                    onClick={togglePlay}
-                    className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-black/75 hover:bg-black/90 backdrop-blur-md text-white flex items-center justify-center border border-white/20 shadow-md transition-all active:scale-95 cursor-pointer"
-                    title={isPlaying ? "Pause" : "Play"}
-                  >
-                    {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5 fill-white" />}
-                  </button>
+            {/* Caption & Metadata Footer */}
+            <div className="relative z-10 w-full mt-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-1">
+              <div className="space-y-1 max-w-lg text-left">
+                <div className="flex items-center gap-2">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-sans font-semibold uppercase tracking-wider bg-strawberry/10 text-strawberry border border-strawberry/25">
+                    {currentMedia.category}
+                  </span>
                 </div>
+                <h3 className="font-serif text-lg sm:text-xl text-ink font-normal leading-tight">
+                  {currentMedia.title}
+                </h3>
+                {displayCaption && (
+                  <p className="font-hand text-xl text-mauve leading-snug">
+                    &ldquo;{displayCaption}&rdquo;
+                  </p>
+                )}
               </div>
-            ) : (
-              <img
-                src={currentMedia.src}
-                alt={currentMedia.title}
-                loading="lazy"
-                decoding="async"
-                className="w-full h-full object-contain"
-              />
-            )}
 
-            {/* Navigation Arrows */}
-            {hasMultiple && (
-              <>
+              {/* Heart & Pucchi Action */}
+              <div className="relative flex items-center gap-3">
                 <button
-                  onClick={() => onNavigate && onNavigate((currentIndex - 1 + items.length) % items.length)}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-black/50 hover:bg-black/80 backdrop-blur-md text-white flex items-center justify-center border border-white/20 transition-all opacity-80 hover:opacity-100 hover:scale-110 active:scale-95 shadow-lg"
-                  title="Previous (Left Arrow)"
+                  onClick={spawnHearts}
+                  className="relative px-4 py-2 rounded-full bg-strawberry text-paper text-xs font-sans font-semibold uppercase tracking-wider flex items-center gap-2 shadow-xs hover:opacity-95 active:scale-95 transition-all cursor-pointer"
                 >
-                  <ChevronLeft className="w-6 h-6" />
-                </button>
-                <button
-                  onClick={() => onNavigate && onNavigate((currentIndex + 1) % items.length)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-black/50 hover:bg-black/80 backdrop-blur-md text-white flex items-center justify-center border border-white/20 transition-all opacity-80 hover:opacity-100 hover:scale-110 active:scale-95 shadow-lg"
-                  title="Next (Right Arrow)"
-                >
-                  <ChevronRight className="w-6 h-6" />
-                </button>
-              </>
-            )}
-          </div>
+                  <Heart className="w-3.5 h-3.5 fill-paper animate-pulse" />
+                  <span>Send Pucchi 🤍</span>
 
-          {/* Caption & Metadata Footer */}
-          <div className="relative z-10 w-full mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-1">
-            <div className="space-y-1 max-w-lg">
-              <div className="flex items-center gap-2">
-                <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-raleway font-bold uppercase tracking-wider border ${getCategoryColor(currentMedia.category)}`}>
-                  {currentMedia.category}
-                </span>
-                <span className="text-[11px] text-[#d4af37] font-mono">
-                  {currentMedia.type === "video" ? "MOTION CLIP" : "ARCHIVAL PHOTOGRAPH"}
-                </span>
+                  {/* Floating Click Hearts */}
+                  {hearts.map((h) => (
+                    <motion.span
+                      key={h.id}
+                      initial={{ opacity: 1, x: 0, y: 0, scale: 0.8 }}
+                      animate={{ opacity: 0, x: h.x, y: h.y, scale: 1.5 }}
+                      transition={{ duration: 1, ease: "easeOut" }}
+                      className="absolute text-strawberry pointer-events-none text-base font-bold"
+                    >
+                      ♥
+                    </motion.span>
+                  ))}
+                </button>
               </div>
-              <h3 className="font-forum text-xl sm:text-2xl text-[#fdfaf5] font-normal leading-tight">
-                {currentMedia.title}
-              </h3>
-              <p className="font-signature text-xl text-[#d97d93] leading-snug">
-                {currentMedia.caption}
-              </p>
             </div>
-
-            {/* Heart & Pucchi Action */}
-            <div className="relative flex items-center gap-3">
-              <button
-                onClick={spawnHearts}
-                className="relative px-4 py-2 rounded-full bg-gradient-to-r from-[#d97d93] to-[#c95874] text-white text-xs font-raleway font-bold uppercase tracking-wider flex items-center gap-2 shadow-md hover:scale-105 active:scale-95 transition-all"
-              >
-                <Heart className="w-4 h-4 fill-white animate-pulse" />
-                <span>Send Pucchi 🤍</span>
-
-                {/* Floating Click Hearts */}
-                {hearts.map((h) => (
-                  <motion.span
-                    key={h.id}
-                    initial={{ opacity: 1, x: 0, y: 0, scale: 0.8 }}
-                    animate={{ opacity: 0, x: h.x, y: h.y, scale: 1.5 }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                    className="absolute text-rose-300 pointer-events-none text-base"
-                  >
-                    ♥
-                  </motion.span>
-                ))}
-              </button>
-            </div>
-          </div>
+          </motion.div>
         </motion.div>
-      </motion.div>
       )}
     </AnimatePresence>
   );

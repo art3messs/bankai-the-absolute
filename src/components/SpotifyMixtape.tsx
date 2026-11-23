@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Disc3, ExternalLink, Sparkles, X, Heart, Music } from "lucide-react";
+import { Disc3, ExternalLink, Sparkles, X, Music } from "lucide-react";
 import { BIRTHDAY_CONFIG } from "@/data/config";
 
 export default function SpotifyMixtape() {

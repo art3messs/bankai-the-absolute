@@ -1,47 +1,46 @@
 import type { Metadata } from "next";
-import { Forum, Parisienne, Raleway } from "next/font/google";
+import { Young_Serif, Figtree, Reenie_Beanie } from "next/font/google";
 import "./globals.css";
-import CustomCursor from "@/components/CustomCursor";
 
-const forum = Forum({
+const youngSerif = Young_Serif({
   weight: "400",
   subsets: ["latin"],
-  variable: "--font-forum",
+  variable: "--font-young-serif",
   display: "swap",
 });
 
-const parisienne = Parisienne({
-  weight: "400",
+const figtree = Figtree({
   subsets: ["latin"],
-  variable: "--font-parisienne",
+  variable: "--font-figtree",
   display: "swap",
 });
 
-const raleway = Raleway({
+const reenieBeanie = Reenie_Beanie({
+  weight: "400",
   subsets: ["latin"],
-  variable: "--font-raleway",
+  variable: "--font-reenie-beanie",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Harleen • The 16th Birthday Archive",
-  description: "An intimate luxury celebration created for Harleen • February 16",
+  title: "Harleen • Birthday celebration",
+  description: "A private birthday celebration made for Harleen • 16 February",
   metadataBase: new URL("https://harleen-birthday.vercel.app"),
   robots: {
     index: true,
     follow: true,
   },
   openGraph: {
-    title: "Harleen • The 16th Birthday Archive",
-    description: "An intimate luxury celebration created for Harleen • February 16",
+    title: "Harleen • Birthday celebration",
+    description: "A private birthday celebration made for Harleen • 16 February",
     url: "/",
-    siteName: "Harleen 16th Birthday Archive",
+    siteName: "Harleen birthday",
     images: [
       {
         url: "/media/harleen-red-feather-dress.jpg",
         width: 1200,
         height: 630,
-        alt: "Celebration",
+        alt: "Harleen",
       },
     ],
     locale: "en_US",
@@ -49,12 +48,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Harleen • The 16th Birthday Archive",
-    description: "An intimate luxury celebration created for Harleen • February 16",
+    title: "Harleen • Birthday celebration",
+    description: "A private birthday celebration made for Harleen • 16 February",
     images: ["/media/harleen-red-feather-dress.jpg"],
-  },
-  icons: {
-    icon: "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌸</text></svg>",
   },
 };
 
@@ -64,9 +60,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${forum.variable} ${parisienne.variable} ${raleway.variable} scroll-smooth`}>
-      <body className="font-raleway antialiased bg-[#FFF8F5] text-[#3A1F2B] min-h-screen selection:bg-[#FFD9E3] selection:text-[#B0295F]">
-        <CustomCursor />
+    <html
+      lang="en"
+      className={`${youngSerif.variable} ${figtree.variable} ${reenieBeanie.variable} scroll-smooth`}
+    >
+      <body className="font-sans antialiased bg-box-pink text-ink min-h-screen selection:bg-strawberry/20 selection:text-ink">
         {children}
       </body>
     </html>

@@ -1,18 +1,19 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Play,
   Pause,
   Volume2,
   VolumeX,
-  Disc3,
-  SkipForward,
-  SkipBack,
+  Music,
   ExternalLink,
+  X,
 } from "lucide-react";
 import { BIRTHDAY_CONFIG } from "@/data/config";
+import { COPY } from "@/data/copy";
 
 interface TurntablePlayerProps {
   autoPlayTrigger?: boolean;
@@ -31,16 +32,16 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
     },
   ];
 
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const currentTrack = tracks[currentTrackIndex];
+  const currentTrack = tracks[0];
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [progress, setProgress] = useState(0);
   const [currentTimeFormatted, setCurrentTimeFormatted] = useState("0:00");
   const [durationFormatted, setDurationFormatted] = useState("0:00");
-  const [showPlaylist, setShowPlaylist] = useState(false);
+  const [isSpotifyModalOpen, setIsSpotifyModalOpen] = useState(false);
   const [audioError, setAudioError] = useState<string | null>(null);
+  const [showTapForMusic, setShowTapForMusic] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const isFirstMount = useRef(true);
 
@@ -62,8 +63,8 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
         .play()
         .then(() => setIsPlaying(true))
         .catch(() => {
+          setAudioError("Tap play to start audio");
           setIsPlaying(false);
-          setAudioError("Click 'Spin & Play' to start audio.");
         });
     }
   };
@@ -74,171 +75,147 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
     setIsMuted(!isMuted);
   };
 
-  const handleNextTrack = () => {
-    const nextIdx = (currentTrackIndex + 1) % tracks.length;
-    setCurrentTrackIndex(nextIdx);
-    setIsPlaying(true);
-  };
-
-  const handlePrevTrack = () => {
-    const prevIdx = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-    setCurrentTrackIndex(prevIdx);
-    setIsPlaying(true);
-  };
-
-  // Switch track in audio element ONLY when track index changes
-  useEffect(() => {
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!audioRef.current) return;
-    if (isFirstMount.current) {
-      isFirstMount.current = false;
-      audioRef.current.src = currentTrack.src;
-      return;
-    }
-    audioRef.current.src = currentTrack.src;
-    audioRef.current.load();
-    if (isPlaying) {
-      audioRef.current
-        .play()
-        .then(() => setIsPlaying(true))
-        .catch(() => {});
-    }
-  }, [currentTrackIndex]);
+    const seekPct = Number(e.target.value);
+    const newTime = (seekPct / 100) * (audioRef.current.duration || 1);
+    audioRef.current.currentTime = newTime;
+    setProgress(seekPct);
+  };
 
-  // Global listeners: pause audio when videos play, and start audio on StartGate unlock
   useEffect(() => {
-    const handleGlobalPause = () => {
-      if (audioRef.current) {
+    const handlePauseRequest = () => {
+      if (audioRef.current && isPlaying) {
         audioRef.current.pause();
         setIsPlaying(false);
       }
     };
-    const handleGlobalStart = () => {
-      if (audioRef.current) {
-        audioRef.current
-          .play()
-          .then(() => setIsPlaying(true))
-          .catch(() => {});
+
+    const handleStartAudio = () => {
+      if (!audioRef.current) return;
+      audioRef.current
+        .play()
+        .then(() => {
+          setIsPlaying(true);
+          setShowTapForMusic(false);
+        })
+        .catch(() => {
+          setShowTapForMusic(true);
+        });
+    };
+
+    const handleToggleAudio = () => {
+      if (!audioRef.current) return;
+      if (audioRef.current.paused) {
+        handleStartAudio();
+      } else {
+        handlePauseRequest();
       }
     };
 
-    window.addEventListener("harleen:pause-music", handleGlobalPause);
-    window.addEventListener("harleen:start-audio", handleGlobalStart);
+    window.addEventListener("harleen:pause-music", handlePauseRequest);
+    window.addEventListener("harleen:start-audio", handleStartAudio);
+    window.addEventListener("harleen:toggle-music", handleToggleAudio);
+
     return () => {
-      window.removeEventListener("harleen:pause-music", handleGlobalPause);
-      window.removeEventListener("harleen:start-audio", handleGlobalStart);
+      window.removeEventListener("harleen:pause-music", handlePauseRequest);
+      window.removeEventListener("harleen:start-audio", handleStartAudio);
+      window.removeEventListener("harleen:toggle-music", handleToggleAudio);
     };
-  }, []);
+  }, [isPlaying]);
 
   useEffect(() => {
-    if (autoPlayTrigger && audioRef.current) {
+    window.dispatchEvent(
+      new CustomEvent("harleen:music-status", { detail: { isPlaying } })
+    );
+  }, [isPlaying]);
+
+  useEffect(() => {
+    if (autoPlayTrigger && isFirstMount.current && audioRef.current) {
+      isFirstMount.current = false;
       audioRef.current
         .play()
-        .then(() => setIsPlaying(true))
-        .catch(() => {});
+        .then(() => {
+          setIsPlaying(true);
+          setShowTapForMusic(false);
+        })
+        .catch(() => {
+          setShowTapForMusic(true);
+        });
     }
   }, [autoPlayTrigger]);
 
-  const handleTimeUpdate = () => {
-    if (!audioRef.current) return;
-    const current = audioRef.current.currentTime;
-    const duration = audioRef.current.duration || 1;
-    setProgress((current / duration) * 100);
-    setCurrentTimeFormatted(formatTime(current));
-    setDurationFormatted(formatTime(duration));
-  };
-
-  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!audioRef.current) return;
-    const newPct = Number(e.target.value);
-    const duration = audioRef.current.duration || 1;
-    audioRef.current.currentTime = (newPct / 100) * duration;
-    setProgress(newPct);
-    setCurrentTimeFormatted(formatTime(audioRef.current.currentTime));
-  };
+  const spotifyEmbedSrc = `https://open.spotify.com/embed/playlist/${BIRTHDAY_CONFIG.spotifyPlaylistId || "06Aj93NfdzlxVX8Sw1dlXK"}?utm_source=generator&theme=0`;
 
   return (
-    <div className="girly-card p-6 sm:p-8 rounded-3xl max-w-lg w-full flex flex-col items-center select-none shadow-[0_20px_50px_rgba(236,72,153,0.15)] border-3 border-[#f472b6]/45 relative overflow-hidden bg-white/95 backdrop-blur-md">
-      {/* Audio Element */}
+    <section id="sound" className="relative z-10 max-w-4xl mx-auto px-4 py-8 flex flex-col items-center text-center">
       <audio
         ref={audioRef}
         src={currentTrack.src}
-        onTimeUpdate={handleTimeUpdate}
-        onEnded={handleNextTrack}
-        onError={() => setAudioError("Unable to play audio track.")}
+        preload="metadata"
+        onTimeUpdate={() => {
+          if (!audioRef.current) return;
+          const cur = audioRef.current.currentTime;
+          const dur = audioRef.current.duration || 1;
+          setProgress((cur / dur) * 100);
+          setCurrentTimeFormatted(formatTime(cur));
+          setDurationFormatted(formatTime(dur));
+        }}
+        onEnded={() => {
+          setIsPlaying(false);
+          setProgress(0);
+        }}
       />
 
-      {/* Top Track Pill */}
-      <div className="flex items-center justify-between w-full mb-4 px-2">
-        <div className="flex items-center gap-2 text-[10px] font-mono tracking-widest uppercase text-[#db2777] font-bold">
-          <Disc3 className={`w-3.5 h-3.5 text-[#fbbf24] ${isPlaying ? "animate-spin" : ""}`} style={{ animationDuration: "10s" }} />
-          <span>HARLEEN VINYL • 33 RPM</span>
-        </div>
-        <button
-          onClick={() => setShowPlaylist(!showPlaylist)}
-          className="text-[10px] font-raleway tracking-wider uppercase text-[#3A1F2B] hover:text-[#B0295F] font-bold bg-[#FFD9E3] px-3.5 py-2 min-h-[44px] rounded-full border border-[#d97d93]/40 transition-all cursor-pointer shadow-xs flex items-center"
-        >
-          {showPlaylist ? "Hide Tracks" : `Playlist (${tracks.length})`}
-        </button>
-      </div>
+      {/* Heading in sentence case, no tags */}
+      <h2 className="font-serif text-3xl sm:text-4xl text-ink font-normal">
+        {COPY.music.heading}
+      </h2>
+      <p className="font-hand text-2xl text-ink/80 mt-2">
+        &ldquo;{COPY.music.subtitle}&rdquo;
+      </p>
 
-      {/* TURNTABLE DECK WITH 3D ISOMETRIC FEEL */}
-      <div
-        className="relative w-full aspect-square max-w-[270px] bg-gradient-to-b from-[#fdfaf5] to-[#f7ecdf] rounded-3xl p-4 shadow-[0_15px_35px_rgba(74,4,78,0.08)] border-2 border-[#d97d93]/25 flex items-center justify-center transition-transform duration-500 hover:scale-[1.02] transform-3d"
-        style={{ perspective: 1000 }}
-      >
-        {/* Golden Tonearm with Animation */}
-        <motion.div
-          animate={{ rotate: isPlaying ? 24 : 0 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="absolute top-4 right-5 w-4 h-36 origin-top-right z-30 pointer-events-none"
-        >
-          <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#d4af37] via-[#f3e5ab] to-[#b8860b] shadow-md border border-[#d4af37] ml-auto -mr-2" />
-          <div className="w-1 h-28 bg-gradient-to-b from-[#f3e5ab] via-[#d4af37] to-[#b8860b] mx-auto shadow-xs" />
-          <div className="w-3.5 h-6 bg-[#c95874] border border-[#d4af37] rounded-xs mx-auto shadow-xs" />
-        </motion.div>
-
-        {/* ROTATING VINYL RECORD WITH ALBUM ART IN CENTER */}
-        <div
-          onClick={togglePlay}
-          className={`relative w-full h-full rounded-full bg-[#18131d] shadow-2xl border-4 border-[#241e16] flex items-center justify-center cursor-pointer group transition-transform ${
-            isPlaying ? "animate-vinyl" : ""
-          }`}
-          style={{
-            backgroundImage: `radial-gradient(circle, #1a1420 28%, #281f33 29%, #1a1420 34%, #281f33 38%, #1a1420 43%, #281f33 48%, #1a1420 55%, #2a2036 60%, #1a1420 65%, #2a2036 75%, #16111b 100%)`,
-          }}
-          title={isPlaying ? "Click to Pause" : "Click to Play"}
-        >
-          {/* Vinyl Grooves Sheen */}
-          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none" />
-
-          {/* CENTER LABEL WITH DYNAMIC ALBUM ART / SONG LOGO */}
-          <div className="relative w-24 h-24 rounded-full overflow-hidden p-0.5 shadow-2xl border-2 border-[#d4af37] bg-white flex items-center justify-center">
-            <img
-              src={currentTrack.cover}
-              alt={currentTrack.title}
-              loading="lazy"
-              decoding="async"
-              className="w-full h-full object-cover object-center filter brightness-95"
-            />
-            {/* Center Spindle Hole */}
-            <div className="absolute w-3.5 h-3.5 rounded-full bg-[#18131d] border-2 border-[#d4af37] shadow-inner" />
+      {/* Unified Music & Turntable Card */}
+      <div className="w-full max-w-xl mt-6 p-6 sm:p-8 rounded-3xl bg-paper border border-mauve/20 shadow-md flex flex-col items-center">
+        {/* VINYL RECORD */}
+        <div className="relative w-48 h-48 sm:w-56 sm:h-56 mx-auto my-2">
+          <div
+            onClick={togglePlay}
+            className={`relative w-full h-full rounded-full bg-stone-900 shadow-xl border-4 border-stone-800 flex items-center justify-center cursor-pointer ${
+              isPlaying ? "animate-spin" : ""
+            }`}
+            style={{
+              animationDuration: "4s",
+              animationTimingFunction: "linear",
+            }}
+            title={isPlaying ? "Click to pause" : "Click to play"}
+          >
+            {/* Center label */}
+            <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-paper bg-paper flex items-center justify-center">
+              <Image
+                src={currentTrack.cover}
+                alt={currentTrack.title}
+                fill
+                sizes="80px"
+                className="object-cover filter brightness-95"
+              />
+              <div className="absolute w-3 h-3 rounded-full bg-stone-900 border border-paper" />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Track Info */}
-      <div className="w-full text-center mt-5">
-        <h4 className="font-forum text-xl sm:text-2xl uppercase tracking-wider text-[#241e16]">
-          {currentTrack.title} • {currentTrack.artist}
-        </h4>
-        <p className="font-signature text-2xl text-[#c95874] mt-1">
-          &ldquo;{currentTrack.quote}&rdquo;
-        </p>
-      </div>
+        {/* Track Title and Artist */}
+        <div className="w-full text-center mt-4">
+          <h3 className="font-serif text-xl sm:text-2xl text-ink font-normal">
+            {currentTrack.title} • {currentTrack.artist}
+          </h3>
+          <p className="font-hand text-xl text-mauve mt-1">
+            &ldquo;{currentTrack.quote}&rdquo;
+          </p>
+        </div>
 
-      {/* Progress & Seeking Bar */}
-      <div className="w-full mt-4 px-2">
-        <div className="relative w-full flex items-center group py-1">
+        {/* Progress bar */}
+        <div className="w-full mt-4 px-2">
           <input
             type="range"
             min="0"
@@ -247,123 +224,150 @@ export default function TurntablePlayer({ autoPlayTrigger }: TurntablePlayerProp
             value={progress}
             onChange={handleSeek}
             aria-label="Seek track position"
-            className="w-full h-1.5 bg-[#f2ccd6]/40 rounded-full appearance-none cursor-pointer accent-[#B0295F] focus:outline-none"
+            className="w-full h-1.5 bg-mauve/20 rounded-full appearance-none cursor-pointer accent-strawberry focus:outline-none"
           />
-        </div>
-        <div className="flex justify-between items-center text-[10px] text-[#7d7265] mt-1 font-mono">
-          <span>{currentTimeFormatted}</span>
-          <span>{durationFormatted !== "0:00" ? durationFormatted : currentTrack.duration}</span>
-        </div>
-        {audioError && (
-          <p role="alert" className="text-[10px] text-rose-500 font-mono text-center mt-1">
-            {audioError}
-          </p>
-        )}
-      </div>
-
-      {/* Playback Controls & Track Switcher */}
-      <div className="flex items-center justify-center gap-2 sm:gap-3 mt-4">
-        {/* Mute Button */}
-        <button
-          onClick={toggleMute}
-          className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full hover:bg-neutral-100 text-[#3A1F2B]/70 flex items-center justify-center transition-colors cursor-pointer"
-          title={isMuted ? "Unmute" : "Mute"}
-        >
-          {isMuted ? <VolumeX className="w-4 h-4 text-[#B0295F]" /> : <Volume2 className="w-4 h-4" />}
-        </button>
-
-        {/* Previous Track */}
-        <button
-          onClick={handlePrevTrack}
-          className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full hover:bg-neutral-100 text-[#3A1F2B] border border-[#d97d93]/30 flex items-center justify-center transition-transform active:scale-90 cursor-pointer shadow-xs"
-          title="Previous Track"
-        >
-          <SkipBack className="w-4 h-4" />
-        </button>
-
-        {/* Main Play / Pause Button */}
-        <button
-          onClick={togglePlay}
-          className="px-6 sm:px-7 py-3 min-h-[44px] rounded-full bg-[#B0295F] hover:bg-[#8F1D4B] text-white font-raleway font-bold text-xs uppercase tracking-[0.2em] shadow-md hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
-        >
-          {isPlaying ? (
-            <>
-              <Pause className="w-3.5 h-3.5 fill-white" />
-              <span>Pause</span>
-            </>
-          ) : (
-            <>
-              <Play className="w-3.5 h-3.5 fill-white ml-0.5" />
-              <span>Spin &amp; Play</span>
-            </>
+          <div className="flex justify-between items-center text-xs text-mauve mt-1 font-mono">
+            <span>{currentTimeFormatted}</span>
+            <span>{durationFormatted !== "0:00" ? durationFormatted : currentTrack.duration}</span>
+          </div>
+          {audioError && (
+            <p role="alert" className="text-xs text-strawberry text-center mt-1">
+              {audioError}
+            </p>
           )}
-        </button>
+        </div>
 
-        {/* Next Track */}
-        <button
-          onClick={handleNextTrack}
-          className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full hover:bg-neutral-100 text-[#3A1F2B] border border-[#d97d93]/30 flex items-center justify-center transition-transform active:scale-90 cursor-pointer shadow-xs"
-          title="Next Track"
-        >
-          <SkipForward className="w-4 h-4" />
-        </button>
+        {/* Controls */}
+        <div className="flex items-center justify-center gap-3 mt-4">
+          <button
+            onClick={toggleMute}
+            className="w-10 h-10 rounded-full hover:bg-mauve/10 text-ink/80 flex items-center justify-center transition-colors cursor-pointer"
+            title={isMuted ? "Unmute" : "Mute"}
+          >
+            {isMuted ? <VolumeX className="w-4 h-4 text-strawberry" /> : <Volume2 className="w-4 h-4" />}
+          </button>
 
-        {/* Spotify External Link */}
-        <a
-          href={BIRTHDAY_CONFIG.spotifyPlaylistUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full hover:bg-neutral-100 text-[#1DB954] flex items-center justify-center transition-colors cursor-pointer"
-          title="Open Curated Playlist on Spotify"
-        >
-          <ExternalLink className="w-4 h-4" />
-        </a>
+          <button
+            onClick={togglePlay}
+            className="px-6 py-2.5 rounded-full bg-strawberry text-paper font-sans font-semibold text-xs uppercase tracking-wider shadow-sm hover:opacity-95 transition-opacity flex items-center justify-center gap-2 cursor-pointer"
+          >
+            {isPlaying ? (
+              <>
+                <Pause className="w-3.5 h-3.5 fill-paper" />
+                <span>Pause</span>
+              </>
+            ) : (
+              <>
+                <Play className="w-3.5 h-3.5 fill-paper ml-0.5" />
+                <span>Play</span>
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* MERGED SPOTIFY MIXTAPE ROW */}
+        <div className="w-full mt-6 pt-5 border-t border-mauve/15 flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-strawberry/10 text-strawberry flex items-center justify-center shrink-0">
+              <Music className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="font-serif text-base text-ink font-normal">
+                {COPY.music.playlistCardTitle}
+              </p>
+              <p className="font-sans text-xs text-mauve">
+                {COPY.music.playlistCardSubtitle}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <button
+              onClick={() => {
+                window.dispatchEvent(new CustomEvent("harleen:pause-music"));
+                setIsSpotifyModalOpen(true);
+              }}
+              className="flex-1 sm:flex-none px-4 py-2 rounded-full border border-mauve/30 hover:bg-mauve/5 text-ink text-xs font-sans font-semibold transition-colors text-center cursor-pointer"
+            >
+              {COPY.music.openSpotifyButton}
+            </button>
+            <a
+              href={BIRTHDAY_CONFIG.spotifyPlaylistUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-full border border-mauve/30 hover:bg-mauve/5 text-ink transition-colors cursor-pointer"
+              title="Open Spotify playlist"
+            >
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          </div>
+        </div>
       </div>
 
-      {/* Expandable Track Selector */}
+      {/* Spotify Modal */}
       <AnimatePresence>
-        {showPlaylist && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="w-full mt-4 pt-4 border-t border-[#d97d93]/20 flex flex-col gap-2 overflow-hidden"
-          >
-            <span className="text-[10px] font-raleway font-bold uppercase tracking-widest text-[#7d7265] text-left">
-              Select A Song To Spin On Vinyl:
-            </span>
-            {tracks.map((t, idx) => (
-              <button
-                key={t.id}
-                onClick={() => {
-                  setCurrentTrackIndex(idx);
-                  setIsPlaying(true);
-                }}
-                className={`flex items-center justify-between p-2 rounded-xl text-left text-xs transition-all cursor-pointer ${
-                  currentTrackIndex === idx
-                    ? "bg-rose-50 border border-rose-300 text-[#c95874] font-bold shadow-xs"
-                    : "hover:bg-neutral-50 text-[#241e16]"
-                }`}
-              >
-                <div className="flex items-center gap-2.5">
-                  <img
-                    src={t.cover}
-                    alt={t.title}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-7 h-7 rounded-md object-cover border border-[#d97d93]/30"
-                  />
-                  <div>
-                    <span className="block leading-tight">{t.title}</span>
-                    <span className="text-[10px] text-[#7d7265] font-normal">{t.artist}</span>
-                  </div>
-                </div>
-                <span className="font-mono text-[10px] text-[#7d7265]">{t.duration}</span>
-              </button>
-            ))}
-          </motion.div>
+        {isSpotifyModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/60 backdrop-blur-xs">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative w-full max-w-lg bg-paper rounded-3xl p-6 shadow-2xl border border-mauve/20"
+            >
+              <div className="flex items-center justify-between pb-3 border-b border-mauve/15 mb-4">
+                <h4 className="font-serif text-xl text-ink font-normal">
+                  {COPY.music.playlistCardTitle}
+                </h4>
+                <button
+                  onClick={() => setIsSpotifyModalOpen(false)}
+                  className="w-8 h-8 rounded-full hover:bg-mauve/10 flex items-center justify-center text-ink cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-black">
+                <iframe
+                  src={spotifyEmbedSrc}
+                  width="100%"
+                  height="100%"
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                  loading="lazy"
+                  className="w-full h-full border-0"
+                />
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
-    </div>
+
+      {/* Floating "Tap for music" button when autoplay was blocked */}
+      <AnimatePresence>
+        {showTapForMusic && !isPlaying && (
+          <motion.button
+            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            type="button"
+            onClick={() => {
+              if (audioRef.current) {
+                audioRef.current
+                  .play()
+                  .then(() => {
+                    setIsPlaying(true);
+                    setShowTapForMusic(false);
+                  })
+                  .catch(() => {});
+              }
+            }}
+            className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2.5 rounded-full bg-strawberry text-paper font-sans text-xs font-semibold shadow-xl border border-white/30 hover:opacity-95 active:scale-95 cursor-pointer transition-all animate-bounce"
+            aria-label="Tap for music"
+          >
+            <Music className="w-4 h-4 text-paper" />
+            <span>Tap for music</span>
+          </motion.button>
+        )}
+      </AnimatePresence>
+    </section>
   );
 }

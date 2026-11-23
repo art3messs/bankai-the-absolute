@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
-import { Sparkles, Heart, Film, Award, Smile, Star } from "lucide-react";
+import Image from "next/image";
+import { Heart } from "lucide-react";
 import confetti from "canvas-confetti";
 
 interface MemoryPopup {
@@ -17,7 +18,7 @@ interface MemoryPopup {
   tagColor: string;
 }
 
-const SCROLL_POPUPS: MemoryPopup[] = [
+export const SCROLL_POPUPS: MemoryPopup[] = [
   {
     id: "pogo-popup",
     badge: "👶 LITTLE POGO DETECTED",
@@ -96,7 +97,7 @@ interface ScrollyCardProps {
 }
 
 export function ScrollyCard({ popup }: ScrollyCardProps) {
-  const [popped, setPopped] = useState(false);
+  const [, setPopped] = useState(false);
 
   const handleCelebrate = () => {
     setPopped(true);
@@ -147,12 +148,12 @@ export function ScrollyCard({ popup }: ScrollyCardProps) {
         <div className="flex items-center gap-4 mt-2">
           {/* Mini Polaroid Frame */}
           <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden shrink-0 border border-[#d97d93]/20 bg-[#fdfaf5] shadow-inner">
-            <img
+            <Image
               src={popup.image}
               alt={popup.title}
-              loading="lazy"
-              decoding="async"
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              fill
+              sizes="96px"
+              className="object-cover group-hover:scale-110 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>

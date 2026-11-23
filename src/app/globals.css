@@ -1,208 +1,115 @@
 @import "tailwindcss";
 
-@layer base {
-  :root {
-    --font-forum: var(--font-forum), Georgia, serif;
-    --font-parisienne: var(--font-parisienne), cursive;
-    --font-raleway: var(--font-raleway), -apple-system, sans-serif;
-    
-    /* 60 / 30 / 10 Harmonious Color Palette */
-    --color-cream: #FFF8F5;   /* 60% Dominant Base */
-    --color-blush: #FFD9E3;   /* 30% Structural Soft Tone */
-    --color-berry: #B0295F;   /* 10% Vibrant Highlight & Actions */
-    --color-ink: #3A1F2B;     /* High-Contrast Accessible Text */
-  }
+@theme {
+  --color-box-pink: #F4B9C9;
+  --color-paper: #FFF9FA;
+  --color-ink: #2B1524;
+  --color-strawberry: #D4285A;
+  --color-mauve: #8A5A6E;
+
+  --font-serif: var(--font-young-serif), Georgia, serif;
+  --font-sans: var(--font-figtree), system-ui, sans-serif;
+  --font-hand: var(--font-reenie-beanie), cursive;
 }
 
-.font-forum {
-  font-family: var(--font-forum), Georgia, serif;
+:root {
+  --font-young-serif: var(--font-young-serif), Georgia, serif;
+  --font-figtree: var(--font-figtree), system-ui, sans-serif;
+  --font-reenie-beanie: var(--font-reenie-beanie), cursive;
 }
 
-.font-signature {
-  font-family: var(--font-parisienne), cursive;
-}
-
-.font-raleway {
-  font-family: var(--font-raleway), sans-serif;
-}
-
-/* Backward compatibility aliases */
 .font-serif {
-  font-family: var(--font-forum), Georgia, serif;
+  font-family: var(--font-young-serif), Georgia, serif;
+}
+
+.font-sans {
+  font-family: var(--font-figtree), system-ui, sans-serif;
 }
 
 .font-hand {
-  font-family: var(--font-parisienne), cursive;
+  font-family: var(--font-reenie-beanie), cursive;
 }
 
-/* 60% Cream Foundation & High-Contrast Ink Text */
+/* Backward compatibility aliases */
+.font-forum {
+  font-family: var(--font-young-serif), Georgia, serif;
+}
+
+.font-signature {
+  font-family: var(--font-reenie-beanie), cursive;
+}
+
+.font-raleway {
+  font-family: var(--font-figtree), system-ui, sans-serif;
+}
+
+/* Main background: box-pink #F4B9C9; ink #2B1524; */
 body {
-  background-color: #FFF8F5;
-  background-image: radial-gradient(ellipse at 50% 10%, #FFD9E3 0%, #FFF8F5 55%, #FFF1F5 100%);
-  background-attachment: fixed;
-  color: #3A1F2B;
-  font-family: var(--font-raleway), sans-serif;
+  background-color: #F4B9C9;
+  color: #2B1524;
+  font-family: var(--font-figtree), system-ui, sans-serif;
   min-height: 100vh;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  html.custom-cursor-active body,
-  html.custom-cursor-active a,
-  html.custom-cursor-active button,
-  html.custom-cursor-active [role="button"] {
-    cursor: none !important;
-  }
-
-  /* Always keep native text caret visible for form inputs */
-  input,
-  textarea {
-    cursor: text !important;
-  }
-}
-
-@keyframes twinkle {
-  0%, 100% {
-    opacity: 0.25;
-    transform: scale(0.85);
-  }
-  50% {
-    opacity: 0.95;
-    transform: scale(1.2);
-  }
-}
-
-/* Keyboard Accessibility Focus Rings */
+/* Accessible focus rings in strawberry */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 [role="button"]:focus-visible {
-  outline: 2px solid #B0295F !important;
+  outline: 2px solid #D4285A !important;
   outline-offset: 2px !important;
 }
 
-/* 30% Blush Card Surfaces & Structural Panels (16px Unified Radius) */
-.girly-card {
-  background: #FFFFFF;
-  border: 1.5px solid #FFD9E3;
+/* Clean paper card */
+.paper-card {
+  background: #FFF9FA;
+  color: #2B1524;
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(58, 31, 43, 0.05);
+  border: 1px solid rgba(138, 90, 110, 0.18);
+  box-shadow: 0 4px 20px rgba(43, 21, 36, 0.04);
 }
 
-.girly-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 18px;
-  border-radius: 9999px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  background: #FFFFFF;
-  border: 1.5px solid #FFD9E3;
-  color: #B0295F; /* High-contrast 6.8:1 WCAG AA compliant */
-  box-shadow: 0 2px 10px rgba(176, 41, 95, 0.08);
-}
-
-.girly-quote-bar {
-  background: #FFFFFF;
-  border-left: 5px solid #B0295F;
-  border-radius: 0 16px 16px 0;
-  padding: 14px 20px;
-  box-shadow: 0 6px 20px rgba(58, 31, 43, 0.04);
-  border-top: 1px solid #FFD9E3;
-  border-right: 1px solid #FFD9E3;
-  border-bottom: 1px solid #FFD9E3;
+/* Legacy alias mappings */
+.girly-card {
+  background: #FFF9FA;
+  color: #2B1524;
+  border-radius: 16px;
+  border: 1px solid rgba(138, 90, 110, 0.18);
+  box-shadow: 0 4px 20px rgba(43, 21, 36, 0.04);
 }
 
 .editorial-card {
-  background: #FFFFFF;
-  border: 1.5px solid #FFD9E3;
+  background: #FFF9FA;
+  color: #2B1524;
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(58, 31, 43, 0.05);
+  border: 1px solid rgba(138, 90, 110, 0.18);
 }
 
 .editorial-rule {
-  height: 1.5px;
-  background: linear-gradient(90deg, transparent 0%, #FFD9E3 50%, transparent 100%);
+  height: 1px;
+  background: rgba(138, 90, 110, 0.2);
 }
 
-/* 3D Transform & Perspective Utilities */
-.perspective-800 {
-  perspective: 800px;
-}
-
+/* 3D utilities if needed for candle/flip */
 .perspective-1000 {
   perspective: 1000px;
-}
-
-.perspective-1200 {
-  perspective: 1200px;
 }
 
 .transform-3d {
   transform-style: preserve-3d;
 }
 
-.card-3d {
-  transform-style: preserve-3d;
-  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease;
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
-.card-3d:hover {
-  transform: translateY(-6px) scale(1.015);
-  box-shadow: 0 20px 40px -10px rgba(58, 31, 43, 0.1), 0 0 15px rgba(255, 217, 227, 0.5);
+/* Hide scrollbar helper */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
-
-/* Floating Animations */
-@keyframes dreamyFloat {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-6px) rotate(0.8deg); }
-}
-
-.animate-dreamy {
-  animation: dreamyFloat 6s ease-in-out infinite;
-}
-
-@keyframes vinylSpin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.animate-vinyl {
-  animation: vinylSpin 14s linear infinite;
-}
-
-/* Custom Editorial Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #FFF8F5;
-}
-::-webkit-scrollbar-thumb {
-  background: #FFD9E3;
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #B0295F;
-}
-
-/* Accessibility: prefers-reduced-motion */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-  .animate-spin,
-  .animate-bounce,
-  .animate-pulse,
-  .animate-dreamy,
-  .animate-vinyl {
-    animation: none !important;
-  }
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

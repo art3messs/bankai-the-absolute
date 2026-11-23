@@ -16,14 +16,25 @@ export interface SongTrack {
   duration: string;
 }
 
+export interface BirthdayDetails {
+  birthYear: number;
+  birthMonth: number;
+  birthDay: number;
+  upcomingYear: number;
+  turningAge: number;
+  daysRemaining: number;
+  formattedDate: string;
+}
+
 export const BIRTHDAY_CONFIG = {
+  event: {
+    recipientName: "Harleen",
+    nickname: "Pucchi",
+    birthDate: "2008-02-16",
+    timeZone: "Asia/Kolkata",
+  },
   recipientName: "Harleen",
   nickname: "Pucchi",
-  birthDate: {
-    day: 16,
-    month: "February",
-    monthIndex: 1, // 0-indexed (Feb = 1)
-  },
   theme: {
     baseColor: "#fdf2f8",       // Softest Blossom Cream
     primaryColor: "#4a044e",    // Deep Royal Plum Berry
@@ -81,14 +92,14 @@ Happy Birthday, Harleen. ✨🤍`,
       url: "/media/harleen-red-feather-dress.jpg",
       caption: "A vision in red • Pure elegance & grace 🌹",
       category: "aesthetic",
-      date: "February 2026",
+      date: "February",
     },
     {
       id: "2",
       url: "/media/ethnic-dragonfly-tiara.jpg",
       caption: "Royal emerald tiara • Timeless queen 👑",
       category: "aesthetic",
-      date: "February 2026",
+      date: "February",
     },
     {
       id: "3",
@@ -120,3 +131,47 @@ Happy Birthday, Harleen. ✨🤍`,
     },
   ] as PhotoMemory[],
 };
+
+const STATIC_REFERENCE_DATE = new Date("2026-11-22T00:00:00+05:30");
+
+export function getBirthdayDetails(referenceDate?: Date): BirthdayDetails {
+  const [bYear, bMonth, bDay] = BIRTHDAY_CONFIG.event.birthDate.split("-").map(Number);
+  const now = referenceDate || STATIC_REFERENCE_DATE;
+
+  let currentYear = now.getFullYear();
+  let currentMonth = now.getMonth() + 1;
+  let currentDay = now.getDate();
+
+  try {
+    const kolkataFormatter = new Intl.DateTimeFormat("en-US", {
+      timeZone: BIRTHDAY_CONFIG.event.timeZone,
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+    });
+    const parts = kolkataFormatter.formatToParts(now);
+    currentYear = Number(parts.find((p) => p.type === "year")?.value || currentYear);
+    currentMonth = Number(parts.find((p) => p.type === "month")?.value || currentMonth);
+    currentDay = Number(parts.find((p) => p.type === "day")?.value || currentDay);
+  } catch {}
+
+  let nextBirthdayYear = currentYear;
+  if (currentMonth > bMonth || (currentMonth === bMonth && currentDay >= bDay)) {
+    nextBirthdayYear = currentYear + 1;
+  }
+
+  const turningAge = nextBirthdayYear - bYear;
+  const nextBirthdayDate = new Date(`${nextBirthdayYear}-02-16T00:00:00+05:30`);
+  const diffTime = nextBirthdayDate.getTime() - now.getTime();
+  const daysRemaining = Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+
+  return {
+    birthYear: bYear,
+    birthMonth: bMonth,
+    birthDay: bDay,
+    upcomingYear: nextBirthdayYear,
+    turningAge,
+    daysRemaining,
+    formattedDate: `${bDay} February`,
+  };
+}
