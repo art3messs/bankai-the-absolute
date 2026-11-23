@@ -43,24 +43,26 @@ async function run() {
     }
 
     // 2. Fullpage screenshot
+    const fullpagePath = path.join(outDir, `00-fullpage-${width}px.png`);
     await page.screenshot({
-      path: path.join(outDir, `00-fullpage-${width}px.png`),
+      path: fullpagePath,
       fullPage: true
     });
+    const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight);
+    console.log(`[HEIGHT] Viewport ${width}px: Total Page Height = ${pageHeight}px`);
 
     // 3. Section by section screenshots
     const sections = [
       { name: '01-header', selector: 'header' },
-      { name: '02-hero', selector: 'main > section:first-of-type, [class*="perspective"]' },
-      { name: '03-cake', selector: '#cake-ceremony, [id*="cake"]' },
-      { name: '04-scroll-reveal', selector: '#scroll-reveal' },
+      { name: '02-hero', selector: 'main > section:first-of-type' },
+      { name: '03-cake', selector: '#cake' },
+      { name: '04-scroll-reveal', selector: '#reveal, #scroll-reveal' },
       { name: '05-sound-music', selector: '#sound' },
       { name: '06-sixteen-reasons', selector: '#reasons' },
       { name: '07-memories-gallery', selector: '#memories' },
       { name: '08-letter', selector: '#letter' },
       { name: '09-vault', selector: '#vault' },
-      { name: '10-guestbook', selector: '#guestbook' },
-      { name: '11-review', selector: '#review, [id*="review"]' },
+      { name: '10-writeback', selector: '#notes, #guestbook' },
       { name: '12-footer', selector: 'footer' }
     ];
 
