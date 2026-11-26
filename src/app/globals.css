@@ -6,6 +6,9 @@
   --color-ink: #2B1524;
   --color-strawberry: #D4285A;
   --color-mauve: #8A5A6E;
+  --color-gold: #C89B3C;
+  --color-gold-light: #F6E5B6;
+  --color-plum: #3E073A;
 
   --font-serif: var(--font-young-serif), Georgia, serif;
   --font-sans: var(--font-figtree), system-ui, sans-serif;
@@ -43,12 +46,33 @@
   font-family: var(--font-figtree), system-ui, sans-serif;
 }
 
-/* Main background: box-pink #F4B9C9; ink #2B1524; */
+/* Layered velvet rose & warm champagne studio backdrop */
 body {
   background-color: #F4B9C9;
+  background-image:
+    radial-gradient(ellipse 90% 55% at 15% 0%, rgba(255, 232, 239, 0.85) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 50% at 90% 18%, rgba(254, 226, 200, 0.55) 0%, transparent 60%),
+    radial-gradient(ellipse 85% 65% at 50% 60%, rgba(244, 185, 201, 0.9) 0%, transparent 75%),
+    radial-gradient(ellipse 75% 55% at 15% 95%, rgba(253, 217, 230, 0.8) 0%, transparent 65%);
+  background-attachment: fixed;
   color: #2B1524;
   font-family: var(--font-figtree), system-ui, sans-serif;
   min-height: 100vh;
+}
+
+/* Hide default desktop cursor only when custom fairy-dust cursor is active */
+@media (hover: hover) and (pointer: fine) {
+  html.custom-cursor-active body,
+  html.custom-cursor-active a,
+  html.custom-cursor-active button,
+  html.custom-cursor-active [role="button"] {
+    cursor: none !important;
+  }
+
+  input,
+  textarea {
+    cursor: text !important;
+  }
 }
 
 /* Accessible focus rings in strawberry */
@@ -61,37 +85,34 @@ textarea:focus-visible,
   outline-offset: 2px !important;
 }
 
-/* Clean paper card */
-.paper-card {
-  background: #FFF9FA;
-  color: #2B1524;
-  border-radius: 16px;
-  border: 1px solid rgba(138, 90, 110, 0.18);
-  box-shadow: 0 4px 20px rgba(43, 21, 36, 0.04);
-}
-
-/* Legacy alias mappings */
-.girly-card {
-  background: #FFF9FA;
-  color: #2B1524;
-  border-radius: 16px;
-  border: 1px solid rgba(138, 90, 110, 0.18);
-  box-shadow: 0 4px 20px rgba(43, 21, 36, 0.04);
-}
-
+/* Elevated Silk Vellum Card Surface */
+.paper-card,
+.girly-card,
 .editorial-card {
-  background: #FFF9FA;
+  background: linear-gradient(155deg, rgba(255, 252, 253, 0.97) 0%, rgba(255, 245, 248, 0.94) 100%);
   color: #2B1524;
-  border-radius: 16px;
-  border: 1px solid rgba(138, 90, 110, 0.18);
+  border-radius: 24px;
+  border: 1px solid rgba(200, 155, 60, 0.25);
+  box-shadow:
+    0 20px 50px rgba(43, 21, 36, 0.08),
+    0 2px 10px rgba(212, 40, 90, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+/* Champagne gold & rose metallic sheen text */
+.text-foil {
+  background: linear-gradient(120deg, #B82353 0%, #D4285A 42%, #C89B3C 75%, #A31D47 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .editorial-rule {
   height: 1px;
-  background: rgba(138, 90, 110, 0.2);
+  background: linear-gradient(90deg, transparent 0%, rgba(200, 155, 60, 0.45) 50%, transparent 100%);
 }
 
-/* 3D utilities if needed for candle/flip */
+/* 3D utilities for card flips & theatrical stages */
 .perspective-1000 {
   perspective: 1000px;
 }
@@ -103,6 +124,52 @@ textarea:focus-visible,
 .backface-hidden {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.25);
+  }
+}
+
+@keyframes dreamyFloat {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(18px, -14px, 0) scale(1.06);
+  }
+}
+
+@keyframes eqPulse {
+  0%, 100% {
+    transform: scaleY(0.32);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.animate-dreamy {
+  animation: dreamyFloat 11s ease-in-out infinite;
+}
+
+.animate-vinyl {
+  animation: spin 4.2s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-dreamy,
+  .animate-vinyl,
+  .animate-spin,
+  .animate-pulse {
+    animation: none !important;
+  }
 }
 
 /* Hide scrollbar helper */

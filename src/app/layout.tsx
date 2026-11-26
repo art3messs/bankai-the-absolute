@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Young_Serif, Figtree, Reenie_Beanie } from "next/font/google";
 import "./globals.css";
+import CustomCursor from "@/components/CustomCursor";
 
 const youngSerif = Young_Serif({
   weight: "400",
@@ -65,6 +66,7 @@ export default function RootLayout({
       className={`${youngSerif.variable} ${figtree.variable} ${reenieBeanie.variable} scroll-smooth`}
     >
       <body className="font-sans antialiased bg-box-pink text-ink min-h-screen selection:bg-strawberry/20 selection:text-ink">
+        <CustomCursor />
         {children}
       </body>
     </html>

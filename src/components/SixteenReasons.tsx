@@ -2,16 +2,24 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Heart } from "lucide-react";
+import { Heart, Sparkles, Crown, Sun, Moon, Music, Star, Flower2, Shuffle } from "lucide-react";
 import { COPY } from "@/data/copy";
+
+const CARD_MOTIFS = [Sparkles, Flower2, Sun, Heart, Crown, Moon, Star, Music];
 
 export default function SixteenReasons() {
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [favorites, setFavorites] = useState<number[]>([]);
+  const [filterFavorites, setFilterFavorites] = useState(false);
+  const [cardOrder, setCardOrder] = useState<number[]>(() =>
+    COPY.reasons.items.map((item) => item.id)
+  );
+
   const reasonsList = COPY.reasons.items;
   const count = reasonsList.length;
   const headingText = `${count} reasons why you are my world`;
-  const unveilText = `Unveil all ${count} cards`;
+  const allRevealed = flippedCards.length === count;
+  const unveilText = allRevealed ? `Turn all ${count} cards back` : `Unveil all ${count} cards`;
 
   useEffect(() => {
     try {
@@ -47,16 +55,34 @@ export default function SixteenReasons() {
   };
 
   const revealAll = () => {
-    if (flippedCards.length === reasonsList.length) {
+    if (allRevealed) {
       setFlippedCards([]);
     } else {
       setFlippedCards(reasonsList.map((i) => i.id));
     }
   };
 
+  const shuffleDeck = () => {
+    setCardOrder((prev) => {
+      const next = [...prev];
+      for (let i = next.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [next[i], next[j]] = [next[j], next[i]];
+      }
+      return next;
+    });
+  };
+
+  const orderedItems = cardOrder
+    .map((id) => reasonsList.find((item) => item.id === id))
+    .filter((item): item is (typeof reasonsList)[number] => Boolean(item));
+
+  const visibleItems = filterFavorites
+    ? orderedItems.filter((item) => favorites.includes(item.id))
+    : orderedItems;
+
   return (
-    <section id="reasons" className="relative z-10 max-w-5xl mx-auto px-4 py-10 flex flex-col items-center text-center">
-      {/* Header in sentence case, dynamic count */}
+    <section id="reasons" className="relative z-10 max-w-5xl mx-auto px-4 py-7 sm:py-12 flex flex-col items-center text-center">
       <h2 className="font-serif text-3xl sm:text-5xl text-ink font-normal">
         {headingText}
       </h2>
@@ -64,101 +90,150 @@ export default function SixteenReasons() {
         &ldquo;{COPY.reasons.subtitle}&rdquo;
       </p>
 
-      <div className="mt-4 mb-6 flex flex-col sm:flex-row items-center gap-3">
+      {/* Action & Filter Bar */}
+      <div className="mt-4 sm:mt-5 mb-5 sm:mb-7 flex flex-wrap items-center justify-center gap-2.5">
         <button
+          type="button"
           onClick={revealAll}
-          className="px-5 py-2.5 rounded-full bg-strawberry text-paper hover:opacity-95 text-xs font-sans font-semibold transition-opacity cursor-pointer shadow-sm"
+          className="px-5 py-2.5 min-h-[40px] rounded-full bg-gradient-to-r from-strawberry to-[#B81E4C] text-paper border border-gold-light/30 hover:brightness-110 text-xs font-sans font-semibold transition-all cursor-pointer shadow-sm"
         >
           {unveilText}
         </button>
 
-        <span className="text-xs font-sans text-mauve">
-          {flippedCards.length === count ? "✦ All 16 reasons revealed 🤍" : `${flippedCards.length} of ${count} revealed`}
-          {favorites.length > 0 && ` • ${favorites.length} favorited`}
+        <button
+          type="button"
+          onClick={shuffleDeck}
+          className="px-4 py-2.5 min-h-[40px] rounded-full bg-paper text-ink border border-gold/30 hover:border-strawberry/50 text-xs font-sans font-medium flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
+          title="Shuffle the cards"
+        >
+          <Shuffle className="w-3.5 h-3.5 text-strawberry" />
+          <span>Shuffle</span>
+        </button>
+
+        {favorites.length > 0 && (
+          <button
+            type="button"
+            onClick={() => setFilterFavorites((f) => !f)}
+            className={`px-4 py-2.5 min-h-[40px] rounded-full text-xs font-sans font-medium flex items-center gap-1.5 border transition-all cursor-pointer ${
+              filterFavorites
+                ? "bg-plum text-gold-light border-gold/50 shadow-sm"
+                : "bg-paper text-ink border-gold/30 hover:border-strawberry/50"
+            }`}
+          >
+            <Heart className={`w-3.5 h-3.5 ${filterFavorites ? "fill-gold-light text-gold-light" : "fill-strawberry text-strawberry"}`} />
+            <span>{filterFavorites ? `Showing Favorites (${favorites.length})` : `Favorites (${favorites.length})`}</span>
+          </button>
+        )}
+
+        <span className="text-xs font-sans text-mauve px-2">
+          {allRevealed ? `✦ All ${count} reasons revealed 🤍` : `${flippedCards.length} of ${count} revealed`}
         </span>
       </div>
 
-      {/* 2-column on mobile, 4-column on desktop */}
+      {/* 2-col Mobile / 4-col Desktop Keepsake Deck */}
       <div className="w-full grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        {reasonsList.map((item) => {
+        {visibleItems.map((item, idx) => {
           const isFlipped = flippedCards.includes(item.id);
           const isFavorited = favorites.includes(item.id);
+          const MotifIcon = CARD_MOTIFS[idx % CARD_MOTIFS.length];
 
           return (
-            <motion.button
-              type="button"
+            <motion.div
               key={item.id}
-              aria-pressed={isFlipped}
-              onClick={() => toggleCard(item.id)}
-              className="relative h-56 sm:h-64 w-full text-left rounded-2xl cursor-pointer perspective-1000 select-none block p-0 bg-transparent border-0"
+              layout
+              transition={{ type: "spring", stiffness: 280, damping: 26 }}
+              whileHover={{ y: -3 }}
+              className="group relative h-44 sm:h-64 w-full text-left perspective-1000 select-none"
             >
               <motion.div
+                role="button"
+                tabIndex={0}
+                aria-pressed={isFlipped}
+                onClick={() => toggleCard(item.id)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleCard(item.id);
+                  }
+                }}
                 animate={{ rotateY: isFlipped ? 180 : 0 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="w-full h-full relative transform-3d"
+                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                className="w-full h-full relative transform-3d cursor-pointer outline-hidden rounded-2xl focus-visible:ring-2 focus-visible:ring-strawberry"
               >
-                {/* FRONT FACE */}
+                {/* FRONT FACE: Cream Parchment & Gold Filigree */}
                 <div
-                  className="absolute inset-0 rounded-2xl bg-paper p-4 sm:p-5 flex flex-col justify-between border border-mauve/20 shadow-sm backface-hidden"
+                  className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#FFFDFD] via-[#FFF6F8] to-[#FCEAF0] p-3.5 sm:p-5 flex flex-col justify-between border border-gold/35 shadow-[0_12px_30px_rgba(43,21,36,0.07)] backface-hidden overflow-hidden"
                   style={{ backfaceVisibility: "hidden" }}
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="font-sans text-sm sm:text-base font-bold text-strawberry">
-                      {item.id < 10 ? `0${item.id}` : item.id}
+                  {/* Delicate Inner Double Frame */}
+                  <div className="pointer-events-none absolute inset-1.5 sm:inset-2 rounded-xl border border-gold/20" />
+                  {/* Foil Shimmer Sweep on Hover */}
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out bg-gradient-to-r from-transparent via-gold-light/30 to-transparent -skew-x-12"
+                  />
+
+                  <div className="relative z-10 flex items-center justify-between">
+                    <span className="font-serif text-xs sm:text-base font-bold text-foil">
+                      N° {item.id < 10 ? `0${item.id}` : item.id}
                     </span>
-                    {isFavorited && (
-                      <Heart className="w-4 h-4 text-strawberry fill-strawberry" />
-                    )}
+                    <div className="flex items-center gap-1.5">
+                      {isFavorited && <Heart className="w-3.5 h-3.5 text-strawberry fill-strawberry" />}
+                      <MotifIcon className="w-3.5 h-3.5 text-gold/80" />
+                    </div>
                   </div>
 
-                  <h3 className="font-serif text-base sm:text-lg text-ink font-normal leading-snug">
+                  <h3 className="relative z-10 font-serif text-sm sm:text-lg text-ink font-normal leading-snug">
                     {item.title}
                   </h3>
 
-                  <span className="text-[11px] font-sans text-mauve">
-                    {COPY.reasons.flipPrompt}
+                  <span className="relative z-10 text-[10px] sm:text-[11px] font-sans text-mauve tracking-wide flex items-center gap-1">
+                    <span className="text-gold">✦</span>
+                    <span>{COPY.reasons.flipPrompt}</span>
                   </span>
                 </div>
 
-                {/* BACK FACE */}
+                {/* BACK FACE: Deep Velvet Plum & Gold Prose */}
                 <div
-                  className="absolute inset-0 rounded-2xl bg-paper p-4 sm:p-5 flex flex-col justify-between border border-mauve/30 shadow-md backface-hidden"
+                  className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#3A0E34] via-[#2B0A28] to-[#1D051B] p-3.5 sm:p-5 flex flex-col justify-between border border-gold/55 shadow-[0_18px_40px_rgba(43,21,36,0.28)] backface-hidden overflow-hidden text-paper"
                   style={{
                     backfaceVisibility: "hidden",
                     transform: "rotateY(180deg)",
                   }}
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-sans text-strawberry font-semibold uppercase tracking-wider">
-                      {item.id}
+                  <div className="pointer-events-none absolute inset-2 rounded-xl border border-gold-light/20" />
+
+                  <div className="relative z-10 flex items-center justify-between">
+                    <span className="text-[10px] font-sans text-gold-light font-semibold uppercase tracking-widest">
+                      {item.id < 10 ? `0${item.id}` : item.id} • Truth
                     </span>
                     <button
                       type="button"
                       onClick={(e) => toggleFavorite(e, item.id)}
-                      className="p-1 rounded-full hover:bg-strawberry/10 text-mauve transition-colors cursor-pointer"
+                      className="p-1.5 rounded-full hover:bg-white/10 text-paper/80 transition-colors cursor-pointer"
                       title={isFavorited ? "Remove from favorites" : "Favorite this reason"}
                       aria-label={isFavorited ? "Remove favorite" : "Add to favorites"}
                     >
                       <Heart
                         className={`w-3.5 h-3.5 transition-colors ${
                           isFavorited
-                            ? "text-strawberry fill-strawberry"
-                            : "text-mauve hover:text-strawberry"
+                            ? "text-box-pink fill-box-pink"
+                            : "text-gold-light/70 hover:text-box-pink"
                         }`}
                       />
                     </button>
                   </div>
 
-                  <p className="font-sans text-xs sm:text-sm text-ink/90 leading-relaxed my-auto">
+                  <p className="relative z-10 font-sans text-xs sm:text-sm text-paper/95 leading-relaxed my-auto">
                     {item.body}
                   </p>
 
-                  <span className="text-[10px] font-sans text-mauve text-right">
+                  <span className="relative z-10 text-[10px] font-sans text-gold-light/70 text-right">
                     {COPY.reasons.unflipPrompt}
                   </span>
                 </div>
               </motion.div>
-            </motion.button>
+            </motion.div>
           );
         })}
       </div>

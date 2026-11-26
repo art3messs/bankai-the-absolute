@@ -5,6 +5,7 @@ import { motion, useSpring, useMotionValue } from "framer-motion";
 
 interface TrailItem {
   id: number;
+  createdAt: number;
   x: number;
   y: number;
   char: string;
@@ -22,6 +23,7 @@ export default function CustomCursor() {
 
   const mouseX = useMotionValue(-100);
   const mouseY = useMotionValue(-100);
+  const isVisibleRef = useRef(false);
   const lastSpawn = useRef(0);
   const lastCoord = useRef({ x: -100, y: -100 });
 
@@ -31,8 +33,13 @@ export default function CustomCursor() {
   const smoothY = useSpring(mouseY, springConfig);
 
   useEffect(() => {
-    // Only show on desktop / pointer devices
-    if (window.matchMedia("(pointer: coarse)").matches) return;
+    // Only show on desktop / fine pointer devices and when reduced motion is not requested
+    if (
+      window.matchMedia("(pointer: coarse)").matches ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
 
     document.documentElement.classList.add("custom-cursor-active");
 
@@ -42,7 +49,10 @@ export default function CustomCursor() {
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
-      if (!isVisible) setIsVisible(true);
+      if (!isVisibleRef.current) {
+        isVisibleRef.current = true;
+        setIsVisible(true);
+      }
 
       const now = performance.now();
       const dist = Math.hypot(e.clientX - lastCoord.current.x, e.clientY - lastCoord.current.y);
@@ -55,6 +65,7 @@ export default function CustomCursor() {
         counter++;
         const newTrail: TrailItem = {
           id: counter,
+          createdAt: now,
           x: e.clientX + (Math.random() * 8 - 4),
           y: e.clientY + (Math.random() * 8 - 4),
           char: sparkleChars[Math.floor(Math.random() * sparkleChars.length)],
@@ -62,7 +73,7 @@ export default function CustomCursor() {
           color: colors[Math.floor(Math.random() * colors.length)],
         };
 
-        setTrails((prev) => [...prev.slice(-12), newTrail]);
+        setTrails((prev) => [...prev.slice(-11), newTrail]);
       }
     };
 
@@ -96,16 +107,17 @@ export default function CustomCursor() {
       window.removeEventListener("mouseup", handleMouseUp);
       window.removeEventListener("mouseover", handleMouseOver);
     };
-  }, [isVisible, mouseX, mouseY]);
+  }, [mouseX, mouseY]);
 
-  // Clean old trail items
+  // Prune aged trail sparkles independently without stalling during rapid movement
   useEffect(() => {
     if (trails.length === 0) return;
-    const timer = setTimeout(() => {
-      setTrails((prev) => prev.slice(1));
-    }, 450);
-    return () => clearTimeout(timer);
-  }, [trails]);
+    const interval = setInterval(() => {
+      const cutoff = performance.now() - 480;
+      setTrails((prev) => prev.filter((item) => item.createdAt > cutoff));
+    }, 100);
+    return () => clearInterval(interval);
+  }, [trails.length]);
 
   if (!isVisible) return null;
 

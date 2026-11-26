@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import Image from "next/image";
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, useMotionTemplate } from "framer-motion";
 import confetti from "canvas-confetti";
-import { Mic, CheckCircle2, Flame, RotateCcw } from "lucide-react";
+import { Mic, CheckCircle2, Flame, RotateCcw, Sparkles } from "lucide-react";
 import { COPY } from "@/data/copy";
 import { getBirthdayDetails } from "@/data/config";
 
@@ -13,32 +12,40 @@ interface BirthdayCakeCeremonyProps {
 }
 
 export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCeremonyProps) {
-  const details = getBirthdayDetails();
-  const ageDigits = String(details.turningAge).split("");
-  const candlePositions = [45, 55];
+  const initialDetails = getBirthdayDetails();
+  const [turningAge, setTurningAge] = useState<number>(initialDetails.turningAge);
+  const ageDigits = String(turningAge).split("");
+  const candlePositions = [42, 58];
 
   const [candlesOut, setCandlesOut] = useState(false);
   const [micActive, setMicActive] = useState(false);
   const [micError, setMicError] = useState<string | null>(null);
+  const [breathLevel, setBreathLevel] = useState(0);
   const [puffParticles, setPuffParticles] = useState<{ id: number; left: number }[]>([]);
 
-  // 3D physics tilt
+  useEffect(() => {
+    const syncTimer = setTimeout(() => {
+      setTurningAge(getBirthdayDetails(new Date()).turningAge);
+    }, 0);
+    return () => clearTimeout(syncTimer);
+  }, []);
+
+  // 3D stage tilt physics
   const stageRef = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const springConfig = { damping: 22, stiffness: 220, mass: 0.5 };
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [14, -14]), springConfig);
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-16, 16]), springConfig);
-  const glareX = useTransform(mouseX, [-0.5, 0.5], ["0%", "100%"]);
-  const glareY = useTransform(mouseY, [-0.5, 0.5], ["0%", "100%"]);
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [10, -10]), springConfig);
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-12, 12]), springConfig);
+  const glareX = useTransform(mouseX, [-0.5, 0.5], ["10%", "90%"]);
+  const glareY = useTransform(mouseY, [-0.5, 0.5], ["10%", "90%"]);
+  const glareBg = useMotionTemplate`radial-gradient(circle at ${glareX} ${glareY}, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 60%)`;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!stageRef.current) return;
     const rect = stageRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    mouseX.set(x);
-    mouseY.set(y);
+    mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
+    mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
   };
 
   const handleMouseLeave = () => {
@@ -51,26 +58,45 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
   const micStreamRef = useRef<MediaStream | null>(null);
   const animationFrameRef = useRef<number | null>(null);
 
-  // Soft musical chime on blowout
   const playWishChime = () => {
     try {
-      const ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
-      const notes = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6
+      const ctx = new (window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+      const notes = [523.25, 659.25, 783.99, 1046.5];
       notes.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = "sine";
-        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.12);
-        gain.gain.setValueAtTime(0.18, ctx.currentTime + idx * 0.12);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.12 + 0.9);
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.11);
+        gain.gain.setValueAtTime(0.16, ctx.currentTime + idx * 0.11);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.11 + 0.95);
         osc.connect(gain);
         gain.connect(ctx.destination);
-        osc.start(ctx.currentTime + idx * 0.12);
-        osc.stop(ctx.currentTime + idx * 0.12 + 1.0);
+        osc.start(ctx.currentTime + idx * 0.11);
+        osc.stop(ctx.currentTime + idx * 0.11 + 1.0);
       });
-    } catch {
-      // AudioContext unavailable
+      setTimeout(() => {
+        ctx.close().catch(() => {});
+      }, 1600);
+    } catch {}
+  };
+
+  const stopMic = () => {
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
     }
+    if (micStreamRef.current) {
+      micStreamRef.current.getTracks().forEach((t) => t.stop());
+      micStreamRef.current = null;
+    }
+    if (audioContextRef.current) {
+      audioContextRef.current.close().catch(() => {});
+      audioContextRef.current = null;
+    }
+    analyserRef.current = null;
+    setMicActive(false);
+    setBreathLevel(0);
   };
 
   const blowOutCandles = () => {
@@ -78,19 +104,18 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
     setCandlesOut(true);
     playWishChime();
 
-    // Rising smoke puffs from each number candle
-    const puffs = candlePositions.map((pos, i) => ({
-      id: i,
-      left: pos,
-    }));
-    setPuffParticles(puffs);
+    setPuffParticles(
+      candlePositions.map((pos, i) => ({
+        id: i,
+        left: pos,
+      }))
+    );
 
-    // Rose & Champagne celebration
     confetti({
-      particleCount: 110,
-      spread: 95,
+      particleCount: 120,
+      spread: 100,
       origin: { y: 0.55 },
-      colors: ["#db2777", "#ec4899", "#fbbf24", "#fef08a", "#ffffff"],
+      colors: ["#D4285A", "#F4B9C9", "#C89B3C", "#F6E5B6", "#FFFFFF"],
     });
 
     stopMic();
@@ -104,7 +129,6 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
   const startMic = async () => {
     try {
       setMicError(null);
-      // Pause background music so it does not trigger false microphone blows
       window.dispatchEvent(new CustomEvent("harleen:pause-music"));
 
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -116,7 +140,8 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
       });
       micStreamRef.current = stream;
 
-      const audioCtx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+      const audioCtx = new (window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
       audioContextRef.current = audioCtx;
 
       const analyser = audioCtx.createAnalyser();
@@ -136,8 +161,6 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
 
       const checkBlow = () => {
         analyser.getByteFrequencyData(dataArray);
-
-        // Low frequency bins (sub-500Hz: indices 1 to 5) where breath turbulence concentrates
         let lowFreqSum = 0;
         const lowBinsCount = 5;
         for (let i = 1; i <= lowBinsCount; i++) {
@@ -145,7 +168,6 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
         }
         const lowFreqAvg = lowFreqSum / lowBinsCount;
 
-        // Calibrate ambient noise floor during first 30 frames (~500ms)
         if (calibrationFrames < 30) {
           baselineSum += lowFreqAvg;
           calibrationFrames++;
@@ -156,7 +178,9 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
           return;
         }
 
-        // Blow detection: energy exceeds baseline by 25+ sustained over 12 frames (~200ms)
+        const delta = Math.max(0, lowFreqAvg - baselineNoise);
+        setBreathLevel(Math.min(100, Math.round((delta / 40) * 100)));
+
         if (lowFreqAvg > baselineNoise + 25) {
           sustainedPuffFrames++;
           if (sustainedPuffFrames >= 12) {
@@ -171,22 +195,9 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
       };
       animationFrameRef.current = requestAnimationFrame(checkBlow);
     } catch {
-      setMicError("Microphone permission denied. Tap the cake instead!");
+      setMicError("Microphone permission unavailable — tap the cake instead!");
       setMicActive(false);
     }
-  };
-
-  const stopMic = () => {
-    if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
-    if (micStreamRef.current) {
-      micStreamRef.current.getTracks().forEach((t) => t.stop());
-      micStreamRef.current = null;
-    }
-    if (audioContextRef.current) {
-      audioContextRef.current.close().catch(() => {});
-      audioContextRef.current = null;
-    }
-    setMicActive(false);
   };
 
   useEffect(() => {
@@ -195,9 +206,10 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
     };
   }, []);
 
+  const flameSkewDeg = Math.min(26, (breathLevel / 100) * 26);
+
   return (
-    <section id="cake" className="relative z-10 max-w-4xl mx-auto px-4 py-12 flex flex-col items-center text-center">
-      {/* Heading in sentence case, no tag, no emoji */}
+    <section id="cake" className="relative z-10 max-w-4xl mx-auto px-4 py-8 sm:py-12 flex flex-col items-center text-center">
       <h2 className="font-serif text-3xl sm:text-5xl text-ink font-normal">
         {COPY.cake.heading}
       </h2>
@@ -205,11 +217,8 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
         &ldquo;{COPY.cake.instruction}&rdquo;
       </p>
 
-      {/* THE 3D INTERACTIVE CAKE STAGE */}
-      <div
-        style={{ perspective: 1200 }}
-        className="w-full max-w-2xl mt-8 flex justify-center select-none"
-      >
+      {/* 3D Interactive Velvet Candlelight Cake Stage */}
+      <div style={{ perspective: 1200 }} className="w-full max-w-2xl mt-8 flex justify-center select-none">
         <motion.div
           ref={stageRef}
           onMouseMove={handleMouseMove}
@@ -233,171 +242,307 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
               else blowOutCandles();
             }
           }}
-          className="relative w-full p-6 sm:p-10 rounded-3xl bg-paper border border-mauve/20 shadow-lg flex flex-col items-center overflow-hidden cursor-pointer group outline-none focus-visible:ring-2 focus-visible:ring-strawberry"
+          className="relative w-full p-5 sm:p-10 rounded-[28px] border border-gold/30 shadow-[0_28px_70px_rgba(43,21,36,0.16)] flex flex-col items-center cursor-pointer group outline-none focus-visible:ring-2 focus-visible:ring-strawberry transition-colors duration-700"
           onClick={candlesOut ? relightCandles : blowOutCandles}
           title={candlesOut ? "Tap cake to relight candles!" : "Tap cake or blow into mic to extinguish!"}
         >
-          {/* Dynamic 3D Specular Lighting Glare */}
-          <motion.div
-            className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-30 transition-opacity duration-300 z-30"
-            style={{
-              background: `radial-gradient(circle at ${glareX} ${glareY}, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 60%)`,
-            }}
-          />
-
-          {/* 3D FLOATING CAKE CONTAINER */}
-          <div
-            className="relative w-full max-w-xs sm:max-w-sm aspect-square my-2 flex items-center justify-center"
-            style={{ transform: "translateZ(50px)", transformStyle: "preserve-3d" }}
-          >
-            {/* 3D Golden Platter Base Shadow */}
+          {/* Rounded-corner Clip Layer for Backdrop & Glare (kept separate from preserve-3d buttons) */}
+          <div className="pointer-events-none absolute inset-0 rounded-[28px] overflow-hidden z-0">
+            {/* Ambient Theatrical Stage Backdrop (Warm Candlelight -> Celestial Starlight after blowout) */}
             <div
-              className="absolute -bottom-2 w-3/4 h-8 bg-gradient-to-r from-transparent via-[#4a044e]/15 to-transparent rounded-full blur-md"
-              style={{ transform: "translateZ(-20px) scale(1.15)" }}
+              aria-hidden="true"
+              className="absolute inset-0 transition-all duration-700"
+              style={{
+                background: candlesOut
+                  ? "radial-gradient(circle at 50% 35%, #FFF8FB 0%, #FDECEF 55%, #F7DBE5 100%)"
+                  : "radial-gradient(circle at 50% 24%, #FFF6DF 0%, #FFEAF1 42%, #FFF9FA 100%)",
+              }}
             />
 
-            {/* THE UPLOADED 3-TIER PINK CAKE PHOTO */}
-            <div className="relative w-full h-full rounded-2xl overflow-hidden p-1 flex items-center justify-center drop-shadow-[0_20px_35px_rgba(74,4,78,0.18)]">
-              <Image
-                src="/media/cake-pink-three-tier-high.png"
-                alt="3-Tier Pink Birthday Cake"
-                fill
-                sizes="(max-width: 640px) 320px, 384px"
-                className="object-contain filter contrast-[1.02] brightness-[1.02]"
-              />
+            {/* Volumetric Candle Halo Glow & Starlight Wish Constellation */}
+            <AnimatePresence>
+              {!candlesOut ? (
+                <motion.div
+                  key="candle-halo"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0, transition: { duration: 0.5 } }}
+                  aria-hidden="true"
+                  className="absolute top-4 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full bg-amber-300/35 blur-3xl"
+                />
+              ) : (
+                <motion.div
+                  key="starlight-wish-sky"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  aria-hidden="true"
+                  className="absolute inset-0 pointer-events-none"
+                >
+                  {[
+                    { left: "14%", top: "18%", delay: 0 },
+                    { left: "26%", top: "12%", delay: 0.25 },
+                    { left: "72%", top: "14%", delay: 0.45 },
+                    { left: "86%", top: "22%", delay: 0.15 },
+                    { left: "18%", top: "48%", delay: 0.6 },
+                    { left: "82%", top: "52%", delay: 0.35 },
+                  ].map((star, idx) => (
+                    <motion.span
+                      key={idx}
+                      initial={{ opacity: 0, scale: 0.4 }}
+                      animate={{
+                        opacity: [0.35, 1, 0.45],
+                        scale: [0.85, 1.25, 0.9],
+                      }}
+                      transition={{
+                        repeat: Infinity,
+                        duration: 2.2,
+                        delay: star.delay,
+                      }}
+                      className="absolute text-gold text-sm select-none"
+                      style={{ left: star.left, top: star.top }}
+                    >
+                      ✦
+                    </motion.span>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-              {/* Subtle 3D Glass Sheen Edge */}
-              <div className="absolute inset-0 rounded-2xl border border-white/60 pointer-events-none" />
-            </div>
+            {/* Dynamic 3D Specular Glare */}
+            <motion.div
+              className="absolute inset-0 opacity-0 group-hover:opacity-40 transition-opacity duration-300"
+              style={{ background: glareBg }}
+            />
+          </div>
 
-            {/* NUMBER CANDLES (OPTION B: NUMBERS "1" AND "9") */}
+          {/* 3D FLOATING CAKE + NUMBER CANDLES STAGE */}
+          <div
+            className="relative z-20 w-full max-w-[300px] sm:max-w-[340px] h-[250px] sm:h-[330px] my-1 flex flex-col items-center justify-end"
+            style={{ transform: "translateZ(48px)", transformStyle: "preserve-3d" }}
+          >
+            {/* NUMBER CANDLES ("1" and "9") ANCHORED ON TOP TIER */}
             <div
-              className="absolute inset-0 pointer-events-none z-30"
-              style={{ transform: "translateZ(75px)", transformStyle: "preserve-3d" }}
+              className="relative w-full h-24 pointer-events-none z-30 flex items-end justify-center"
+              style={{ transform: "translateZ(26px)" }}
             >
               {ageDigits.map((digit, idx) => {
-                const leftPct = candlePositions[idx] ?? (idx === 0 ? 45 : 55);
+                const leftPct = candlePositions[idx] ?? (idx === 0 ? 42 : 58);
                 return (
                   <div
                     key={idx}
-                    className="absolute -translate-x-1/2 flex flex-col items-center"
-                    style={{
-                      left: `${leftPct}%`,
-                      top: "14%",
-                    }}
+                    className="absolute -translate-x-1/2 bottom-0 flex flex-col items-center"
+                    style={{ left: `${leftPct}%` }}
                   >
-                    {/* Dancing Flame */}
-                    <div className="h-6 flex items-end justify-center">
+                    {/* Organic Flickering Flame */}
+                    <div className="h-9 flex items-end justify-center">
                       <AnimatePresence>
                         {!candlesOut && (
                           <motion.div
-                            initial={{ scale: 0.8, opacity: 0 }}
+                            initial={{ scale: 0.7, opacity: 0 }}
                             animate={{
-                              scale: [1, 1.22, 0.94, 1.18, 1],
-                              opacity: [0.95, 1, 0.9, 1, 0.95],
-                              y: [0, -1.5, 0.5, -2, 0],
+                              opacity: [0.94, 1, 0.88, 1, 0.95],
+                              scale: [1, 1.18, 0.94, 1.14, 1],
+                              rotate: [
+                                flameSkewDeg,
+                                flameSkewDeg - 4,
+                                flameSkewDeg + 5,
+                                flameSkewDeg - 2,
+                                flameSkewDeg,
+                              ],
+                              y: [0, -2, 0.5, -1.5, 0],
                             }}
-                            exit={{ scale: 0, opacity: 0, y: -10 }}
+                            exit={{
+                              scale: 0,
+                              opacity: 0,
+                              y: -12,
+                              transition: { duration: 0.22, ease: "easeOut", repeat: 0 },
+                            }}
                             transition={{
                               repeat: Infinity,
-                              duration: 0.35 + idx * 0.08,
+                              duration: 0.38 + idx * 0.09,
                               ease: "easeInOut",
                             }}
-                            className="relative w-3.5 h-6 rounded-full"
+                            className="relative w-4 h-7 origin-bottom"
                           >
-                            {/* Golden Core Flame */}
-                            <div className="w-full h-full bg-gradient-to-t from-orange-500 via-amber-300 to-yellow-100 rounded-full blur-[0.6px] shadow-[0_0_14px_rgba(251,191,36,0.95)]" />
-                            {/* Inner Hot White Ember */}
-                            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-2.5 bg-white rounded-full blur-[0.4px]" />
+                            <div className="w-full h-full rounded-full bg-gradient-to-t from-strawberry via-amber-400 to-amber-100 shadow-[0_0_24px_rgba(251,191,36,0.98)]" />
+                            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-3.5 bg-white rounded-full blur-[0.2px]" />
                           </motion.div>
                         )}
                       </AnimatePresence>
                     </div>
 
-                    {/* Candle Wick */}
-                    <div className="w-0.5 h-2 bg-ink/70 mx-auto -mt-0.5" />
+                    {/* Wick */}
+                    <div className="w-[2px] h-2 bg-ink/80 -mt-1" />
 
-                    {/* Wax Number Candle Figure */}
-                    <div className="px-2.5 py-0.5 rounded-md bg-gradient-to-b from-white via-rose-50 to-rose-100 border border-strawberry/40 shadow-xs flex items-center justify-center">
-                      <span className="font-serif font-bold text-strawberry text-lg sm:text-xl leading-none">
+                    {/* Sculpted Porcelain & Gold Number Candle */}
+                    <div className="w-10 h-12 rounded-xl bg-gradient-to-b from-paper via-[#FFE7EE] to-[#FBD1DE] border-2 border-gold/65 shadow-[0_6px_14px_rgba(43,21,36,0.16)] flex items-center justify-center">
+                      <span className="font-serif font-bold text-2xl sm:text-3xl text-foil leading-none">
                         {digit}
                       </span>
                     </div>
                   </div>
                 );
               })}
-            </div>
 
-            {/* 3D RISING SMOKE PUFFS ON BLOWOUT */}
-            <div
-              className="absolute inset-0 pointer-events-none z-40"
-              style={{ transform: "translateZ(85px)" }}
-            >
+              {/* Rising Smoke Puffs on Blowout */}
               <AnimatePresence>
                 {candlesOut &&
                   puffParticles.map((puff) => (
                     <motion.div
                       key={puff.id}
-                      initial={{ opacity: 0.85, y: 0, scale: 0.6 }}
-                      animate={{ opacity: 0, y: -75, scale: 2.2 }}
-                      transition={{ duration: 1.5, ease: "easeOut", delay: puff.id * 0.05 }}
-                      className="absolute w-4 h-4 rounded-full bg-white/60 blur-xs"
-                      style={{
-                        left: `${puff.left}%`,
-                        top: "14%",
-                        transform: "translateX(-50%)",
-                      }}
+                      initial={{ opacity: 0.85, y: -42, scale: 0.5 }}
+                      animate={{ opacity: 0, y: -125, scale: 2.6, x: puff.id === 0 ? -10 : 12 }}
+                      transition={{ duration: 1.7, ease: "easeOut", delay: puff.id * 0.08 }}
+                      className="absolute bottom-12 w-5 h-5 rounded-full bg-mauve/25 blur-sm"
+                      style={{ left: `${puff.left}%`, transform: "translateX(-50%)" }}
                     />
                   ))}
               </AnimatePresence>
             </div>
 
-            {/* 3D FLOATING NAMEPLATE BADGE */}
-            <div
-              className="absolute bottom-6 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-paper shadow-md border border-mauve/20 text-center pointer-events-none whitespace-nowrap"
-              style={{ transform: "translateZ(80px)" }}
+            {/* BESPOKE RAZOR-SHARP 3-TIER STRAWBERRY VELVET & CHAMPAGNE CAKE SVG */}
+            <svg
+              viewBox="0 0 320 220"
+              className="w-full h-[185px] sm:h-[230px] drop-shadow-[0_22px_32px_rgba(74,4,78,0.18)] -mt-2"
+              aria-hidden="true"
             >
-              <span className="font-sans font-semibold text-strawberry text-xs">
-                {recipientName} • Turning {details.turningAge}
+              <defs>
+                <linearGradient id="tierTop" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#FFF5F8" />
+                  <stop offset="100%" stopColor="#FFD2E0" />
+                </linearGradient>
+                <linearGradient id="tierMid" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#FFDBE7" />
+                  <stop offset="100%" stopColor="#F59FBB" />
+                </linearGradient>
+                <linearGradient id="tierBot" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#FFC8DA" />
+                  <stop offset="100%" stopColor="#E67A9E" />
+                </linearGradient>
+                <linearGradient id="glaze" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#E83E70" />
+                  <stop offset="100%" stopColor="#B81C4C" />
+                </linearGradient>
+                <linearGradient id="goldStand" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#B08229" />
+                  <stop offset="38%" stopColor="#F6E5B6" />
+                  <stop offset="68%" stopColor="#D4A64A" />
+                  <stop offset="100%" stopColor="#A37722" />
+                </linearGradient>
+              </defs>
+
+              {/* Ambient Shadow Under Pedestal */}
+              <ellipse cx="160" cy="208" rx="115" ry="10" fill="rgba(43,21,36,0.16)" />
+
+              {/* Champagne Gold Fluted Pedestal Stand */}
+              <path d="M135 182 L185 182 L195 204 L125 204 Z" fill="url(#goldStand)" />
+              <ellipse cx="160" cy="204" rx="52" ry="6" fill="url(#goldStand)" />
+              <rect x="42" y="175" width="236" height="9" rx="4.5" fill="url(#goldStand)" />
+              <ellipse cx="160" cy="176" rx="116" ry="5" fill="#FFF2CE" opacity="0.55" />
+
+              {/* Bottom Tier */}
+              <rect x="58" y="122" width="204" height="54" rx="12" fill="url(#tierBot)" />
+              <path
+                d="M58 128 C78 148, 92 126, 108 142 C124 156, 138 128, 160 144 C180 158, 198 126, 214 142 C230 156, 245 130, 262 128 L262 122 L58 122 Z"
+                fill="url(#glaze)"
+              />
+              {/* Bottom Tier Gold Pearls */}
+              {[72, 92, 112, 132, 152, 172, 192, 212, 232, 248].map((cx) => (
+                <circle key={cx} cx={cx} cy="172" r="3.4" fill="#FFF5E1" stroke="#C89B3C" strokeWidth="0.8" />
+              ))}
+
+              {/* Middle Tier */}
+              <rect x="82" y="74" width="156" height="50" rx="12" fill="url(#tierMid)" />
+              <path
+                d="M82 80 C98 98, 112 78, 128 94 C144 108, 156 80, 174 95 C192 108, 208 80, 224 94 C232 98, 236 86, 238 80 L238 74 L82 74 Z"
+                fill="url(#glaze)"
+              />
+              {/* Middle Tier Pearl Trim */}
+              {[94, 112, 130, 148, 166, 184, 202, 220].map((cx) => (
+                <circle key={cx} cx={cx} cy="121" r="3" fill="#FFF8FA" stroke="#D4285A" strokeWidth="0.6" />
+              ))}
+
+              {/* Top Tier */}
+              <rect x="106" y="30" width="108" height="46" rx="12" fill="url(#tierTop)" />
+              <ellipse cx="160" cy="32" rx="54" ry="8" fill="#FFF9FA" stroke="#F4B9C9" strokeWidth="1.2" />
+              <path
+                d="M106 36 C120 52, 132 34, 145 48 C158 58, 168 35, 182 48 C196 58, 206 38, 214 36 L214 30 L106 30 Z"
+                fill="url(#glaze)"
+              />
+              {/* Top Tier Cream & Gold Sprinkles */}
+              {[118, 134, 150, 166, 182, 198].map((cx) => (
+                <circle key={cx} cx={cx} cy="73" r="2.7" fill="#FFF2CE" stroke="#C89B3C" strokeWidth="0.7" />
+              ))}
+              {/* Glossy Strawberries */}
+              <ellipse cx="112" cy="117" rx="6" ry="5" fill="#C91D4D" />
+              <ellipse cx="208" cy="117" rx="6" ry="5" fill="#C91D4D" />
+              <ellipse cx="86" cy="168" rx="7" ry="5.5" fill="#C91D4D" />
+              <ellipse cx="234" cy="168" rx="7" ry="5.5" fill="#C91D4D" />
+            </svg>
+
+            {/* Nameplate Badge */}
+            <div
+              className="-mt-3 px-4 py-1.5 rounded-full bg-paper/95 shadow-md border border-gold/40 text-center pointer-events-none whitespace-nowrap"
+              style={{ transform: "translateZ(60px)" }}
+            >
+              <span className="font-sans font-semibold text-strawberry text-xs flex items-center gap-1.5">
+                <Sparkles className="w-3 h-3 text-gold" />
+                <span>{recipientName} • Turning {turningAge}</span>
               </span>
             </div>
           </div>
 
-          {/* STATUS NOTIFICATION BAR */}
-          <div
-            className="h-9 mt-4 flex items-center justify-center text-center"
-            style={{ transform: "translateZ(30px)" }}
-          >
+          {/* Live Mic Breath Meter */}
+          {micActive && !candlesOut && (
+            <div
+              className="relative z-20 w-48 mt-3 flex flex-col items-center gap-1"
+              style={{ transform: "translateZ(35px)" }}
+            >
+              <div className="w-full h-2 rounded-full bg-mauve/15 overflow-hidden border border-gold/25">
+                <div
+                  className="h-full bg-gradient-to-r from-strawberry via-gold to-amber-300 transition-all duration-75"
+                  style={{ width: `${Math.max(8, breathLevel)}%` }}
+                />
+              </div>
+              <span className="text-[10px] font-sans text-mauve">
+                Breath sensor active — blow gently
+              </span>
+            </div>
+          )}
+
+          {/* Status Prompt */}
+          <div className="relative z-20 min-h-[2.25rem] mt-3 flex items-center justify-center text-center" style={{ transform: "translateZ(30px)" }}>
             {candlesOut ? (
               <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.92 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="flex items-center gap-2 text-strawberry font-sans text-sm sm:text-base font-medium"
+                className="text-strawberry font-sans text-sm sm:text-base font-medium"
               >
-                <span>{COPY.cake.wishMadeTitle} {COPY.cake.wishMadeSubtitle}</span>
+                {COPY.cake.wishMadeTitle} {COPY.cake.wishMadeSubtitle}
               </motion.div>
             ) : (
-              <p className="text-xs sm:text-sm text-ink/80 font-sans flex items-center gap-1.5">
+              <p className="text-xs sm:text-sm text-ink/85 font-sans flex items-center gap-1.5">
                 <Flame className="w-3.5 h-3.5 text-strawberry animate-pulse" />
                 <span>{COPY.cake.blowPrompt}</span>
               </p>
             )}
           </div>
 
-          {/* MIC TOGGLE & RELIGHT CONTROLS */}
+          {/* Mic Toggle & Relight Buttons */}
           <div
-            className="mt-2 flex items-center gap-3 z-20"
-            style={{ transform: "translateZ(40px)" }}
+            className="relative z-30 mt-3 flex items-center gap-3"
+            style={{ transform: "translateZ(72px)" }}
             onClick={(e) => e.stopPropagation()}
           >
             {!candlesOut ? (
               <button
                 type="button"
                 onClick={micActive ? stopMic : startMic}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold transition-all shadow-sm cursor-pointer ${
+                className={`flex items-center gap-2 px-5 py-2.5 min-h-[44px] rounded-full text-xs font-semibold transition-all shadow-md cursor-pointer ${
                   micActive
-                    ? "bg-strawberry text-paper animate-pulse"
-                    : "bg-strawberry text-paper hover:opacity-95"
+                    ? "bg-strawberry text-paper animate-pulse ring-2 ring-gold-light"
+                    : "bg-gradient-to-r from-strawberry to-[#B81E4C] text-paper border border-gold-light/30 hover:brightness-110"
                 }`}
               >
                 <Mic className="w-3.5 h-3.5" />
@@ -409,12 +554,10 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
               <button
                 type="button"
                 onClick={relightCandles}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-paper hover:bg-strawberry/5 text-strawberry border border-strawberry text-xs font-semibold transition-all shadow-sm cursor-pointer"
+                className="flex items-center gap-2 px-5 py-2.5 min-h-[44px] rounded-full bg-paper hover:bg-strawberry/5 text-strawberry border border-strawberry/60 text-xs font-semibold transition-all shadow-sm cursor-pointer"
               >
                 <RotateCcw className="w-3.5 h-3.5 text-strawberry" />
-                <span className="font-sans">
-                  {COPY.cake.relightButton}
-                </span>
+                <span className="font-sans">{COPY.cake.relightButton}</span>
               </button>
             )}
           </div>
@@ -427,24 +570,20 @@ export default function BirthdayCakeCeremony({ recipientName }: BirthdayCakeCere
         </motion.div>
       </div>
 
-      {/* CELEBRATORY WISH MOMENT CARD */}
+      {/* Wish Made Celebration Banner */}
       <AnimatePresence>
         {candlesOut && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 18, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10 }}
-            className="w-full max-w-xl mt-6 p-6 rounded-2xl bg-paper border border-mauve/20 shadow-sm text-center"
+            className="w-full max-w-xl mt-6 p-6 rounded-3xl paper-card text-center"
           >
-            <div className="w-10 h-10 rounded-full bg-strawberry/10 text-strawberry flex items-center justify-center mx-auto mb-3">
+            <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-strawberry/15 to-gold-light/40 text-strawberry flex items-center justify-center mx-auto mb-3 border border-gold/30">
               <CheckCircle2 className="w-5 h-5" />
             </div>
-            <h3 className="font-serif text-2xl text-ink font-normal">
-              {COPY.cake.wishMadeTitle}
-            </h3>
-            <p className="font-sans text-sm text-ink/80 mt-2">
-              {COPY.cake.wishMadeSubtitle}
-            </p>
+            <h3 className="font-serif text-2xl text-ink font-normal">{COPY.cake.wishMadeTitle}</h3>
+            <p className="font-sans text-sm text-ink/80 mt-2">{COPY.cake.wishMadeSubtitle}</p>
           </motion.div>
         )}
       </AnimatePresence>

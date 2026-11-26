@@ -26,6 +26,14 @@ export interface BirthdayDetails {
   formattedDate: string;
 }
 
+export interface CountdownBreakdown extends BirthdayDetails {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+  isBirthdayToday: boolean;
+}
+
 export const BIRTHDAY_CONFIG = {
   event: {
     recipientName: "Harleen",
@@ -156,13 +164,16 @@ export function getBirthdayDetails(referenceDate?: Date): BirthdayDetails {
   } catch {}
 
   let nextBirthdayYear = currentYear;
-  if (currentMonth > bMonth || (currentMonth === bMonth && currentDay >= bDay)) {
+  if (currentMonth > bMonth || (currentMonth === bMonth && currentDay > bDay)) {
     nextBirthdayYear = currentYear + 1;
   }
 
   const turningAge = nextBirthdayYear - bYear;
-  const nextBirthdayDate = new Date(`${nextBirthdayYear}-02-16T00:00:00+05:30`);
-  const diffTime = nextBirthdayDate.getTime() - now.getTime();
+  const isBirthdayToday = currentMonth === bMonth && currentDay === bDay;
+  const targetMonth = String(bMonth).padStart(2, "0");
+  const targetDay = String(bDay).padStart(2, "0");
+  const nextBirthdayDate = new Date(`${nextBirthdayYear}-${targetMonth}-${targetDay}T00:00:00+05:30`);
+  const diffTime = isBirthdayToday ? 0 : Math.max(0, nextBirthdayDate.getTime() - now.getTime());
   const daysRemaining = Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
 
   return {
@@ -173,5 +184,29 @@ export function getBirthdayDetails(referenceDate?: Date): BirthdayDetails {
     turningAge,
     daysRemaining,
     formattedDate: `${bDay} February`,
+  };
+}
+
+export function getCountdownBreakdown(referenceDate?: Date): CountdownBreakdown {
+  const now = referenceDate || STATIC_REFERENCE_DATE;
+  const details = getBirthdayDetails(now);
+  const targetMonth = String(details.birthMonth).padStart(2, "0");
+  const targetDay = String(details.birthDay).padStart(2, "0");
+  const targetDate = new Date(`${details.upcomingYear}-${targetMonth}-${targetDay}T00:00:00+05:30`);
+  const diffMs = Math.max(0, targetDate.getTime() - now.getTime());
+
+  const isBirthdayToday = details.daysRemaining === 0;
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diffMs / (1000 * 60)) % 60);
+  const seconds = Math.floor((diffMs / 1000) % 60);
+
+  return {
+    ...details,
+    days,
+    hours,
+    minutes,
+    seconds,
+    isBirthdayToday,
   };
 }
